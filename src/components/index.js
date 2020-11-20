@@ -9,5 +9,7 @@ import HeaderText from './HeaderText'
 import PlainText from './PlainText'
 import ButtonWithIcon from './ButtonWithIcon'
 import QuestionCard from './QuestionCard'
+import AnswerCard from './AnswerCard'
 export { BottomNavigator, Saldo, ButtonIcon, PesananAktif, ButtonPrimary, 
-    InputText, HeaderText, PlainText, ButtonWithIcon, ButtonDefault, QuestionCard }
+    InputText, HeaderText, PlainText, ButtonWithIcon, ButtonDefault, QuestionCard ,
+AnswerCard}

@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View , TouchableOpacity, Dimensions} from 'react-native'
 import {WARNA_UTAMA, WARNA_DISABLE, OpenSans, OpenSansBold} from '../../utils/constant';
-const ButtomPrimary = ({onPress,title, width, marginTop}) => {
+const ButtomPrimary = ({onPress,title, width, marginTop,color, fontSize}) => {
     return (
         <View
              
@@ -9,7 +9,7 @@ const ButtomPrimary = ({onPress,title, width, marginTop}) => {
             width={width}
             marginTop = {marginTop}>
             <TouchableOpacity onPress={onPress}>
-                <Text style={styles.textLoginBtn}> {title}</Text>
+                <Text style={styles.textLoginBtn(color,fontSize)}> {title}</Text>
             </TouchableOpacity>
         </View>
     )
@@ -31,15 +31,16 @@ const styles = StyleSheet.create({
         shadowOpacity   : 0.22,
         shadowRadius    : 2.22,
         elevation: 3,    
-       
+        paddingHorizontal : 10
         
     }, 
-    textLoginBtn :{
+    textLoginBtn : (color, fontSize) => ({
+        
         textAlign       : 'center',
         marginTop       : 10,
         marginBottom    : 10,
-        fontSize        : 20,
-        color           : "#fff",
+        fontSize        : fontSize != null ? fontSize : 20,
+        color           : color != null ? color : "#fff",
         fontFamily      : OpenSansBold,
-    },
+    }),
 })

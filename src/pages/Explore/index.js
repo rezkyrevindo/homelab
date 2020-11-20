@@ -18,7 +18,7 @@ const windowHeight = Dimensions.get('window').height;
 const headerHeight = windowHeight * 0.25;
 const StatusBarHeight = 30;
 
-const Explore = () => {
+const Explore = ({navigation}) => {
   return (
     <View style={styles.page}>
      <View>
@@ -125,12 +125,18 @@ const Explore = () => {
 
 
             <QuestionCard
+                onPress={() => {
+                    navigation.navigate('DetailQuestion',{
+                      isSolved: false 
+                    });
+                }}
                 name = 'Rezky Revindo'
                 category = 'Matematika'
                 time = '1 d ago'
                 point = '+50'
                 isSolved={false}
                 answer = '0'
+                like = '1'
                 question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
             />
             <QuestionCard
@@ -140,6 +146,7 @@ const Explore = () => {
                 point = '+20'
                 isSolved={false}
                 answer = '0'
+                like = '1'
                 question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
             />
             <QuestionCard
@@ -149,6 +156,7 @@ const Explore = () => {
                 point = '+50'
                 isSolved={false}
                 answer = '1'
+                like = '1'
                 question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
             />
           

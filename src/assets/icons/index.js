@@ -30,6 +30,12 @@ import IconUserActive from './userActive.svg'
 import IconPointsWhite from './pointsWhite.svg'
 import IconSetting from './setting.svg'
 import IconCaretDown from './caret-down.svg'
+import IconPicture from './picture.svg'
+import IconFont from './font.svg'
+import IconDerajat from './derajat.svg'
+import IconLike from './like.svg'
+import IconLikeActive from './likeActive'
+import IconCheck from './check.svg'
 export {
   IconMenu,IconMenuActive, IconNotification,IconNotificationActive, IconSearch, IconSearchActive,
   IconAkun,
@@ -54,5 +60,6 @@ export {
   IconChat,
   IconChatActive,
   IconUser, IconUserActive, IconPointsWhite, IconSetting,
-  IconCaretDown
+  IconCaretDown, IconPicture, IconFont,IconDerajat,
+  IconLike,IconLikeActive, IconCheck
 };

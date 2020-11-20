@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, Splash, Akun, CreateQuestion, Login, Register, Verification, ConfirmationSuccess, Explore, Notification , Chat} from '../pages';
+import { Home, Splash, Akun, CreateQuestion, Login, Register,DetailQuestion ,Verification, ConfirmationSuccess, Explore, MyDetailQuestion ,Notification , Chat} from '../pages';
 import { BottomNavigator } from '../components';
 
 const Stack = createStackNavigator();
@@ -26,6 +26,8 @@ const Router = () => {
     <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }}/>
       <Stack.Screen name="CreateQuestion" component={CreateQuestion} options={{headerTitle: 'Create Question'}}/>
+      <Stack.Screen name="MyDetailQuestion" component={MyDetailQuestion} options={{headerTitle: 'My Question'}}/>
+      <Stack.Screen name="DetailQuestion" component={DetailQuestion} options={{headerTitle: 'Question'}}/>
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
       <Stack.Screen name="Verification" component={Verification} options={{ headerShown: false }}/>
       <Stack.Screen name="ConfirmationSuccess" component={ConfirmationSuccess} options={{ headerShown: false }}/>

@@ -104,12 +104,16 @@ const Home = ({navigation}) => {
 
 
           <QuestionCard
+            onPress={() => {
+                    navigation.navigate('MyDetailQuestion');
+                }}
             name = 'Rezky Revindo'
             category = 'Matematika'
             time = '1 d ago'
-            point = '+50'
+            point = '+5'
             isSolved={false}
-            answer = '5'
+            answer = '2'
+            like = '1'
             question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
           />
           
@@ -125,15 +129,36 @@ const Home = ({navigation}) => {
           </View>
 
           <QuestionCard
+            onPress={() => {
+                navigation.navigate('DetailQuestion',{
+                  isSolved: true 
+                });
+            }}
             name = 'Rezky Revindo'
             category = 'Matematika'
             time = '1 d ago'
             point = '+50'
             answer = '0'
+            like = '1'
             isSolved={true}
             question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
           />
           
+          <QuestionCard
+            onPress={() => {
+                navigation.navigate('DetailQuestion',{
+                  isSolved: true
+                });
+            }}
+            name = 'Rezky Revindo'
+            category = 'Matematika'
+            time = '1 d ago'
+            point = '+50'
+            answer = '0'
+            like = '1'
+            isSolved={true}
+            question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
+          />
 
         </View>
         

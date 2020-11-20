@@ -1,9 +1,11 @@
-import React from 'react'
+import React,  { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import PlainText from '../PlainText'
-import { DefaultProfile, IconPoints, IconLike,IconLikeActive, IconCheck} from '../../assets';
+import { DefaultProfile, IconLike, IconLikeActive, IconCheck} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
-const QuestionCard = (props) => {
+
+const AnswerCard = (props) => {
+    
     return (
         <TouchableOpacity 
           onPress={props.onPress}
@@ -21,26 +23,20 @@ const QuestionCard = (props) => {
                         fontSize = {13}
                     />
                   <PlainText
-                      title={props.time + ' - ' + props.category}
-                      color={"#000"}
-                      fontSize = {11}
-                  />
+                        title={props.time }
+                        color={"#000"}
+                        fontSize = {11}
+                    />
                 </View>
               </View>
-              
-              <View style={{alignItems:'center', flexDirection:'row'}}>
-                <PlainText
-                      title={props.point}
-                      color={WARNA_UTAMA}
-                      fontSize = {16}
-                      fontStyle= {"bold"}
-                  />
-                <IconPoints style={{marginLeft: 5}}/>
-                {props.isSolved == true &&
-                  <IconCheck style={{marginLeft:10}} width={24} height={24} fill={'#fff'}/>
+                {props.isRelevant == true &&
+                    <View style={{flexDirection:'row', alignItems : 'center'}}>
+                        
+                        
+                        <IconCheck style={{marginLeft:3}} width={24} height={24} fill={'#fff'}/>
+                    </View>
+                    
                 }
-              </View>
-                
              
             </View>
 
@@ -52,27 +48,21 @@ const QuestionCard = (props) => {
                 />
             </View>
             <View style={styles.cardQuestionFooter}>
-              <View style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}}>
+              <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                 <View  style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
-                      <IconLike width={18} height={18} fill={'#D7443E'}/>
-                      <PlainText
-                          marginLeft  = {10}
-                          title={props.like + " Like"}
-                          fontStyle={"bold"}
-                          color={"#000"}
-                          fontSize = {13}
-                      />
+                    <IconLike width={18} height={18} fill={'#D7443E'}/>
+                    <PlainText
+                        marginLeft  = {10}
+                        title={props.like + " Like"}
+                        fontStyle={"bold"}
+                        color={"#000"}
+                        fontSize = {13}
+                    />
                 </View>
-
-              
-
-                <PlainText
-                  title={props.answer + " Answer"}
-                  fontStyle={"bold"}
-                  color={"#000"}
-                  fontSize = {13}
-                  />
                 
+              
+               
+               
                
               </View>
              
@@ -82,7 +72,7 @@ const QuestionCard = (props) => {
     )
 }
 
-export default QuestionCard
+export default AnswerCard
 
 const styles = StyleSheet.create({
     //------------------------
@@ -104,7 +94,8 @@ const styles = StyleSheet.create({
     paddingHorizontal:20,
     paddingVertical : 10, 
     justifyContent : 'space-between' , 
-    backgroundColor : '#FFD31D25', 
+    alignItems : 'center',
+    backgroundColor : '#F5F5F5', 
     borderTopEndRadius : 20, 
     borderTopStartRadius : 20 
   },
@@ -117,8 +108,10 @@ const styles = StyleSheet.create({
     paddingTop : 0,
   },
   buttonSeeAll :{
-    backgroundColor : WARNA_SUCCESS,
-    borderRadius    : 40,
-    justifyContent  : 'center',
-},
+        backgroundColor : WARNA_SUCCESS,
+        paddingVertical : 3,
+        borderRadius    : 10,
+        justifyContent  : 'center',
+        paddingHorizontal : 15,
+    },
 })

@@ -10,7 +10,10 @@ import Explore from './Explore'
 import Notification from './Notification'
 import Chat from './Chat'
 import CreateQuestion from './CreateQuestion'
-
+import MyDetailQuestion from './MyDetailQuestion'
+import DetailQuestion from './DetailQuestion'
 export { Splash, Pesanan, 
     CreateQuestion,
-    Akun, Home, Login, Register, Verification , ConfirmationSuccess, Explore, Notification, Chat}
+    Akun, Home, Login, Register, Verification , ConfirmationSuccess, Explore, Notification, Chat,
+    MyDetailQuestion, DetailQuestion
+}
