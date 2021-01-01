@@ -22,15 +22,8 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
     buttonLogin : {
         backgroundColor : WARNA_UTAMA,
-        borderRadius    : 10,
-        shadowColor     : "#000",
-        shadowOffset    : {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity   : 0.22,
-        shadowRadius    : 2.22,
-        elevation: 3,    
+        borderRadius    : 30,
+   
         paddingHorizontal : 10
         
     }, 
@@ -39,8 +32,8 @@ const styles = StyleSheet.create({
         textAlign       : 'center',
         marginTop       : 10,
         marginBottom    : 10,
-        fontSize        : fontSize != null ? fontSize : 20,
-        color           : color != null ? color : "#fff",
+        fontSize        : fontSize != null ? fontSize : 14,
+        color           : color != null ? color : "#000",
         fontFamily      : OpenSansBold,
     }),
 })

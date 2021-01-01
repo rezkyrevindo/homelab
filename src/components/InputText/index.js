@@ -6,7 +6,7 @@ import {IconSearch} from '../../assets';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const InputText = ({placeholder, secureTextEntry, width,borderRadius, textAlign, marginTop, paddingRight}) => {
+const InputText = ({placeholder, secureTextEntry, width,borderRadius, textAlign, marginTop, paddingRight, onChangeText, value}) => {
     return (
         <View>
             <TextInput 
@@ -18,6 +18,8 @@ const InputText = ({placeholder, secureTextEntry, width,borderRadius, textAlign,
                 paddingHorizontal={20}
                 textAlign= {textAlign}
                 fontFamily={OpenSans}
+                onChangeText={onChangeText}
+                value={value}
                 />
         </View>
         
@@ -29,7 +31,7 @@ export default InputText
 const styles = StyleSheet.create({
     textInput_Style: (borderRadius,marginTop, paddingRight) =>({
         paddingRight    : paddingRight != null ? paddingRight :20,
-        borderRadius    : borderRadius != null ? borderRadius : 10,
+        borderRadius    : borderRadius != null ? borderRadius : 30,
         height          : windowHeight * 0.07,
         marginTop       : marginTop != null ? marginTop : windowHeight * 0.04,
         borderColor     : WARNA_DISABLE,

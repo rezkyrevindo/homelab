@@ -21,11 +21,7 @@ const StatusBarHeight = 30;
 const Home = ({navigation}) => {
   return (
     <View style={styles.page}>
-     <View>
-          <StatusBar  
-          backgroundColor={WARNA_UTAMA} 
-          barStyle="dark-content" />
-      </View>
+    
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.headerWrap}>
@@ -180,7 +176,6 @@ const styles = StyleSheet.create({
     backgroundColor : WARNA_UTAMA,
     width: windowWidth,
     height: windowHeight * 0.3,
-    marginTop : 20,
     flexDirection : 'row',
     alignItems : 'center'
   },

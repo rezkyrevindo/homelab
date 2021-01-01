@@ -10,6 +10,7 @@ import PlainText from './PlainText'
 import ButtonWithIcon from './ButtonWithIcon'
 import QuestionCard from './QuestionCard'
 import AnswerCard from './AnswerCard'
+import LoadingIndicator from './LoadingIndicator'
 export { BottomNavigator, Saldo, ButtonIcon, PesananAktif, ButtonPrimary, 
     InputText, HeaderText, PlainText, ButtonWithIcon, ButtonDefault, QuestionCard ,
-AnswerCard}
+AnswerCard, LoadingIndicator}

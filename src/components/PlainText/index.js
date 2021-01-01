@@ -6,11 +6,11 @@ import {WARNA_UTAMA, WARNA_DISABLE, OpenSans, OpenSansBold} from '../../utils/co
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const PlainText = ({title, color, marginLeft, marginTop, fontSize, marginBottom, fontStyle}) => {
+const PlainText = ({title, color, marginLeft, marginTop, fontSize, marginBottom, fontStyle, textAlign}) => {
     return (
         <View>
              <Text
-                style={styles.forgotPassword(color,marginLeft, marginTop,fontSize, marginBottom, fontStyle)}
+                style={styles.forgotPassword(color,marginLeft, marginTop,fontSize, marginBottom, fontStyle, textAlign)}
                 >
                 {title}
             </Text>
@@ -21,13 +21,14 @@ const PlainText = ({title, color, marginLeft, marginTop, fontSize, marginBottom,
 export default PlainText
 
 const styles = StyleSheet.create({
-    forgotPassword:(color, marginLeft,marginTop, fontSize, marginBottom, fontStyle) => ({
+    forgotPassword:(color, marginLeft,marginTop, fontSize, marginBottom, fontStyle, textAlign) => ({
         marginLeft      : marginLeft,
         marginTop       : marginTop,
         fontFamily      : fontStyle =="bold" ? OpenSansBold : OpenSans,
         color           : color,
         fontSize        : fontSize,
         marginBottom    : marginBottom,
+        textAlign       : textAlign != null ? textAlign : null
         
     }),
 })

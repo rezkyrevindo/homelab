@@ -2,7 +2,8 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, Splash, Akun, CreateQuestion, Login, Register,DetailQuestion ,Verification, ConfirmationSuccess, Explore, MyDetailQuestion ,Notification , Chat} from '../pages';
+import { Home, Splash, Akun, CreateQuestion, Login,RegisterSuccess, Register,DetailQuestion ,Verification, ConfirmationSuccess, 
+  Landing,Explore, MyDetailQuestion ,Notification , Chat,ForgotPassword, ForgotPasswordSuccess} from '../pages';
 import { BottomNavigator } from '../components';
 
 const Stack = createStackNavigator();
@@ -28,11 +29,66 @@ const Router = () => {
       <Stack.Screen name="CreateQuestion" component={CreateQuestion} options={{headerTitle: 'Create Question'}}/>
       <Stack.Screen name="MyDetailQuestion" component={MyDetailQuestion} options={{headerTitle: 'My Question'}}/>
       <Stack.Screen name="DetailQuestion" component={DetailQuestion} options={{headerTitle: 'Question'}}/>
-      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+      <Stack.Screen name="Login" component={Login} 
+      options={
+        {
+          headerTitle : 'Masuk',
+          headerTitleStyle:{
+            alignSelf : 'center',
+            marginLeft : -60,
+            
+          },
+        }} />
       <Stack.Screen name="Verification" component={Verification} options={{ headerShown: false }}/>
       <Stack.Screen name="ConfirmationSuccess" component={ConfirmationSuccess} options={{ headerShown: false }}/>
-      <Stack.Screen name="Register" component={Register} options={{ headerShown: false }}/>
+      <Stack.Screen name="Register" component={Register} 
+         options={
+        {
+          headerTitle : 'Buat Akun',
+          headerTitleStyle:{
+            alignSelf : 'center',
+            marginLeft : -60,
+            
+          },
+        }}
+      />
+      <Stack.Screen name="RegisterSuccess" component={RegisterSuccess} 
+         options={
+        {
+          headerTitle : 'Buat Akun',
+          headerTitleStyle:{
+            alignSelf : 'center',
+            marginLeft : -60,
+            
+          },
+          headerShown:false
+        }}
+      />
+      <Stack.Screen name="ForgotPasswordSuccess" component={ForgotPasswordSuccess} 
+         options={
+        {
+          headerTitle : 'Buat Akun',
+          headerTitleStyle:{
+            alignSelf : 'center',
+            marginLeft : -60,
+            
+          },
+          headerShown:false
+        }}
+      />
+       <Stack.Screen name="ForgotPassword" component={ForgotPassword} 
+         options={
+        {
+          headerTitle : 'Lupa Password',
+          headerTitleStyle:{
+            alignSelf : 'center',
+            marginLeft : -60,
+            
+          },
+        }}
+      />
       <Stack.Screen name="MainApp" component={MainApp} options={{ headerShown: false }}/>
+      <Stack.Screen name="Landing" component={Landing} options={{ headerShown: false }}/>
     </Stack.Navigator>
   );
 };

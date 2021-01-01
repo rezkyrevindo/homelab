@@ -12,8 +12,12 @@ import Chat from './Chat'
 import CreateQuestion from './CreateQuestion'
 import MyDetailQuestion from './MyDetailQuestion'
 import DetailQuestion from './DetailQuestion'
+import Landing from './Landing'
+import RegisterSuccess from './RegisterSuccess'
+import ForgotPassword from './ForgotPassword'
+import ForgotPasswordSuccess from './ForgotPasswordSuccess'
 export { Splash, Pesanan, 
     CreateQuestion,
     Akun, Home, Login, Register, Verification , ConfirmationSuccess, Explore, Notification, Chat,
-    MyDetailQuestion, DetailQuestion
+    MyDetailQuestion, DetailQuestion, Landing, RegisterSuccess, ForgotPassword,ForgotPasswordSuccess
 }

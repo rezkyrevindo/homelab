@@ -1,19 +1,25 @@
 import React, { useEffect } from 'react'
-import { StyleSheet, Text, View, ImageBackground, Image } from 'react-native'
+import { StyleSheet, StatusBar, View, ImageBackground, Image } from 'react-native'
 import {Logo } from '../../assets'
 
 const Splash = ({ navigation }) => {
     
     useEffect(() => {
         setTimeout( () => {
-            navigation.replace('Login');
+            navigation.replace('Landing');
         }, 3000)
     }, [navigation]);
 
     return (
-       <ImageBackground style={styles.background}>
-           <Image source={Logo} style={styles.logo} />
-       </ImageBackground>
+        
+            <ImageBackground style={styles.background}>
+            <StatusBar  
+                backgroundColor={"#FFD31D"} 
+                barStyle="dark-content" />
+                <Image source={Logo} style={styles.logo} />
+            </ImageBackground>
+        
+      
     )
 }
 

@@ -1,128 +1,147 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {
     StyleSheet,
-    Image,
     View,
     Dimensions,
-    StatusBar,
+    TouchableOpacity, StatusBar
   } from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import {LogoHorizontal} from '../../assets';
+import {ScrollView} from 'react-native-gesture-handler';
+import {ImgSignup, ImgIcon} from '../../assets';
 import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
-import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, ButtonDefault} from '../../components'
+import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator} from '../../components'
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowHeight = Dimensions.get('window').height -56;
+import FastImage from 'react-native-fast-image'
+import BottomSheet from 'reanimated-bottom-sheet';
 
 const Register = ({navigation}) => {
-    return (
-        <View style = {styles.container}>
+    const [isLoading, setLoading] = useState(false)
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [namaDepan, setNamaDepan] = useState("")
+    const [namaBelakang, setNamaBelakang] = useState("")
+    const [confPassword, setConfPassword]= useState("")
+
+
+    const renderContent = () => (
+        <View style={{height : windowHeight, backgroundColor:'white',}}>
+            <ScrollView>
             <View>
-                <StatusBar translucent 
-                backgroundColor={"#FFF"} 
+                <StatusBar  
+                backgroundColor={WARNA_UTAMA} 
                 barStyle="dark-content" />
             </View>
-            <ScrollView  showsVerticalScrollIndicator={false}>
-                <View style={styles.header}>
-                    <Image style={styles.logo} source={LogoHorizontal}></Image>
-                </View>
-                <View style={styles.body}>
-                    <HeaderText
-                        marginTop = {windowHeight * 0.054}
-                        title={"Register"}
-                        textAlign={"center"}
-                       
-                    />
-                    <View style={{alignItems:'center'}}>
+                <View style={{width:50,height:3, backgroundColor:WARNA_UTAMA, alignSelf:'center', marginTop:20}}></View>
+                <View style={{alignItems:'center'}}>
+                    <TouchableOpacity style={{width:100, height:100, backgroundColor:'#C4C4C4', marginTop:20, borderRadius:100, alignItems:"center", justifyContent:'center'}}>
+                        <FastImage 
+                            style={{width:30, height:30}} 
+                            source={ImgIcon}
+                            resizeMode={FastImage.resizeMode.contain}
+                        ></FastImage>
+                    </TouchableOpacity>
+                    <View style={{flexDirection:"row", justifyContent:"space-between", width:windowWidth *0.85}}>
                         <InputText 
-                            width       = {windowWidth * 0.66}
-                            placeholder = "Username" 
+                            width       = {windowWidth * 0.40}
+                            placeholder = "Nama Depan" 
                             secureTextEntry = {false} 
+                            onChangeText = {(text) => setNamaDepan(text)}
+                            value={namaDepan}
                             />
                         <InputText 
-                            width       = {windowWidth * 0.66}
-                            placeholder = "Email" 
+                            width       = {windowWidth * 0.40}
+                            placeholder = "Nama Belakang" 
                             secureTextEntry = {false} 
-                            />
-                        <InputText 
-                            width       = {windowWidth * 0.66}
-                            placeholder = "Nomor HP" 
-                            secureTextEntry = {false} 
-                            />
-                        <InputText 
-                            width       = {windowWidth * 0.66}
-                            placeholder = "Password" 
-                            secureTextEntry = {true}
-                            />
-                        <InputText 
-                            width       = {windowWidth * 0.66}
-                            placeholder = "Confirm Password" 
-                            secureTextEntry = {true}
+                            onChangeText = {(text) => setNamaBelakang(text)}
+                            value={namaBelakang}
                             />
                     </View>
-
-                   
-                    <View style={{alignItems:'center'}}>
-                        <ButtonPrimary  
-                            onPress={() => {
-                                navigation.navigate('Verification');
-                            }}
-                            title="Continue"
-                            width={windowWidth*0.6}
-                            marginTop   = {windowHeight * 0.033}
+                    <InputText 
+                        width       = {windowWidth * 0.85}
+                        placeholder = "Email" 
+                        secureTextEntry = {false} 
+                        onChangeText = {(text) => setEmail(text)}
+                        value={email}
                         />
-                    </View>
-
-                    <View style={{alignItems:"center"}}>
-                        <PlainText
-                            fontSize={13}
-                            title="or Login Use"
-                            color={"#000"}
-                            marginTop = {windowHeight * 0.033}       
-                        />
-                    </View>
-                   
-
-                    <View style={styles.otherLogin}>
-                        <ButtonWithIcon
-                            title={"facebook"}
-                        />
-                        <ButtonWithIcon
-                            title={"google"}
-                        />
-                        
-                    </View>
-                  
-                    <View style={{alignItems:'center'}}>
-                      
-                        <TouchableOpacity  onPress={() => {
-                                navigation.navigate('Login');
-                            }}>
-                            <PlainText
-                                title={"Back to Login"}
-                                color={WARNA_UTAMA}
-                                marginTop = {windowHeight * 0.033}
-                                fontSize = {13}
-                            />
-                        </TouchableOpacity>
-                        <PlainText
-                                title={"By continuing, you agree to our"}
-                                color={"#000"}
-                                marginTop = {windowHeight * 0.033}
-                                fontSize= {10}
-                            />
-                        <PlainText
-                            title={"Terms of Service and Privacy Policy "}
-                            color={WARNA_UTAMA}
-                            marginTop = {windowHeight * 0.01}
-                            fontSize= {10}
-                            marginBottom={50}
-                        />
-                    </View>
                     
+                    <InputText 
+                        width       = {windowWidth * 0.85}
+                        placeholder = "Password" 
+                        secureTextEntry = {true}
+                        onChangeText = {(text) => setPassword(text)}
+                        value={password}
+                        />
+                    <InputText 
+                        width       = {windowWidth * 0.85}
+                        placeholder = "Confirm Password" 
+                        secureTextEntry = {true}
+                        onChangeText = {(text) => setConfPassword(text)}
+                            value={confPassword}
+                        />
                 </View>
+           
+            
+            <View style={{alignItems:'center'}}>
+                <ButtonPrimary  
+                    onPress={() => {
+                        navigation.navigate('RegisterSuccess');
+                    }}
+                    title="Continue"
+                    width={windowWidth*0.6}
+                    marginTop   = {windowHeight * 0.033}
+                />
+            </View>
 
+            
+            <View style={{alignItems:'center'}}>
+                
+                
+                <PlainText
+                        title={"By continuing, you agree to our"}
+                        color={"#000"}
+                        marginTop = {windowHeight * 0.033}
+                        fontSize= {10}
+                    />
+                <PlainText
+                    title={"Terms of Service and Privacy Policy "}
+                    color={WARNA_UTAMA}
+                    marginTop = {windowHeight * 0.01}
+                    fontSize= {10}
+                    marginBottom={50}
+                />
+            </View>
             </ScrollView>
+
+            
         </View>
+      );
+     
+    const sheetRef = React.useRef(null);
+    return ( 
+        <View style={styles.container}>
+        {isLoading &&
+            <LoadingIndicator/>
+        }
+        {!isLoading && 
+            <View style = {styles.container}>
+                
+                <View style={styles.header}>
+                    <FastImage 
+                        style={styles.logo} 
+                        source={ImgSignup}
+                        resizeMode={FastImage.resizeMode.contain}
+                    ></FastImage>
+                </View> 
+                <BottomSheet
+                    ref={sheetRef}
+                    snapPoints={[windowHeight , windowHeight * 0.85, windowHeight *0.75]}
+                    initialSnap = {2}
+                    borderRadius={10}
+                    renderContent={renderContent}
+                    />
+            </View>
+        }
+    </View>
     )
 }
 
@@ -130,18 +149,17 @@ export default Register
 
 const styles = StyleSheet.create({
     container:{
-        flex:1,
+        height:windowHeight,
         backgroundColor:'white' 
     },
     header: {
-        width: windowWidth,
-        height: windowHeight * 0.11,
-        paddingTop : 40,
+        padding : 20,
         alignItems : 'center',
+        backgroundColor:"#FFF2D7",
     },
     logo : {
-        width : windowWidth * 0.36,
-        height : windowHeight * 0.052
+        width : "80%", 
+        height: windowHeight * 0.20
     },
     body:{
         flex:1,
