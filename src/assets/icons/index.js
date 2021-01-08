@@ -36,6 +36,13 @@ import IconDerajat from './derajat.svg'
 import IconLike from './like.svg'
 import IconLikeActive from './likeActive'
 import IconCheck from './check.svg'
+import IconExplore from './explore.svg'
+import IconRiwayat from './riwayat.svg'
+import IconWallet from './wallet.svg'
+import IconCaretUp from './caret-up.svg'
+import IconCaretLeft from "./caret-left.svg"
+import IconWithdraw from './withdraw.svg'
+import IconTopUp from './topup.svg'
 export {
   IconMenu,IconMenuActive, IconNotification,IconNotificationActive, IconSearch, IconSearchActive,
   IconAkun,
@@ -61,5 +68,6 @@ export {
   IconChatActive,
   IconUser, IconUserActive, IconPointsWhite, IconSetting,
   IconCaretDown, IconPicture, IconFont,IconDerajat,
-  IconLike,IconLikeActive, IconCheck
+  IconLike,IconLikeActive, IconCheck, IconExplore, IconRiwayat, IconWallet,
+  IconCaretUp, IconCaretLeft, IconTopUp, IconWithdraw
 };

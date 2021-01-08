@@ -6,20 +6,21 @@ import {IconSearch} from '../../assets';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const InputText = ({placeholder, secureTextEntry, width,borderRadius, textAlign, marginTop, paddingRight, onChangeText, value}) => {
+const InputText = ({placeholder, secureTextEntry, width,borderRadius, textAlign, marginTop, paddingRight, onChangeText, value,onBlur, height}) => {
     return (
         <View>
             <TextInput 
                 width           = {width}
                 secureTextEntry = {secureTextEntry}
                 placeholder = {placeholder} 
-                style={styles.textInput_Style(borderRadius,marginTop, paddingRight)}
+                style={styles.textInput_Style(borderRadius,marginTop, paddingRight, height)}
                 underlineColorAndroid='transparent'
                 paddingHorizontal={20}
                 textAlign= {textAlign}
                 fontFamily={OpenSans}
                 onChangeText={onChangeText}
                 value={value}
+                onBlur={onBlur}
                 />
         </View>
         
@@ -29,10 +30,10 @@ const InputText = ({placeholder, secureTextEntry, width,borderRadius, textAlign,
 export default InputText
 
 const styles = StyleSheet.create({
-    textInput_Style: (borderRadius,marginTop, paddingRight) =>({
+    textInput_Style: (borderRadius,marginTop, paddingRight, height) =>({
         paddingRight    : paddingRight != null ? paddingRight :20,
         borderRadius    : borderRadius != null ? borderRadius : 30,
-        height          : windowHeight * 0.07,
+        height          : height != null ? height : windowHeight * 0.07 ,
         marginTop       : marginTop != null ? marginTop : windowHeight * 0.04,
         borderColor     : WARNA_DISABLE,
         borderWidth     : 1,

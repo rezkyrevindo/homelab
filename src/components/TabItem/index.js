@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
-import {IconUnderline,IconMenu, IconMenuActive, IconHome, IconHomeActive, IconSearch, IconSearchActive, IconNotificationActive, IconNotification
+import {IconUnderline,IconMenu, IconExplore, IconHome, IconHomeActive, IconSearch, IconSearchActive, IconNotificationActive, IconNotification
 ,IconChat, IconChatActive, IconUser, IconUserActive } from '../../assets'
 
 import { WARNA_UTAMA, WARNA_DISABLE } from '../../utils/constant'
@@ -11,15 +11,13 @@ const navHeight     = windowHeight * 0.07;
 
 const TabItem = ({isFocused, onPress, onLongPress, label }) => {
   const Icon = () => {
-      if(label === "Home") return isFocused ? <IconHomeActive style={styles.iconStyle}/> : <IconHome style={styles.iconStyle} />
+      if(label === "Home") return isFocused ? <IconHome width={24} height={24} fill={WARNA_UTAMA} style={styles.iconStyle}/> : <IconHome width={24} height={24} fill={"#979797"}  style={styles.iconStyle}/>
 
-      if(label === "Search") return isFocused ? <IconSearchActive style={styles.iconStyle}/> : <IconSearch style={styles.iconStyle} />
+      if(label === "Search") return isFocused ? <IconExplore width={24} height={24} fill={WARNA_UTAMA}  style={styles.iconStyle}/> : <IconExplore width={24} height={24} fill={"#979797"}  style={styles.iconStyle}/>
 
-      if(label === "Notification") return isFocused ? <IconNotificationActive style={styles.iconStyle}/> : <IconNotification style={styles.iconStyle} />
+      if(label === "Notification") return isFocused ? <IconNotification width={24} height={24} fill={WARNA_UTAMA}  style={styles.iconStyle}/> : <IconNotification width={24} height={24} fill={"#979797"}  style={styles.iconStyle}  />
 
-      if(label === "Chat") return isFocused ? <IconChatActive style={styles.iconStyle}/> : <IconChat style={styles.iconStyle} />
-
-      if(label === "Profile") return isFocused ? <IconUserActive style={styles.iconStyle}/> : <IconUser style={styles.iconStyle} />
+      if(label === "Profile") return isFocused ? <IconUserActive width={24} height={24} fill={WARNA_UTAMA}  style={styles.iconStyle}  /> : <IconUser width={24} height={24} fill={"#979797"}  style={styles.iconStyle} />
 
       return <IconHome />
   }
@@ -30,7 +28,6 @@ const TabItem = ({isFocused, onPress, onLongPress, label }) => {
 
     if(label === "Notification") return isFocused ? <IconUnderline style={styles.underline}/>  : <View></View> 
 
-    if(label === "Chat") return isFocused ? <IconUnderline style={styles.underline}/>  : <View></View> 
 
     if(label === "Profile") return isFocused ? <IconUnderline style={styles.underline}/> : <View></View> 
 
@@ -57,8 +54,6 @@ const styles = StyleSheet.create({
     },
     iconStyle : {
       marginTop : navHeight * 0.2,
-      height   : navHeight * 0.5,
-      width     : navHeight * 0.5,
     },
     wrap  : {
       flexDirection : 'column',

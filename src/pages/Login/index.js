@@ -49,7 +49,7 @@ const Login = ({navigation}) => {
                 <View style={{alignItems:'center'}}>
                     <ButtonPrimary  
                         onPress={() => {
-                            navigation.navigate('MainApp');
+                            navigation.navigate('Interest');
                         }}
                         title="Lanjutkan"
                         width={windowWidth*0.6}

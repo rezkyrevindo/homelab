@@ -3,16 +3,16 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import PlainText from '../PlainText'
 import { DefaultProfile, IconLike, IconLikeActive, IconCheck} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
-
+import FastImage from 'react-native-fast-image'
 const AnswerCard = (props) => {
     
     return (
-        <TouchableOpacity 
-          onPress={props.onPress}
+        <View 
+          
          style={styles.cardQuestion}>
             <View style={styles.cardQuestionHeader}>
               <View style={{flexDirection : 'row'}}>
-                <Image source={DefaultProfile} style={{width : 50, height: 50}} />
+                <FastImage source={DefaultProfile} style={{width : 50, height: 50}} />
                 <View 
                 style={{flexDirection : 'column', justifyContent:'space-around', marginLeft: 10}}
                 >
@@ -40,27 +40,33 @@ const AnswerCard = (props) => {
              
             </View>
 
-            <View style={styles.cardQuestionContent}>
+            <TouchableOpacity onPress={props.onPress} style={styles.cardQuestionContent}>
               <PlainText
                 title={props.question}
                 color={"#000"}
                 fontSize = {13}
                 />
-            </View>
+            </TouchableOpacity>
             <View style={styles.cardQuestionFooter}>
               <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                 <View  style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
                     <IconLike width={18} height={18} fill={'#D7443E'}/>
                     <PlainText
                         marginLeft  = {10}
-                        title={props.like + " Like"}
+                        title={props.commentar + " Like"}
                         fontStyle={"bold"}
                         color={"#000"}
                         fontSize = {13}
                     />
+                   
                 </View>
                 
-              
+                <PlainText
+                      title={props.commentar + " comment"}
+                      fontStyle={"bold"}
+                      color={"#000"}
+                      fontSize = {13}
+                      />
                
                
                
@@ -68,7 +74,7 @@ const AnswerCard = (props) => {
              
             </View>
            
-          </TouchableOpacity>
+          </View>
     )
 }
 

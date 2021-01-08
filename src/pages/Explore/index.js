@@ -21,11 +21,7 @@ const StatusBarHeight = 30;
 const Explore = ({navigation}) => {
   return (
     <View style={styles.page}>
-     <View>
-          <StatusBar  
-          backgroundColor={WARNA_UTAMA} 
-          barStyle="dark-content" />
-      </View>
+    
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.headerWrap}>
@@ -38,12 +34,7 @@ const Explore = ({navigation}) => {
                     title={"Explore"}
                 />
            
-                <PlainText
-                    title={"Bantu jawab pertanyaan teman kamu sekarang juga, kumpulkan point dan dapatkan hadiahnya!"}
-                    color={"#000"}
-                    fontSize = {12}
-                    marginTop = {10}
-                />
+               
               </View>
                 
             </View>
@@ -181,8 +172,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor : WARNA_UTAMA,
     width: windowWidth,
-    height: windowHeight * 0.25,
-    marginTop : 10,
+    height: windowHeight * 0.15,
     flexDirection : 'row',
     alignItems : 'center'
   },

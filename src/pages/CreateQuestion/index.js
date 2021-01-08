@@ -1,4 +1,4 @@
-import React  from 'react'
+import React, {useEffect, useState}  from 'react'
 import {
     StyleSheet,
     Text,
@@ -13,17 +13,82 @@ import {
 import {IconCaretDown, IconDerajat,IconPicture,IconFont, IconPoints} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard, ButtonPrimary} from '../../components/';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_DISABLE, OpenSansBold, OpenSans} from '../../utils/constant';
+import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 import {ScrollView} from 'react-native-gesture-handler';
-
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const headerHeight = windowHeight * 0.25;
-const StatusBarHeight = 30;
-
 
 const CreateQuestion = () => {
+    const [modalKategori, setModalKategori] = useState(false)
+    const [modalPoint, setModalPoint] = useState(false)
+    const KategoriModal = ()=>{
+        return (
+            <Modal
+                visible={modalKategori}
+                onTouchOutside={() => { setModalKategori(false)}}
+            >
+                <ModalContent>
+                    <View style={{ width:windowWidth*0.5, alignItems:'center'}}>
+                        <PlainText
+                            title={"Pilih Kategori"}
+                            color={"#000"}
+                            fontSize= {14}
+                            fontStyle={"bold"}
+                        />
+                        <PlainText
+                            title={"Pilih Kategori"}
+                            color={"#000"}
+                            fontSize= {14}
+                            fontStyle={"bold"}
+                        />
+                        <PlainText
+                            title={"Pilih Kategori"}
+                            color={"#000"}
+                            fontSize= {14}
+                            fontStyle={"bold"}
+                        />
+                    </View>
+                    
+                </ModalContent>
+            </Modal>
+        )
+    }
+    const PointModal = ()=>{
+        return (
+            <Modal
+                visible={modalPoint}
+                onTouchOutside={() => { setModalPoint(false)}}
+            >
+                <ModalContent>
+                    <View style={{ width:windowWidth*0.5, alignItems:'center'}}>
+                        <PlainText
+                            title={"Pilih Kategori"}
+                            color={"#000"}
+                            fontSize= {14}
+                            fontStyle={"bold"}
+                        />
+                        <PlainText
+                            title={"Pilih Kategori"}
+                            color={"#000"}
+                            fontSize= {14}
+                            fontStyle={"bold"}
+                        />
+                        <PlainText
+                            title={"Pilih Kategori"}
+                            color={"#000"}
+                            fontSize= {14}
+                            fontStyle={"bold"}
+                        />
+                    </View>
+                    
+                </ModalContent>
+            </Modal>
+        )
+    }
     return (
         <View style={styles.container}>
+            <KategoriModal/>
+            <PointModal/>
              <View>
                 <StatusBar translucent 
                 backgroundColor={WARNA_UTAMA} 
@@ -32,7 +97,7 @@ const CreateQuestion = () => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.content}>
                     <View style={styles.headerContent}>
-                        <TouchableOpacity style={{flexDirection :'row', alignItems:'center'}}>
+                        <TouchableOpacity style={{flexDirection :'row', alignItems:'center'}} onPress={()=> setModalPoint(true)}>
                             <IconPoints/>
                             <PlainText
                                 marginLeft= {10}
@@ -50,7 +115,8 @@ const CreateQuestion = () => {
                             <IconCaretDown style={{marginLeft:10}} fill={WARNA_UTAMA} width={12} height={12} />
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{flexDirection :'row', alignItems:'center'}}>
+                        <TouchableOpacity style={{flexDirection :'row', alignItems:'center'}} onPress={()=>setModalKategori(true)}>
+                            
                            
                             <PlainText
                                 marginLeft= {10}
@@ -98,6 +164,7 @@ const CreateQuestion = () => {
                     </View>
                 </View>
             </ScrollView>
+           
         </View>
     )
 }

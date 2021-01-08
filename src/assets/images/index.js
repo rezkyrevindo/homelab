@@ -13,5 +13,15 @@ import ImgSignup from './img_signup.png'
 import ImgIcon from './img_icon.png'
 import ImgSuccess from './img_success.png'
 import ImgForgotPassword from './img_forgot_password.png'
+import ImgBisnis    from './img_bisnis.png'
+import IconLock from './lock_icon.png'
+import ImgAddAccount from './img_add_account.png'
+import ImgKonfirmasi from './img_konfirmasi.png'
+import ImgPayment from './img_payment.png'
+import ImgWaiting from './img_waiting.png'
+import ImgWithdraw from './img_withdraw.png'
+
+
 export { Logo, LogoHorizontal , DefaultProfile, LoginImg, RegisterImg, VerificationImg, Background, Points,
-ImgLanding, ImgLogin, IconLoading, ImgSignup, ImgIcon, ImgSuccess, ImgForgotPassword}
+ImgLanding, ImgLogin, IconLoading, ImgSignup, ImgIcon, ImgSuccess, ImgForgotPassword, ImgBisnis, IconLock,
+ImgAddAccount, ImgKonfirmasi, ImgPayment, ImgWaiting, ImgWithdraw}

@@ -7,7 +7,7 @@ import {
   ImageBackground,
   Dimensions, StatusBar, TouchableOpacity, 
 } from 'react-native';
-import {IconSetting, DefaultProfile, IconPoints, IconPointsWhite} from '../../assets';
+import {IconSetting, DefaultProfile, IconPoints, IconPointsWhite, IconTopUp, IconWithdraw} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard} from '../../components/';
 import { WARNA_UTAMA, WARNA_DISABLE, OpenSans} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -18,7 +18,7 @@ const windowHeight = Dimensions.get('window').height;
 const headerHeight = windowHeight * 0.25;
 const StatusBarHeight = 30;
 
-const Akun = () => {
+const Akun = ({navigation}) => {
   return (
     <View style={styles.page}>
      <View>
@@ -157,9 +157,9 @@ const Akun = () => {
                         />
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonIcon}>
+                <TouchableOpacity style={styles.buttonIcon} onPress={()=> navigation.navigate("TopUp")}>
                     <View style={styles.buttonIconHeader}>
-                        <IconSetting/>
+                        <IconTopUp/>
                     </View>
                     <View style={styles.buttonIconText}>
                         <PlainText
@@ -169,9 +169,9 @@ const Akun = () => {
                         />
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonIcon}>
+                <TouchableOpacity style={styles.buttonIcon} onPress={() => navigation.navigate("Withdraw")}>
                     <View style={styles.buttonIconHeader}>
-                        <IconSetting/>
+                        <IconWithdraw/>
                     </View>
                     <View style={styles.buttonIconText}>
                         <PlainText
@@ -247,7 +247,6 @@ const styles = StyleSheet.create({
     backgroundColor : WARNA_UTAMA,
     width: windowWidth,
     height: windowHeight * 0.15,
-    marginTop : 10,
     flexDirection : 'row',
     alignItems : 'center'
   },

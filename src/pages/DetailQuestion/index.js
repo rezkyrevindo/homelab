@@ -16,7 +16,7 @@ import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from 
 import {ScrollView} from 'react-native-gesture-handler';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowHeight = Dimensions.get('window').height -56;
 
 const DetailQuestion = ({route, navigation}) => {
     const [solved, setSolved] = useState(true);
@@ -28,13 +28,49 @@ const DetailQuestion = ({route, navigation}) => {
         <View
           style={{
             
-            backgroundColor: WARNA_UTAMA,
+            backgroundColor: "#fff",
             padding: 16,
             height: "100%",
-            borderRadius:20,
-          }}
-        >
-          <Text>Swipe down to close</Text>
+            borderTopEndRadius:20,
+            borderTopStartRadius:20,
+            
+        }}
+        >   
+            <View style={{alignItems:'center'}}>
+            <View style={{width:50, height:3, backgroundColor:WARNA_UTAMA}}/>
+            </View>
+            
+            <View style={styles.bodyContent}>
+                    
+                        <View style={{padding:20, backgroundColor : WARNA_UTAMA, borderTopEndRadius:10, borderTopStartRadius:10}}>
+                            <PlainText
+                                    title={"Tulis jawaban kamu"}
+                                    color={"#000"}
+                                    fontSize= {14}
+                                    fontStyle={"bold"}
+                                />
+                        </View>
+                        <TextInput
+                            numberOfLines={20}
+                            style={styles.inputContainer}
+                            multiline = {true}
+                        />
+                    </View>
+                    <View style={styles.footerContent}>
+                        <IconFont  fill={'#000'} width={24} height={24}/>
+                        <IconDerajat fill={'#000'} width={24} height={24}/>
+                        <IconPicture fill={'#000'} width={24} height={24}/>
+                        <TouchableOpacity
+                                style={styles.btn}
+                            >
+                            <PlainText
+                                    title={"Send"}
+                                    color={"#000"}
+                                    fontSize= {14}
+                                    fontStyle={"bold"}
+                                />
+                        </TouchableOpacity>
+                    </View>
         </View>
       );
     
@@ -91,6 +127,8 @@ const DetailQuestion = ({route, navigation}) => {
                         time = '1 d ago'
                         isRelevant={false}
                         like = '5'
+                        commentar='5'
+                        onPress={() => navigation.navigate("Commentar")}
                         question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
                     />
                     <AnswerCard
@@ -98,6 +136,8 @@ const DetailQuestion = ({route, navigation}) => {
                         time = '1 d ago'
                         isRelevant={false}
                         like = '2'
+                        commentar='5'
+                        onPress={() => navigation.navigate("Commentar")}
                         question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
                     />
                     <View style={{padding:10}}></View>
@@ -105,8 +145,8 @@ const DetailQuestion = ({route, navigation}) => {
             </View>
             { !JSON.stringify(isSolved) != "true" &&
                 <TouchableOpacity
-                    onPress={() => sheetRef.current.snapTo(1)}
-                    style={{height: "7%", backgroundColor:WARNA_UTAMA, alignItems:'center', justifyContent:'center'}}>
+                    onPress={() => sheetRef.current.snapTo(0)}
+                    style={{height: 50, backgroundColor:WARNA_UTAMA, alignItems:'center', justifyContent:'center'}}>
                     <PlainText
                         title={"Answer"}
                         color={"#000"}
@@ -119,7 +159,7 @@ const DetailQuestion = ({route, navigation}) => {
             
             <BottomSheet
                 ref={sheetRef}
-                snapPoints={['80%', "40%", 0]}
+                snapPoints={['90%', "40%", 0]}
                 initialSnap={2}
                 borderRadius={10}
                 renderContent={renderContent}
@@ -147,7 +187,7 @@ const styles = StyleSheet.create({
 
     },
     container: {
-        flex: 1,
+        height:windowHeight,
         backgroundColor : '#FAFAFA',
     },
     headerContent : {

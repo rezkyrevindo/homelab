@@ -16,8 +16,20 @@ import Landing from './Landing'
 import RegisterSuccess from './RegisterSuccess'
 import ForgotPassword from './ForgotPassword'
 import ForgotPasswordSuccess from './ForgotPasswordSuccess'
+import Interest from './Interest'
+import Commentar from './Commentar'
+import TopUp from './TopUp'
+import PembayaranTopUp from './PembayaranTopUp'
+import KonfirmasiTopUp from './KonfirmasiTopUp'
+import WaitingTopUp from './WaitingTopUp'
+import Withdraw from './Withdraw'
+import PilihBank    from './PilihBank'
+import AddAccountBank   from './AddAccountBank'
+import WithdrawDetail from './WithdrawDetail'
+import WithdrawKonfirmasi from './WithdrawKonfirmasi'
 export { Splash, Pesanan, 
     CreateQuestion,
     Akun, Home, Login, Register, Verification , ConfirmationSuccess, Explore, Notification, Chat,
-    MyDetailQuestion, DetailQuestion, Landing, RegisterSuccess, ForgotPassword,ForgotPasswordSuccess
+    MyDetailQuestion, DetailQuestion, Landing, RegisterSuccess, ForgotPassword,ForgotPasswordSuccess, Interest, Commentar,
+    TopUp, PembayaranTopUp, KonfirmasiTopUp, WaitingTopUp, Withdraw, PilihBank, AddAccountBank, WithdrawDetail, WithdrawKonfirmasi
 }

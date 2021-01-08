@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
     backgroundColor : WARNA_UTAMA,
     width: windowWidth,
     height: windowHeight * 0.15,
-    marginTop : 10,
     flexDirection : 'row',
     alignItems : 'center'
   },

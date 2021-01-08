@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import PlainText from '../PlainText'
 import { DefaultProfile, IconPoints, IconLike,IconLikeActive, IconCheck} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
+import FastImage from 'react-native-fast-image'
 const QuestionCard = (props) => {
     return (
         <TouchableOpacity 
@@ -10,7 +11,7 @@ const QuestionCard = (props) => {
          style={styles.cardQuestion}>
             <View style={styles.cardQuestionHeader}>
               <View style={{flexDirection : 'row'}}>
-                <Image source={DefaultProfile} style={{width : 50, height: 50}} />
+                <FastImage source={DefaultProfile} style={{width : 50, height: 50}} />
                 <View 
                 style={{flexDirection : 'column', justifyContent:'space-around', marginLeft: 10}}
                 >
@@ -21,7 +22,7 @@ const QuestionCard = (props) => {
                         fontSize = {13}
                     />
                   <PlainText
-                      title={props.time + ' - ' + props.category}
+                      title={props.time}
                       color={"#000"}
                       fontSize = {11}
                   />
@@ -54,13 +55,12 @@ const QuestionCard = (props) => {
             <View style={styles.cardQuestionFooter}>
               <View style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}}>
                 <View  style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
-                      <IconLike width={18} height={18} fill={'#D7443E'}/>
+                     
                       <PlainText
-                          marginLeft  = {10}
-                          title={props.like + " Like"}
+                          title={"#"+props.category}
                           fontStyle={"bold"}
-                          color={"#000"}
-                          fontSize = {13}
+                          color={"#FF9F31"}
+                          fontSize = {11}
                       />
                 </View>
 
