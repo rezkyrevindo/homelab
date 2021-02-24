@@ -13,6 +13,9 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56;
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
+import Axios from 'axios'
+import Snackbar from 'react-native-snackbar';
+import qs from 'qs'
 
 const Register = ({navigation}) => {
     const [isLoading, setLoading] = useState(false)
@@ -21,6 +24,43 @@ const Register = ({navigation}) => {
     const [namaDepan, setNamaDepan] = useState("")
     const [namaBelakang, setNamaBelakang] = useState("")
     const [confPassword, setConfPassword]= useState("")
+    
+    const submit = async () => {
+        console.log(""+email + password)
+
+        setLoading(true)
+
+        const url = "https://askhomelab.com/api/register"
+        const config = {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+            }
+          }
+        const data = new URLSearchParams()
+        data.append("email", email)
+        data.append("password", password)
+        data.append("first_name", namaDepan)
+        data.append("last_name", namaBelakang)
+        data.append("password_confirmation", confPassword)
+        
+        Axios({
+            method : 'post',
+            url     : url,
+            data : qs.stringify(data),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+            
+        }).then(function(response) {
+            console.log(response.data.messages)
+            setLoading(false)
+        }).catch(function (error) {
+            console.log(error.response.data.errors)
+            setLoading(false)
+        })
+
+
+    }
 
 
     const renderContent = () => (
@@ -84,7 +124,7 @@ const Register = ({navigation}) => {
             <View style={{alignItems:'center'}}>
                 <ButtonPrimary  
                     onPress={() => {
-                        navigation.navigate('RegisterSuccess');
+                        submit()
                     }}
                     title="Continue"
                     width={windowWidth*0.6}

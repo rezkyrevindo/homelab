@@ -9,6 +9,8 @@ import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
 import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator} from '../../components'
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
+import axios from 'axios'
+import qs from 'qs'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
 
@@ -16,6 +18,32 @@ const Login = ({navigation}) => {
     const [isLoading, setLoading] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
+    const submit = async () => {
+        console.log(""+email + password)
+
+        setLoading(true)
+        var data = new FormData();        
+        data.append('email', email)
+        data.append('password', password)
+        const headers = {
+            'Content-Type': 'multipart/form-data'
+          }
+        await axios({
+            method: 'post',
+            url: 'https://askhomelab.com/api/login',
+            data: data
+            })
+            .then(function (response) {
+                setLoading(false)
+                console.log(response);
+            })
+            .catch(function (error) {
+                setLoading(false)
+                console.log(error);
+            });
+
+    }
 
     const renderContent = () => (
         <View style={{height : windowHeight, backgroundColor:'white',}}>
@@ -49,7 +77,7 @@ const Login = ({navigation}) => {
                 <View style={{alignItems:'center'}}>
                     <ButtonPrimary  
                         onPress={() => {
-                            navigation.navigate('Interest');
+                            submit()
                         }}
                         title="Lanjutkan"
                         width={windowWidth*0.6}
