@@ -10,7 +10,7 @@ import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, Loading
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
 import axios from 'axios'
-import qs from 'qs'
+import Snackbar from 'react-native-snackbar';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
 
@@ -21,7 +21,7 @@ const Login = ({navigation}) => {
 
     const submit = async () => {
         console.log(""+email + password)
-
+        // axios.defaults.headers.common['Content-Type'] = 'multipart/form-data';
         setLoading(true)
         var data = new FormData();        
         data.append('email', email)
@@ -29,19 +29,40 @@ const Login = ({navigation}) => {
         const headers = {
             'Content-Type': 'multipart/form-data'
           }
-        await axios({
-            method: 'post',
-            url: 'https://askhomelab.com/api/login',
-            data: data
-            })
-            .then(function (response) {
-                setLoading(false)
-                console.log(response);
-            })
-            .catch(function (error) {
-                setLoading(false)
-                console.log(error);
-            });
+        axios.post('https://askhomelab.com/api/login',
+         data,
+        {
+          headers : {
+            Accept : '*/*',
+            "content-type" :'multipart/form-data'
+          }  
+        })
+          .then(function (response) {
+            Snackbar.show({
+                text: "Login berhasil",
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+              });
+            navigation.navigate('Interest')
+              setLoading(false)
+          })
+          .catch(function (error) {
+                Snackbar.show({
+                text: "Username atau password salah",
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+              });
+              console.log(error.response)
+              setLoading(false)
+          });
 
     }
 

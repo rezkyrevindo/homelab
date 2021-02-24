@@ -13,7 +13,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56;
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
-import Axios from 'axios'
+import axios from 'axios'
 import Snackbar from 'react-native-snackbar';
 import qs from 'qs'
 
@@ -43,21 +43,32 @@ const Register = ({navigation}) => {
         data.append("last_name", namaBelakang)
         data.append("password_confirmation", confPassword)
         
-        Axios({
-            method : 'post',
-            url     : url,
-            data : qs.stringify(data),
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-            }
-            
-        }).then(function(response) {
-            console.log(response.data.messages)
-            setLoading(false)
-        }).catch(function (error) {
-            console.log(error.response.data.errors)
-            setLoading(false)
+        axios.post('https://askhomelab.com/api/register',
+         data,
+        {
+          headers : {
+            Accept : '*/*',
+            "content-type" :'application/x-www-form-urlencoded'
+          }  
         })
+          .then(function (response) {
+            
+            navigation.navigate('RegisterSuccess')
+            setLoading(false)
+          })
+          .catch(function (error) {
+                Snackbar.show({
+                text: error.response.data.message,
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+              });
+              console.log(error.response)
+              setLoading(false)
+          });
 
 
     }
