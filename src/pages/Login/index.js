@@ -1,69 +1,67 @@
 import React, {useState, useEffect} from 'react'
 import {
     StyleSheet,
-    View,
-    Dimensions,StatusBar, TouchableHighlight
+    View,Text,
+    Dimensions,StatusBar, TouchableHighlight, Button
   } from 'react-native';
 import {ImgLogin} from '../../assets';
 import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
 import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator} from '../../components'
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
-import axios from 'axios'
 import Snackbar from 'react-native-snackbar';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
 
+import { useSelector, useDispatch } from 'react-redux';
+import { login } from '../../redux/actions';
+
+
+
 const Login = ({navigation}) => {
+    const { token,data } = useSelector (state => state.authReducers);
+    const dispatch = useDispatch();
+
+    const requestLogin = (email,password) => dispatch(login(email,password));
+
     const [isLoading, setLoading] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    const submit = async () => {
-        console.log(""+email + password)
-        // axios.defaults.headers.common['Content-Type'] = 'multipart/form-data';
-        setLoading(true)
-        var data = new FormData();        
-        data.append('email', email)
-        data.append('password', password)
-        const headers = {
-            'Content-Type': 'multipart/form-data'
-          }
-        axios.post('https://askhomelab.com/api/login',
-         data,
-        {
-          headers : {
-            Accept : '*/*',
-            "content-type" :'multipart/form-data'
-          }  
-        })
-          .then(function (response) {
+    const loginCheck = () =>{
+        if(token == "false"){
             Snackbar.show({
-                text: "Login berhasil",
-                duration: Snackbar.LENGTH_INDEFINITE,
-                action: {
-                    text: 'Ok',
-                    textColor: WARNA_UTAMA,
-                    onPress: () => { /* Do something. */ },
-                },  
-              });
+            text: "Username atau password salah",
+            duration: Snackbar.LENGTH_INDEFINITE,
+            action: {
+                text: 'Ok',
+                textColor: WARNA_UTAMA,
+                onPress: () => { /* Do something. */ },
+            },  
+            });
+            setLoading(false)
+        }else{
+            Snackbar.show({
+            text: "Login berhasil",
+            duration: Snackbar.LENGTH_INDEFINITE,
+            action: {
+                text: 'Ok',
+                textColor: WARNA_UTAMA,
+                onPress: () => { /* Do something. */ },
+            },  
+            });
             navigation.navigate('Interest')
-              setLoading(false)
-          })
-          .catch(function (error) {
-                Snackbar.show({
-                text: "Username atau password salah",
-                duration: Snackbar.LENGTH_INDEFINITE,
-                action: {
-                    text: 'Ok',
-                    textColor: WARNA_UTAMA,
-                    onPress: () => { /* Do something. */ },
-                },  
-              });
-              console.log(error.response)
-              setLoading(false)
-          });
+            setLoading(false)
+        }
+    }
 
+    const submit = async () => {
+        
+        setLoading(true)
+        await requestLogin(email,password).then(
+            () => loginCheck()
+        )
     }
 
     const renderContent = () => (
@@ -73,9 +71,10 @@ const Login = ({navigation}) => {
                 backgroundColor={WARNA_UTAMA} 
                 barStyle="dark-content" />
             </View>
+           
             <View style={styles.body}>
                 <View style={{width:50,height:3, backgroundColor:WARNA_UTAMA, alignSelf:'center', marginTop:20}}></View>
-                  
+               
                 <View style={{alignItems:'center'}}>
                     <InputText 
                         width       = {windowWidth * 0.8}
