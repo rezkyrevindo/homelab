@@ -5,11 +5,11 @@ import { useSelector, useDispatch } from 'react-redux';
 const Splash = ({ navigation }) => {
     const { token,data } = useSelector (state => state.authReducers);
     useEffect(() => {
-        console.log(data + " " + token)
+       
         setTimeout( () => {
-            if(token != 'false' && data[2].categori_id == null){
+            if(token != 'false' && data[2].category_id == null){
                 navigation.replace('Interest')
-            }else if(token != 'false' && data[2].categori_id != null){
+            }else if(token != 'false' && data[2].category_id != null){
                 navigation.replace('MainApp');
             }else{
                 navigation.replace('Landing');

@@ -145,10 +145,9 @@ const Router = () => {
       <Stack.Screen name="Interest" component={Interest} 
          options={
         {
-          headerTitle : 'Pilih minatmu',
+          headerTitle : 'Pilih Minatmu',
           headerTitleStyle:{
             alignSelf : 'center',
-            marginLeft : -60,
             
           },
         }}

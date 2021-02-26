@@ -33,6 +33,7 @@ const Home = ({navigation}) => {
   const RenderContent = () => (
         
         <View style={styles.content}>
+        
             <View style={{flexDirection : 'row', justifyContent :'space-between', alignItems:'center', marginTop:20}}>
               <PlainText
                     title={"Your Last Questions "}
@@ -211,6 +212,11 @@ const Home = ({navigation}) => {
 
   return (
     <View style={styles.page}>
+    <View>
+                <StatusBar  
+                backgroundColor={WARNA_UTAMA} 
+                barStyle="dark-content" />
+            </View>
     <ScrollView  showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.headerWrap}>

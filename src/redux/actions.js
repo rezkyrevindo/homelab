@@ -53,3 +53,29 @@ export const login = (email,password) => {
         console.log(error)
     }
 };
+
+export const updateProfile = (token) => {
+    try {
+         return async dispatch => {
+        
+           
+            axios.get('https://askhomelab.com/api/view_setting', {
+                headers: {
+                    "Authorization" : 'Bearer ' + token
+                }
+            }).then(function (res){
+                dispatch({
+                    type : UPDATE_PROFILE,
+                    payload : res.data
+                })
+                console.log(res.data)
+            }).catch(function (err){
+                console.log(err)
+            });
+            
+        }
+    }catch (error){
+        console.log(error)
+    }
+};
+
