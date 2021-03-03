@@ -136,28 +136,7 @@ const Interest = ({navigation}) => {
                         }
                         
                         
-                        {/* <TouchableHighlight  >
-                            <View  style={{alignItems:'center'}}>
-                                <FastImage 
-                                    style={styles.logo_lock} 
-                                    source={ImgBisnis}
-                                    resizeMode={FastImage.resizeMode.contain}
-                                ></FastImage>
-                                <FastImage 
-                                    style={{width:40, height:40, marginTop: -windowHeight * 0.13}} 
-                                    source={IconLock}
-                                    resizeMode={FastImage.resizeMode.contain}
-                                ></FastImage>
-                                
-                                <PlainText
-                                    fontSize={18}
-                                    title="IT"
-                                    fontStyle={"bold"}
-                                    color={"#000"}    
-                                />
-                            </View>
-                            
-                        </TouchableHighlight> */}
+                       
                     </SafeAreaView>
                 </SafeAreaView>
             }

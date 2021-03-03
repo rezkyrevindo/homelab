@@ -20,8 +20,12 @@ import ImgKonfirmasi from './img_konfirmasi.png'
 import ImgPayment from './img_payment.png'
 import ImgWaiting from './img_waiting.png'
 import ImgWithdraw from './img_withdraw.png'
+import ImgNothingAnswer from './img_nothing_answer.png'
+import ImgNothingAsked from './img_nothing_asked.png'
+import ImgNothingQuestion from './img_nothing_question.png'
 
 
 export { Logo, LogoHorizontal , DefaultProfile, LoginImg, RegisterImg, VerificationImg, Background, Points,
 ImgLanding, ImgLogin, IconLoading, ImgSignup, ImgIcon, ImgSuccess, ImgForgotPassword, ImgBisnis, IconLock,
-ImgAddAccount, ImgKonfirmasi, ImgPayment, ImgWaiting, ImgWithdraw}
+ImgAddAccount, ImgKonfirmasi, ImgPayment, ImgWaiting, ImgWithdraw, ImgNothingAsked,
+ImgNothingAnswer, ImgNothingQuestion}

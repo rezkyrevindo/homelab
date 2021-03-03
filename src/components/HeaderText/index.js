@@ -5,13 +5,13 @@ import {WARNA_UTAMA, WARNA_DISABLE, OpenSans, OpenSansBold} from '../../utils/co
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const HeaderText = ({title, marginTop, textAlign, marginLeft, fontSize}) => {
+const HeaderText = ({title, marginTop, textAlign, marginLeft, fontSize, color, opacity}) => {
     return (
         <View marginTop={marginTop}
         marginLeft={marginLeft}
         alignItems={textAlign}>
             <Text         
-            style={styles.textLogin(fontSize)}
+            style={styles.textLogin(fontSize,color,opacity)}
              >
             {title}
         </Text>
@@ -23,9 +23,11 @@ const HeaderText = ({title, marginTop, textAlign, marginLeft, fontSize}) => {
 export default HeaderText
 
 const styles = StyleSheet.create({
-    textLogin: (fontSize) =>({
+    textLogin: (fontSize, color, opacity) =>({
         fontSize : fontSize != null ? fontSize : 29,
         fontFamily: OpenSansBold,
+        color       : color != null ? color : "#000",
+        opacity     : opacity != null ?  opacity : 1, 
         
     }),
 })
