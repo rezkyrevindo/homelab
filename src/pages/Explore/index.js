@@ -32,6 +32,14 @@ const Explore = ({navigation}) => {
   const [selectedPoint, setSelectedPoint] = useState("25")
   const [isLoadingContent, setLoadingContent] = useState(false)
   const listPoints = [{id:'25', name:'25'}, {id:'15', name:'15'} , {id:'10', name:'10'}]
+  const [selectedQuestion, setSelectedQuestion] = useState(null)
+
+
+  useEffect(() => {
+    if(selectedQuestion != null)
+    navigation.navigate('DetailQuestion', {isSolved: selectedQuestion.Solved_Status,id_question: selectedQuestion.id_Question });
+  }, [selectedQuestion])
+
   useEffect(() => {
     getCategory()
   }, [])
@@ -182,7 +190,7 @@ const Explore = ({navigation}) => {
       return (
         <QuestionCard
           onPress={() => {
-                  navigation.navigate('MyDetailQuestion');
+                  setSelectedQuestion(item)
               }}
           name = {item.User_Question}
           category = {item.Sub_Category}

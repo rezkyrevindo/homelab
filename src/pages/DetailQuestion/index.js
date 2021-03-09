@@ -3,26 +3,91 @@ import {
   StyleSheet,
   Text,
   Image,
-  View,
+  View,SafeAreaView, FlatList,
   Modal,
   TouchableHighlight, TextInput, Alert,
   Dimensions, StatusBar, TouchableOpacity, 
 } from 'react-native';
-
+import axios from 'axios'
 import BottomSheet from 'reanimated-bottom-sheet';
 import {IconCaretDown, IconDerajat,IconPicture,IconFont, IconPoints} from '../../assets';
-import {PlainText, HeaderText, InputText,AnswerCard,  QuestionCard} from '../../components/';
+import {PlainText, HeaderText, InputText,AnswerCard,  QuestionCard, LoadingIndicator} from '../../components/';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
-
+import { useSelector, useDispatch } from 'react-redux';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56;
 
 const DetailQuestion = ({route, navigation}) => {
+    const { token,data } = useSelector (state => state.authReducers);
     const [solved, setSolved] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
-    const {isSolved} = route.params;
+    const {isSolved, id_question} = route.params;
+    const [isLoading, setLoading] = useState(false)
 
+    const [dataQuestion, setDataQuestion] = useState([])
+    const [dataAnswer, setDataAnswer] = useState([])
+
+    useEffect(() => {
+        getDataQuestion()
+    }, [])
+
+
+    const getDataQuestion = async () =>{
+        setLoading(true)
+        var data = new FormData()
+        data.append('id_question' , id_question)
+        axios.post('https://askhomelab.com/api/detail_question',
+        data,
+        {
+            headers : {
+            Accept : '*/*',
+            "content-type" :'multipart/form-data',
+            "Authorization" : "Bearer "+token
+            }  
+        })
+            .then(function (response) {
+                if (response.data){
+                    setDataQuestion(response.data.Question)
+                    setDataAnswer(response.data.Sub_Question)
+                    console.log(dataAnswer)
+                    
+                }else{
+                    setDataQuestion(null)
+                    console.info("Unable to fetch data from API")
+                    console.log(listQuestion)
+                }
+                setLoading(false)
+            })
+            .catch(function (error) {
+                setLoading(false)
+                console.error(error.response.status)
+            });
+    }
+
+    const renderAnswer = ({item}) =>{
+        var jum_commentar = 0; 
+        console.log(item[1].map(data=>{
+            if(data.comment == "comment_is_null"){
+                jum_commentar = "No"
+            }else{
+                jum_commentar = item[1].length
+            }
+            
+        }))
+        
+        return (
+            <AnswerCard
+                name = {item[0].answer.First_Name_Answer + " "+item[0].answer.Last_Name_Answer}
+                time = {item[0].answer.Date_Answer}
+                isRelevant={item[0].Is_Relevant}
+                like = {item[0].answer.Total_Like}
+                commentar={jum_commentar}
+                onPress={() => navigation.navigate("Commentar")}
+                question={item[0].answer.Answer}
+            />
+        )
+    }
 
     const renderContent = () => (
         <View
@@ -76,94 +141,113 @@ const DetailQuestion = ({route, navigation}) => {
     
     const sheetRef = React.useRef(null);
     
+
     return (
         <View style={styles.container}>
-        
-            { JSON.stringify(isSolved) == "true" &&
-                <View style={{height: 80, backgroundColor:WARNA_SUCCESS, alignItems:'center', justifyContent:'center'}}>
-                    <PlainText
-                        title={"Question Solved"}
-                        color={"#fff"}
-                        fontStyle={"bold"}
-                        fontSize = {14}
-                    />
-                    <PlainText
-                        title={"Jawaban relevan "}
-                        color={"#fff"}
-                        fontSize = {11}
-                    />
-                    <PlainText
-                        title={"adalah jawaban yang ada tanda centang"}
-                        color={"#fff"}
-                        fontSize = {11}
-                    />
-                </View>
+            {isLoading &&
+                <LoadingIndicator/>
             }
-            <View style={{height:'93%'}}>
-                <ScrollView showsVerticalScrollIndicator={false} style={{paddingHorizontal : windowWidth * 0.05}}>
-                    <QuestionCard
-                        name = 'Rezky Revindo'
-                        category = 'Matematika'
-                        time = '1 d ago'
-                        point = '+5'
-                        isSolved={false}
-                        answer = '2'
-                        like = '1'
-                        question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
-                    />
+            {!isLoading &&
+                <View>
+                { isSolved == "1" &&
+                    <View style={{height: 80, backgroundColor:WARNA_SUCCESS, alignItems:'center', justifyContent:'center'}}>
+                        <PlainText
+                            title={"Question Solved"}
+                            color={"#fff"}
+                            fontStyle={"bold"}
+                            fontSize = {14}
+                        />
+                        <PlainText
+                            title={"Jawaban relevan "}
+                            color={"#fff"}
+                            fontSize = {11}
+                        />
+                        <PlainText
+                            title={"adalah jawaban yang ada tanda centang"}
+                            color={"#fff"}
+                            fontSize = {11}
+                        />
+                    </View>
+                }
+                <View style={{height:'93%'}}>
+                    <ScrollView showsVerticalScrollIndicator={false} style={{paddingHorizontal : windowWidth * 0.05}}>
+                        <QuestionCard
+                            name = {dataQuestion.First_Name_Question + " " + dataQuestion.Last_Name_Question}
+                            category = {dataQuestion.Sub_Kategori_Question}
+                            time = {dataQuestion.Date_Question}
+                            point = {"+"+dataQuestion.Point_Question}
+                            isSolved={dataQuestion.Solved_Question}
+                            question={dataQuestion.Content_Question}
+                        />
 
-                    <View style={{flexDirection : 'row', justifyContent :'space-between', alignItems:'center', marginTop:20}}>
+                        <View style={{flexDirection : 'row', justifyContent :'space-between', alignItems:'center', marginTop:20}}>
+                            <PlainText
+                                title={"Answer"}
+                                color={"#000"}
+                                fontStyle={"bold"}
+                                fontSize = {14}
+                            />
+                            
+                        </View>
+
+                        <SafeAreaView style={{flex :1}}
+                            >
+                            {/* <LoadAnswer/> */}
+                            <FlatList
+                            data={dataAnswer}
+                            // keyExtractor={(item) => item[0].answer_0.id_Question.toString()}
+                            renderItem={renderAnswer}
+                            showsVerticalScrollIndicator={false}
+                            />
+                            
+                            {/* { listQuestionSearch == null &&
+                                <View style={{flexDirection :'row', alignItems:'center',alignContent:'center',
+                                justifyContent:'center', marginTop:50}}>
+                                <FastImage
+                                    style={{  width: 300, height: 300 }}
+                                    source={ImgNothingQuestion}
+                                    resizeMode={FastImage.resizeMode.contain}
+                                />
+                                </View>
+                            } */}
+                            
+                            </SafeAreaView>
+                        {/* <AnswerCard
+                            name = 'Rezky Revindo'
+                            time = '1 d ago'
+                            isRelevant={false}
+                            like = '2'
+                            commentar='5'
+                            onPress={() => navigation.navigate("Commentar")}
+                            question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
+                        /> */}
+                        <View style={{padding:10}}></View>
+                    </ScrollView>
+                </View>
+                { !JSON.stringify(isSolved) != "true" &&
+                    <TouchableOpacity
+                        onPress={() => sheetRef.current.snapTo(0)}
+                        style={{height: 50, backgroundColor:WARNA_UTAMA, alignItems:'center', justifyContent:'center'}}>
                         <PlainText
                             title={"Answer"}
                             color={"#000"}
                             fontStyle={"bold"}
                             fontSize = {14}
                         />
-                        
-                    </View>
-
-                    <AnswerCard
-                        name = 'Rezky Revindo'
-                        time = '1 d ago'
-                        isRelevant={false}
-                        like = '5'
-                        commentar='5'
-                        onPress={() => navigation.navigate("Commentar")}
-                        question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
-                    />
-                    <AnswerCard
-                        name = 'Rezky Revindo'
-                        time = '1 d ago'
-                        isRelevant={false}
-                        like = '2'
-                        commentar='5'
-                        onPress={() => navigation.navigate("Commentar")}
-                        question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
-                    />
-                    <View style={{padding:10}}></View>
-                </ScrollView>
-            </View>
-            { !JSON.stringify(isSolved) != "true" &&
-                <TouchableOpacity
-                    onPress={() => sheetRef.current.snapTo(0)}
-                    style={{height: 50, backgroundColor:WARNA_UTAMA, alignItems:'center', justifyContent:'center'}}>
-                    <PlainText
-                        title={"Answer"}
-                        color={"#000"}
-                        fontStyle={"bold"}
-                        fontSize = {14}
-                    />
-                   
-                </TouchableOpacity>
+                    
+                    </TouchableOpacity>
+                }
+                
+                <BottomSheet
+                    ref={sheetRef}
+                    snapPoints={['90%', "40%", 0]}
+                    initialSnap={2}
+                    borderRadius={10}
+                    renderContent={renderContent}
+                />
+                </View>
             }
             
-            <BottomSheet
-                ref={sheetRef}
-                snapPoints={['90%', "40%", 0]}
-                initialSnap={2}
-                borderRadius={10}
-                renderContent={renderContent}
-            />
            
         </View>
         

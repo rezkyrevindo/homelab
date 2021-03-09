@@ -1,4 +1,4 @@
-import { LOGIN, UPDATE_PROFILE } from './actions';
+import { LOGIN, UPDATE_PROFILE, LOGOUT } from './actions';
 
 const initialState = {
     data : [],
@@ -11,6 +11,12 @@ function authReducers(state = initialState, action) {
             return { ...state, token: action.payload.token };
         case UPDATE_PROFILE:
             return { ...state, data: action.payload};
+        case LOGOUT :
+            return (
+              {...state, data : []},
+              {...state, token : 'false'} )
+            
+
         default:
             return state;
     }

@@ -79,3 +79,36 @@ export const updateProfile = (token) => {
     }
 };
 
+export const logout = (token) =>{
+    try{
+        return async dispatch => {
+        // axios.post('https://askhomelab.com/api/logout',
+        // {
+        //     headers : {
+        //     Accept : '*/*',
+        //     "content-type" :'multipart/form-data',
+        //     "Authorization" : "Bearer "+token
+        //     }  
+        // })
+        //     .then(function (response) {
+        //         if (response.data.message != "No Associated Data"){
+        //             navigation.replace("Landing")
+        //         }else{
+                  
+        //         }
+                
+        //     })
+        //     .catch(function (error) {
+            
+        //         console.error(error.response.data)
+            // });
+
+            dispatch({
+                type : LOGOUT
+            })
+        }
+    }catch (error){
+
+    }
+}
+

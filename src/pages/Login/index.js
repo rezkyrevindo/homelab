@@ -51,7 +51,12 @@ const Login = ({navigation}) => {
                 onPress: () => { /* Do something. */ },
             },  
             });
-            navigation.navigate('Interest')
+            if ( data[2].category_id != null){
+                navigation.navigate('MainApp')
+            }else{
+                navigation.navigate('Interest')
+            }
+            
             setLoading(false)
         }
     }

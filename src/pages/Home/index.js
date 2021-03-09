@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
   Dimensions, StatusBar, TouchableOpacity, 
 } from 'react-native';
-import {IconSearchActive, ImgNothingQuestion, IconPoints} from '../../assets';
+import {IconSearchActive, ImgNothingAsked,ImgNothingQuestion, IconPoints} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard, LoadingIndicator} from '../../components/';
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
@@ -17,13 +17,15 @@ import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux';
 
 
+
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height-56;
 const headerHeight = windowHeight * 0.25;
 const StatusBarHeight = 30;
 
 const Home = ({navigation}) => {
-  
+  const [selectedQuestion, setSelectedQuestion] = useState(null)
   const { token,data } = useSelector (state => state.authReducers);
   const [search, setSearch] = useState("")
   const [isSearch, setIsSearch] = useState(false)
@@ -31,8 +33,12 @@ const Home = ({navigation}) => {
   const [isLoading, setLoading] = useState(false)
 
 
+  useEffect(() => {
+    if(selectedQuestion != null)
+    navigation.navigate('DetailQuestion', {isSolved: selectedQuestion.Solved_Status,id_question: selectedQuestion.id_Question });
+  }, [selectedQuestion])
 
-
+  
 
   const getSearchingQuestion = async () =>{
       if(search == ""){
@@ -74,7 +80,7 @@ const Home = ({navigation}) => {
     return (
       <QuestionCard
         onPress={() => {
-                navigation.navigate('MyDetailQuestion');
+              setSelectedQuestion(item)
             }}
         name = {item.User_Question}
         category = {item.Sub_Category}
@@ -107,8 +113,15 @@ const Home = ({navigation}) => {
               </TouchableOpacity>
             </View>
 
-
-            <QuestionCard
+            <View style={{flexDirection :'row', alignItems:'center',alignContent:'center',
+                justifyContent:'center', marginTop:50}}>
+                <FastImage
+                    style={{  width: 200, height: 200 }}
+                    source={ImgNothingAsked}
+                    resizeMode={FastImage.resizeMode.contain}
+                />
+                </View>
+            {/* <QuestionCard
               onPress={() => {
                       navigation.navigate('MyDetailQuestion');
                   }}
@@ -120,7 +133,7 @@ const Home = ({navigation}) => {
               answer = '2'
               like = '1'
               question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
-            />
+            /> */}
             
             
 
@@ -134,7 +147,7 @@ const Home = ({navigation}) => {
               
             </View>
 
-            <QuestionCard
+            {/* <QuestionCard
               onPress={() => {
                   navigation.navigate('DetailQuestion',{
                     isSolved: true 
@@ -175,7 +188,7 @@ const Home = ({navigation}) => {
               like = '1'
               question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
             />
-           
+            */}
         </View>
         
   );
@@ -260,7 +273,7 @@ const Home = ({navigation}) => {
                 <HeaderText
                     marginTop = {windowHeight * 0.01}
                     fontSize  = {24}
-                    title={"Mulai Bertanya"}
+                    title={"Ask Question ?"}
                 />
               </View>
               <View style={{

@@ -4,9 +4,8 @@ import PlainText from '../PlainText'
 import { DefaultProfile, IconPoints, IconLike,IconLikeActive, IconCheck} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
 import FastImage from 'react-native-fast-image'
-
 function hitungSelisihHari(tgl1){
-  var miliday =  60 * 60 * 1000;
+  var miliday = 60 * 60 * 1000;
 
   var tanggal1 = new Date(tgl1);
   var tanggal2 = new Date();
@@ -15,11 +14,14 @@ function hitungSelisihHari(tgl1){
   var tglKedua = Date.parse(tanggal2);
 
   var selisih = (tglKedua - tglPertama) / miliday;
-  if (selisih > 24){
+  if (selisih >= 24){
     selisih = selisih/24
     return Math.floor(selisih) + " days ago"
-  }else{
+  }else if (selisih < 24 && selisih > 1){
     return Math.floor(selisih) + " hours ago"
+  }else{
+    selisih = selisih * 60
+    return Math.floor(selisih) + " minutes ago"
   }
 }
 const QuestionCard = (props) => {

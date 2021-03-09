@@ -11,7 +11,9 @@ import {IconSetting, DefaultProfile, IconPoints, IconPointsWhite, IconTopUp, Ico
 import {PlainText, HeaderText, InputText, QuestionCard} from '../../components/';
 import { WARNA_UTAMA, WARNA_DISABLE, OpenSans} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
-
+import axios from 'axios'
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../redux/actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -19,6 +21,35 @@ const headerHeight = windowHeight * 0.25;
 const StatusBarHeight = 30;
 
 const Akun = ({navigation}) => {
+    const { token,data } = useSelector (state => state.authReducers);
+    const dispatch = useDispatch();
+
+    const requestLogout = (token) => dispatch(logout(token));
+    // const requestLogout = async() => {
+    //     axios.post('https://askhomelab.com/api/logout',
+        
+    //     {
+    //         headers : {
+    //         Accept : '*/*',
+    //         "content-type" :'multipart/form-data',
+    //         "Authorization" : "Bearer "+token
+    //         }  
+    //     })
+    //         .then(function (response) {
+    //             if (response.data.message != "No Associated Data"){
+    //                 navigation.replace("Landing")
+    //             }else{
+                  
+    //             }
+                
+    //         })
+    //         .catch(function (error) {
+            
+    //             console.error(error.response.data)
+    //         });
+    // }
+   
+
   return (
     <View style={styles.page}>
      <View>
@@ -55,13 +86,13 @@ const Akun = ({navigation}) => {
                
                 <View style={{alignItems : 'center'}}>
                     <PlainText
-                        title={"Samantha"}
+                        title={data[2].first_name}
                         color={"#000"}
                         fontStyle={"bold"}
                         fontSize = {16}
                     /> 
                     <PlainText
-                        title={"@Username"}
+                        title={data[2].email}
                         color={'#111111'}
                         fontSize = {11}
                     /> 
@@ -86,7 +117,7 @@ const Akun = ({navigation}) => {
                    <IconPointsWhite />
                     <View style={{ alignItems:'flex-end'}}>
                         <PlainText
-                            title={"1200"}
+                            title={data[2].point}
                             color={'#111111'}
                             fontSize = {24}
                             fontStyle={'bold'}
@@ -103,7 +134,7 @@ const Akun = ({navigation}) => {
                    
                     <View style={{alignItems:'center', }}>
                         <PlainText
-                            title={"2"}
+                            title={data[0].total_question}
                             color={WARNA_UTAMA}
                             fontSize = {13}
                             fontStyle={'bold'}
@@ -116,7 +147,7 @@ const Akun = ({navigation}) => {
                     </View>
                     <View style={{alignItems:'center', }}>
                         <PlainText
-                            title={"10"}
+                            title={data[1].total_answer}
                             color={WARNA_UTAMA}
                             fontSize = {13}
                             fontStyle={'bold'}
@@ -216,6 +247,20 @@ const Akun = ({navigation}) => {
                     <View style={styles.buttonIconText}>
                         <PlainText
                             title={"History"}
+                            color={"#000"}
+                            fontSize = {12}
+                        />
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonIcon}
+                    onPress = { () => requestLogout().then(()=> navigation.replace("Landing"))} 
+                >
+                    <View style={styles.buttonIconHeader}>
+                        <IconSetting/>
+                    </View>
+                    <View style={styles.buttonIconText}>
+                        <PlainText
+                            title={"Logout"}
                             color={"#000"}
                             fontSize = {12}
                         />
