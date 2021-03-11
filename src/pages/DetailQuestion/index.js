@@ -27,11 +27,68 @@ const DetailQuestion = ({route, navigation}) => {
 
     const [dataQuestion, setDataQuestion] = useState([])
     const [dataAnswer, setDataAnswer] = useState([])
-
+    const [reference, setReference] = useState(null)
+    const [type_reference, setTypeReference] = useState(null)
+    const [content, setContent] = useState("")
+    const listType = [{'name': 'url'}, {"name" : "file"}, {"name" : "book"}]
     useEffect(() => {
         getDataQuestion()
     }, [])
 
+    const addAnswer = async () => {
+        setLoading(true)
+        var data = new FormData()
+        data.append('id_question', id_question)
+        // data.append('img', img)
+        data.append('answer', content)
+        data.append('reference', reference)
+        data.append('type_reference', "url")
+
+        axios.post ('https://askhomelab.com/api/create_answer',
+        data,
+        {
+            headers : {
+                Accept : '*/*',
+                "content-type" :'multipart/form-data',
+                "Authorization" : "Bearer "+token
+                }  
+        }).then(function(response) {
+            
+            getDataQuestion()
+            console.log(response.data)
+            setLoading(false)
+        }).catch(function(error){
+            setLoading(false)
+            console.error(error.response.status)
+        })
+    }
+
+    const TypeModal = ()=>{
+        return (
+            <Modal
+                visible={modalKategori}
+                onTouchOutside={() => { setModalKategori(false)}}
+            >
+                <ModalContent>
+                    <View style={{ width:windowWidth*0.5, alignItems:'center'}}>
+                        
+                    <SafeAreaView style={{marginTop:10, flexDirection : 'row', paddingBottom : 5}}>
+                        <FlatList
+                        maxHeight={windowHeight * 0.4}
+                        data={listKategori}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={RenderKategori}
+                        showsHorizontalScrollIndicator={false}
+                        extraData={selectedKategori}
+                        />
+                        
+                    </SafeAreaView>
+                    </View>
+                    
+                </ModalContent>
+            </Modal>
+        )
+    }
 
     const getDataQuestion = async () =>{
         setLoading(true)
@@ -83,7 +140,7 @@ const DetailQuestion = ({route, navigation}) => {
                 isRelevant={item[0].Is_Relevant}
                 like = {item[0].answer.Total_Like}
                 commentar={jum_commentar}
-                onPress={() => navigation.navigate("Commentar")}
+                onPress={() => navigation.navigate("Commentar", {listCommentar : item[1], id_answer : item[0].answer.Id_Answer, isSolved, id_question})}
                 question={item[0].answer.Answer}
             />
         )
@@ -105,7 +162,7 @@ const DetailQuestion = ({route, navigation}) => {
             <View style={{width:50, height:3, backgroundColor:WARNA_UTAMA}}/>
             </View>
             
-            <View style={styles.bodyContent}>
+                    <View style={styles.bodyContent}>
                     
                         <View style={{padding:20, backgroundColor : WARNA_UTAMA, borderTopEndRadius:10, borderTopStartRadius:10}}>
                             <PlainText
@@ -113,20 +170,46 @@ const DetailQuestion = ({route, navigation}) => {
                                     color={"#000"}
                                     fontSize= {14}
                                     fontStyle={"bold"}
+                                    
                                 />
                         </View>
                         <TextInput
                             numberOfLines={20}
                             style={styles.inputContainer}
                             multiline = {true}
+                            onChangeText= {(text) => setContent(text)}
+                            value={content}
                         />
                     </View>
+                    
+                    <View style={styles.bodyContent}>
+                    
+                        <View style={{padding:20, backgroundColor : WARNA_UTAMA, borderTopEndRadius:10, borderTopStartRadius:10}}>
+                            <PlainText
+                                    title={"Referensi Jawaban Kamu"}
+                                    color={"#000"}
+                                    fontSize= {14}
+                                    fontStyle={"bold"}
+                                    
+                                />
+                        </View>
+                        
+                        <TextInput
+                            numberOfLines={1}
+                            style={styles.inputContainer}
+                            multiline = {true}
+                            onChangeText= {(text) => setReference(text)}
+                            value={reference}
+                        />
+                    </View>
+
                     <View style={styles.footerContent}>
                         <IconFont  fill={'#000'} width={24} height={24}/>
                         <IconDerajat fill={'#000'} width={24} height={24}/>
                         <IconPicture fill={'#000'} width={24} height={24}/>
                         <TouchableOpacity
                                 style={styles.btn}
+                                onPress= {()=> addAnswer()}
                             >
                             <PlainText
                                     title={"Send"}
