@@ -9,7 +9,7 @@ function hitungSelisihHari(tgl1){
 
   var tanggal1 = new Date(tgl1);
   var tanggal2 = new Date();
-
+  console.log(tgl1)
   var tglPertama = Date.parse(tanggal1);
   var tglKedua = Date.parse(tanggal2);
 
@@ -88,12 +88,12 @@ const QuestionCard = (props) => {
 
               
 
-                {/* <PlainText
+                <PlainText
                   title={props.answer + " Answer"}
                   fontStyle={"bold"}
                   color={"#000"}
                   fontSize = {13}
-                  /> */}
+                  />
                 
                
               </View>

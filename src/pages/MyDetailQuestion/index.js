@@ -15,8 +15,10 @@ import {ScrollView} from 'react-native-gesture-handler';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const MyDetailQuestion = (props) => {
-    const [solved, setSolved] = useState(false);
+const MyDetailQuestion = ({route,navigation}) => {
+    
+    const {isSolved, id_question} = route.params;
+    const [solved, setSolved] = useState(isSolved);
     return (
         <View style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false} style={{paddingHorizontal : windowWidth * 0.05}}>

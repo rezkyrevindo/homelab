@@ -10,13 +10,10 @@ import {
 import {IconSearchActive, ImgNothingAsked,ImgNothingQuestion, IconPoints} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard, LoadingIndicator} from '../../components/';
 import FastImage from 'react-native-fast-image'
-import BottomSheet from 'reanimated-bottom-sheet';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_DISABLE, OpenSansBold, OpenSans} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
 import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux';
-
-
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -31,14 +28,72 @@ const Home = ({navigation}) => {
   const [isSearch, setIsSearch] = useState(false)
   const [listQuestionSearch , setListQuestionSearch] = useState([])
   const [isLoading, setLoading] = useState(false)
+  const [listMyQuestion, setListMyQuestion] = useState([])
+  const [displayHome, setDisplayHome] = useState(0)
+  const [selectedMyQuestion, setSelectedMyQuestion] = useState(null)
 
 
   useEffect(() => {
     if(selectedQuestion != null)
     navigation.navigate('DetailQuestion', {isSolved: selectedQuestion.Solved_Status,id_question: selectedQuestion.id_Question });
   }, [selectedQuestion])
+  useEffect(() => {
+    if(selectedMyQuestion != null)
+    navigation.navigate('MyDetailQuestion', {isSolved: selectedMyQuestion.Solved_Status,id_question: selectedMyQuestion.id_Question });
+  }, [selectedMyQuestion])
 
-  
+  useEffect(() => {
+    getMyQuestion()
+  }, [])
+
+  const filterQuestion = (question)=>{
+      
+      console.log("Size array : "+listMyQuestion.length)
+      if( listMyQuestion.length == 0){
+        var i = 0
+        question.map((data) =>{
+          if( data.Solved_Status == 0  && i < 3){
+            const newArray = listMyQuestion
+            newArray.push(data)
+            
+            setListMyQuestion(newArray)
+            i+=1
+            
+          }
+        })
+      }else{
+        const newArray = listMyQuestion
+        setListMyQuestion(newArray)
+      }
+      
+  }
+
+  const getMyQuestion = async () => {
+    setLoading(true)
+    axios({
+        method :'get',
+        url :'https://askhomelab.com/api/my_question',
+        headers :{
+            "Authorization" : "Bearer "+token
+        }
+    }) .then(function (response) {
+        if (response.data.My_Question.length > 0){
+          setListMyQuestion([])
+          filterQuestion(response.data.My_Question)
+          
+          
+          console.log(response.data.My_Question)
+        }else{
+          setListMyQuestion(null)
+          console.info("Unable to fetch data from API")
+        }
+        setLoading(false)
+    })
+    .catch(function (err) {
+      setLoading(false)
+        console.error(err.response)
+    });  
+  }
 
   const getSearchingQuestion = async () =>{
       if(search == ""){
@@ -77,6 +132,7 @@ const Home = ({navigation}) => {
      
   }
   const renderItem = ({item}) =>{
+    
     return (
       <QuestionCard
         onPress={() => {
@@ -87,11 +143,35 @@ const Home = ({navigation}) => {
         time = {item.Date_Created}
         point = {item.Total_Point}
         isSolved={item.Solved_Status}
-        answer = '2'
+        answer = {item.Total_Answer}
         question={item.Content_Question}
       />
     )
+    
   }
+
+  const renderItemMyQuestion = ({item}) =>{
+    
+    if(displayHome == 0 && item.Solved_Status == "0" && displayHome <= 3){
+      
+      return (
+        <QuestionCard
+          onPress={() => {
+                setSelectedMyQuestion(item)
+              }}
+          name = {item.User_Question}
+          category = {item.Sub_Category}
+          time = {item.Date_Created}
+          point = {item.Total_Point}
+          isSolved={item.Solved_Status}
+          answer = {item.Total_Answer}
+          question={item.Content_Question}
+        />
+      )
+      
+    }
+  }
+
 
   const RenderContent = () => (
         
@@ -112,15 +192,27 @@ const Home = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
-
-            <View style={{flexDirection :'row', alignItems:'center',alignContent:'center',
-                justifyContent:'center', marginTop:50}}>
-                <FastImage
-                    style={{  width: 200, height: 200 }}
-                    source={ImgNothingAsked}
-                    resizeMode={FastImage.resizeMode.contain}
+              { listMyQuestion != null &&
+                  <FlatList
+                data={listMyQuestion}
+                keyExtractor={(item) => item.id_Question.toString()}
+                renderItem={renderItemMyQuestion}
+                showsVerticalScrollIndicator={false}
+                
                 />
-                </View>
+              }
+              { listMyQuestion == null &&
+                <View style={{flexDirection :'row', alignItems:'center',alignContent:'center',
+                justifyContent:'center', marginTop:50}}>
+                  <FastImage
+                      style={{  width: 300, height: 300 }}
+                      source={ImgNothingAsked}
+                      resizeMode={FastImage.resizeMode.contain}
+                  />
+               </View>
+              }
+
+            
             {/* <QuestionCard
               onPress={() => {
                       navigation.navigate('MyDetailQuestion');

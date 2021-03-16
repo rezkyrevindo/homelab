@@ -197,7 +197,7 @@ const Explore = ({navigation}) => {
           time = {item.Date_Created}
           point = {item.Total_Point}
           isSolved={item.Solved_Status}
-          answer = '2'
+          answer = {item.Total_Answer}
           question={item.Content_Question}
         />
       )
