@@ -4,7 +4,8 @@ import PlainText from '../PlainText'
 import { DefaultProfile, IconLike, IconLikeActive, IconCheck} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
 import FastImage from 'react-native-fast-image'
-
+import axios from 'axios'
+import { useSelector, useDispatch } from 'react-redux';
 
 function hitungSelisihHari(tgl1){
   var miliday = 60 * 60 * 1000;
@@ -27,6 +28,30 @@ function hitungSelisihHari(tgl1){
   }
 }
 const AnswerCard = (props) => {
+  const { token,data } = useSelector (state => state.authReducers);
+  const [like, setLike] = useState(props.like)
+  const [isLike, setIsLike] = useState(false)
+  const addLike = () =>{
+    var data = new FormData()
+    data.append('id_answer', props.id_answer)
+
+    axios.post ('https://askhomelab.com/api/like_answer',
+    data,
+    {
+        headers : {
+            Accept : '*/*',
+            "content-type" :'multipart/form-data',
+            "Authorization" : "Bearer "+token
+            }  
+    }).then(function(response) {
+        console.log(response.data)
+        setLike(like+1)
+        setIsLike(true)
+    }).catch(function(error){
+        console.error(error)
+    })
+  }
+
   const date = hitungSelisihHari(props.time)
   console.log(date)
     return (
@@ -72,17 +97,36 @@ const AnswerCard = (props) => {
             </TouchableOpacity>
             <View style={styles.cardQuestionFooter}>
               <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                <View  style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
-                    <IconLike width={18} height={18} fill={'#D7443E'}/>
-                    <PlainText
-                        marginLeft  = {10}
-                        title={props.like + " Like"}
-                        fontStyle={"bold"}
-                        color={"#000"}
-                        fontSize = {13}
-                    />
-                   
-                </View>
+                {isLike &&
+                  <TouchableOpacity  
+                  style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
+                      <IconLikeActive width={18} height={18} fill={'#D7443E'}/>
+                      <PlainText
+                          marginLeft  = {10}
+                          title={like + " Like"}
+                          fontStyle={"bold"}
+                          color={"#000"}
+                          fontSize = {13}
+                      />
+                    
+                  </TouchableOpacity>
+                }
+                {!isLike &&
+                  <TouchableOpacity  
+                  onPress= {()=> addLike()}
+                  style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
+                      <IconLike width={18} height={18} fill={'#D7443E'}/>
+                      <PlainText
+                          marginLeft  = {10}
+                          title={like + " Like"}
+                          fontStyle={"bold"}
+                          color={"#000"}
+                          fontSize = {13}
+                      />
+                    
+                  </TouchableOpacity>
+                }
+                
                 
                 <PlainText
                       title={props.commentar + " comment"}

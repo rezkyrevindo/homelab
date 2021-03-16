@@ -5,6 +5,32 @@ export const LOGIN = 'LOGIN';
 export const LOGOUT = "LOGOUT";
 export const UPDATE_PROFILE = "UPDATE_PROFILE"
 
+
+export const updateProfile = (token) => {
+    try {
+         return async dispatch => {
+        
+           
+            axios.get('https://askhomelab.com/api/view_setting', {
+                headers: {
+                    "Authorization" : 'Bearer ' + token
+                }
+            }).then(function (res){
+                dispatch({
+                    type : UPDATE_PROFILE,
+                    payload : res.data
+                })
+                console.log(res.data)
+            }).catch(function (err){
+                console.log(err)
+            });
+            
+        }
+    }catch (error){
+        console.log(error)
+    }
+};
+
 export const login = (email,password) => {
     try {
          return async dispatch => {
@@ -54,61 +80,29 @@ export const login = (email,password) => {
     }
 };
 
-export const updateProfile = (token) => {
-    try {
-         return async dispatch => {
-        
-           
-            axios.get('https://askhomelab.com/api/view_setting', {
-                headers: {
-                    "Authorization" : 'Bearer ' + token
-                }
-            }).then(function (res){
-                dispatch({
-                    type : UPDATE_PROFILE,
-                    payload : res.data
-                })
-                console.log(res.data)
-            }).catch(function (err){
-                console.log(err)
-            });
-            
-        }
-    }catch (error){
-        console.log(error)
-    }
-};
 
 export const logout = (token) =>{
     try{
         return async dispatch => {
-        // axios.post('https://askhomelab.com/api/logout',
-        // {
-        //     headers : {
-        //     Accept : '*/*',
-        //     "content-type" :'multipart/form-data',
-        //     "Authorization" : "Bearer "+token
-        //     }  
-        // })
-        //     .then(function (response) {
-        //         if (response.data.message != "No Associated Data"){
-        //             navigation.replace("Landing")
-        //         }else{
-                  
-        //         }
-                
-        //     })
-        //     .catch(function (error) {
-            
-        //         console.error(error.response.data)
-            // });
-
-            dispatch({
-                type : LOGOUT
+            axios({
+                method :'post',
+                url :'https://askhomelab.com/api/logout',
+                headers :{
+                    "Authorization" : "Bearer "+token
+                }
+            }) .then(function (response) {
+                console.log(response.data)
+                dispatch({
+                    type : LOGOUT
+                })
             })
+            .catch(function (err) {
+            
+                console.error(err.response)
+            });   
         }
     }catch (error){
-
+        console.log(error)
     }
 }
 

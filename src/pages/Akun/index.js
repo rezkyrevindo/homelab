@@ -25,29 +25,7 @@ const Akun = ({navigation}) => {
     const dispatch = useDispatch();
 
     const requestLogout = (token) => dispatch(logout(token));
-    // const requestLogout = async() => {
-    //     axios.post('https://askhomelab.com/api/logout',
-        
-    //     {
-    //         headers : {
-    //         Accept : '*/*',
-    //         "content-type" :'multipart/form-data',
-    //         "Authorization" : "Bearer "+token
-    //         }  
-    //     })
-    //         .then(function (response) {
-    //             if (response.data.message != "No Associated Data"){
-    //                 navigation.replace("Landing")
-    //             }else{
-                  
-    //             }
-                
-    //         })
-    //         .catch(function (error) {
-            
-    //             console.error(error.response.data)
-    //         });
-    // }
+    
    
 
   return (
@@ -176,7 +154,9 @@ const Akun = ({navigation}) => {
             
 
             <View style={{flexDirection : 'row'}}>
-                <TouchableOpacity style={styles.buttonIcon}>
+                <TouchableOpacity style={styles.buttonIcon}
+                    onPress = { () => navigation.navigate('Setting') }
+                >
                     <View style={styles.buttonIconHeader}>
                         <IconSetting/>
                     </View>
@@ -253,7 +233,7 @@ const Akun = ({navigation}) => {
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonIcon}
-                    onPress = { () => requestLogout().then(()=> navigation.replace("Landing"))} 
+                    onPress = { () =>  requestLogout(token).then(()=> navigation.replace("Landing"))} 
                 >
                     <View style={styles.buttonIconHeader}>
                         <IconSetting/>
