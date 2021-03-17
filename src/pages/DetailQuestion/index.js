@@ -19,6 +19,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56;
 
 const DetailQuestion = ({route, navigation}) => {
+    
     const { token,data } = useSelector (state => state.authReducers);
     const [solved, setSolved] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
@@ -262,6 +263,7 @@ const DetailQuestion = ({route, navigation}) => {
                             point = {"+"+dataQuestion.Point_Question}
                             isSolved={dataQuestion.Solved_Question}
                             question={dataQuestion.Content_Question}
+                            answer = {dataAnswer.length}
                         />
 
                         <View style={{flexDirection : 'row', justifyContent :'space-between', alignItems:'center', marginTop:20}}>

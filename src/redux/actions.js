@@ -39,7 +39,7 @@ export const login = (email,password) => {
             data.append('email', email)
             data.append('password', password)
 
-            axios.post('https://askhomelab.com/api/login',
+            axios.post('https://askhomelab.com/api/login_app',
             data,
             {
                 headers : {
