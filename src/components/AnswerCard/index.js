@@ -1,7 +1,7 @@
 import React,  { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import PlainText from '../PlainText'
-import { DefaultProfile, IconLike, IconLikeActive, IconCheck} from '../../assets';
+import { DefaultProfile, IconLike, IconLikeActive, IconCheck, IconLock} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
 import FastImage from 'react-native-fast-image'
 import axios from 'axios'
@@ -30,7 +30,7 @@ function hitungSelisihHari(tgl1){
 const AnswerCard = (props) => {
   const { token,data } = useSelector (state => state.authReducers);
   const [like, setLike] = useState(props.like)
-  const [isLike, setIsLike] = useState(false)
+  const [isLike, setIsLike] = useState(props.is_like)
   const addLike = () =>{
     var data = new FormData()
     data.append('id_answer', props.id_answer)
@@ -46,7 +46,7 @@ const AnswerCard = (props) => {
     }).then(function(response) {
         console.log(response.data)
         setLike(like+1)
-        setIsLike(true)
+        setIsLike("True")
     }).catch(function(error){
         console.error(error)
     })
@@ -87,60 +87,95 @@ const AnswerCard = (props) => {
                 }
              
             </View>
-
-            <TouchableOpacity onPress={props.onPress} style={styles.cardQuestionContent}>
-              <PlainText
-                title={props.question}
-                color={"#000"}
-                fontSize = {13}
-                />
-            </TouchableOpacity>
-            <View style={styles.cardQuestionFooter}>
-              <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                {isLike &&
-                  <TouchableOpacity  
-                  style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
-                      <IconLikeActive width={18} height={18} fill={'#D7443E'}/>
-                      <PlainText
-                          marginLeft  = {10}
-                          title={like + " Like"}
-                          fontStyle={"bold"}
-                          color={"#000"}
-                          fontSize = {13}
-                      />
-                    
-                  </TouchableOpacity>
-                }
-                {!isLike &&
-                  <TouchableOpacity  
-                  onPress= {()=> addLike()}
-                  style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
-                      <IconLike width={18} height={18} fill={'#D7443E'}/>
-                      <PlainText
-                          marginLeft  = {10}
-                          title={like + " Like"}
-                          fontStyle={"bold"}
-                          color={"#000"}
-                          fontSize = {13}
-                      />
-                    
-                  </TouchableOpacity>
-                }
-                
-                
-                <PlainText
-                      title={props.commentar + " comment"}
-                      fontStyle={"bold"}
+                { props.is_lock && 
+                  <TouchableOpacity    style={styles.cardQuestionContent}>
+                    <PlainText
+                      title={props.question.substring(0,20) + " ... "}
                       color={"#000"}
                       fontSize = {13}
                       />
-               
-               
-               
-              </View>
-             
-            </View>
-           
+                  </TouchableOpacity>
+                 
+                }
+
+                { props.is_lock && 
+                  <TouchableOpacity    
+                  style={{backgroundColor : '#F5F5F5',
+                  padding:20, 
+                  borderBottomStartRadius:20,
+                  borderBottomEndRadius:20 , alignItems:'center'}}>
+                    <FastImage source= {IconLock} style={{width:25, height:25}}/>
+                    <PlainText
+                        title={" Buka jawaban untuk melihat seluruh jawaban maupun gambar "}
+                        color={"#000"}
+                        fontSize = {13}
+                        marginTop={10}
+                        textAlign= "center"
+                        />
+                      
+                    
+                    
+                  </TouchableOpacity>
+                 
+                }
+
+                { !props.is_lock &&
+                  <TouchableOpacity   onPress={props.onPress} style={styles.cardQuestionContent}>
+                    <PlainText
+                      title={props.question}
+                      color={"#000"}
+                      fontSize = {13}
+                      />
+                  </TouchableOpacity>
+                }
+                { !props.is_lock &&
+                  <View style={styles.cardQuestionFooter}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                      {isLike == "True" &&
+                        <TouchableOpacity  
+                        style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
+                            <IconLikeActive width={18} height={18} fill={'#D7443E'}/>
+                            <PlainText
+                                marginLeft  = {10}
+                                title={like + " Like"}
+                                fontStyle={"bold"}
+                                color={"#000"}
+                                fontSize = {13}
+                            />
+                          
+                        </TouchableOpacity>
+                      }
+                      {isLike == "False" &&
+                        <TouchableOpacity  
+                        onPress= {()=> addLike()}
+                        style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
+                            <IconLike width={18} height={18} fill={'#D7443E'}/>
+                            <PlainText
+                                marginLeft  = {10}
+                                title={like + " Like"}
+                                fontStyle={"bold"}
+                                color={"#000"}
+                                fontSize = {13}
+                            />
+                          
+                        </TouchableOpacity>
+                      }
+                      
+                      
+                      <PlainText
+                            title={props.commentar + " comment"}
+                            fontStyle={"bold"}
+                            color={"#000"}
+                            fontSize = {13}
+                            />
+                    
+                    
+                    
+                    </View>
+                    
+                
+                </View>
+              }
           </View>
     )
 }
@@ -179,6 +214,7 @@ const styles = StyleSheet.create({
   cardQuestionFooter : {
     padding:20,
     paddingTop : 0,
+    
   },
   buttonSeeAll :{
         backgroundColor : WARNA_SUCCESS,

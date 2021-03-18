@@ -4,17 +4,18 @@ import {
   Text,
   Image,
   View,SafeAreaView, FlatList,
-  Modal,
+  
   TouchableHighlight, TextInput, Alert,
   Dimensions, StatusBar, TouchableOpacity, 
 } from 'react-native';
 import axios from 'axios'
 import BottomSheet from 'reanimated-bottom-sheet';
 import {IconCaretDown, IconDerajat,IconPicture,IconFont, IconPoints} from '../../assets';
-import {PlainText, HeaderText, InputText,AnswerCard,  QuestionCard, LoadingIndicator} from '../../components/';
+import {PlainText, HeaderText, ButtonPrimary,AnswerCard,  QuestionCard, LoadingIndicator} from '../../components/';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
+import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56;
 
@@ -22,7 +23,9 @@ const DetailQuestion = ({route, navigation}) => {
     
     const { token,data } = useSelector (state => state.authReducers);
     const [solved, setSolved] = useState(true);
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalKategori, setModalKategori] = useState(false);
+    const [modalUnlock, setModalUnlock] = useState(false);
+    
     const {isSolved, id_question} = route.params;
     const [isLoading, setLoading] = useState(false)
 
@@ -32,6 +35,14 @@ const DetailQuestion = ({route, navigation}) => {
     const [type_reference, setTypeReference] = useState(null)
     const [content, setContent] = useState("")
     const listType = [{'name': 'url'}, {"name" : "file"}, {"name" : "book"}]
+    const [refresh , setRefresh] = useState(0)
+    
+    const dispatch = useDispatch();
+    const updateProf = (token) => dispatch(updateProfile(token));
+
+    useEffect(() => {
+        getDataQuestion()
+    }, [refresh])
     useEffect(() => {
         getDataQuestion()
     }, [])
@@ -64,6 +75,69 @@ const DetailQuestion = ({route, navigation}) => {
         })
     }
 
+    const unlockProcess = async () =>{
+        setLoading(true)
+        var data = new FormData()
+        data.append('id_question', id_question)
+
+        axios.post ('https://askhomelab.com/api/unlock_question',
+        data,
+        {
+            headers : {
+                Accept : '*/*',
+                "content-type" :'multipart/form-data',
+                "Authorization" : "Bearer "+token
+                }  
+        }).then(function(response) {
+            
+            
+            updateProf(token).then( () =>{
+                setLoading(false)
+                setRefresh(refresh+1)
+            })
+        }).catch(function(error){
+            
+            setLoading(false)
+            setRefresh(refresh+1)
+            console.error(error.response)
+        })
+    }
+
+    const UnlockModal = ()=>{
+        return (
+            <Modal
+                visible={modalUnlock}
+                onTouchOutside={() => { setModalUnlock(false)}}
+            >
+                <ModalContent>
+                        <PlainText
+                            title={"Anda yakin membuka jawaban ini?"}
+                            color={"#000"}
+                            fontStyle={"bold"}
+                            fontSize = {16}
+                            textAlign={"center"}
+                        />
+                        <PlainText
+                            title={"Membuka jawaban ini akan menghabiskan 3 point anda "}
+                            color={"#000"}
+                            fontSize = {14}
+                            textAlign={"center"}
+                        />
+                       
+                        <View style={{alignItems:'center'}}>
+                            <ButtonPrimary  
+                                onPress={() => {
+                                    unlockProcess()
+                                }}
+                                title="Lanjutkan"
+                                width={windowWidth*0.6}
+                                marginTop   = {windowHeight * 0.033}
+                            />
+                        </View>
+                </ModalContent>
+            </Modal>
+        )
+    }
     const TypeModal = ()=>{
         return (
             <Modal
@@ -136,10 +210,38 @@ const DetailQuestion = ({route, navigation}) => {
         
         return (
             <AnswerCard
+                is_lock ={false}
                 name = {item[0].answer.First_Name_Answer + " "+item[0].answer.Last_Name_Answer}
                 time = {item[0].answer.Date_Answer}
                 isRelevant={item[0].Is_Relevant}
                 like = {item[0].answer.Total_Like}
+                is_like = {item[0].answer.Status_User_Like}
+                commentar={jum_commentar}
+                onPress={() => navigation.navigate("Commentar", {listCommentar : item[1], id_answer : item[0].answer.Id_Answer, isSolved, id_question})}
+                question={item[0].answer.Answer}
+                id_answer = {item[0].answer.Id_Answer}
+            />
+        )
+    }
+    const renderAnswerLock = ({item}) =>{
+        var jum_commentar = 0; 
+        console.log(item[1].map(data=>{
+            if(data.comment == "comment_is_null"){
+                jum_commentar = "No"
+            }else{
+                jum_commentar = item[1].length
+            }
+            
+        }))
+        
+        return (
+            <AnswerCard
+                is_lock = {true}
+                name = {item[0].answer.First_Name_Answer + " "+item[0].answer.Last_Name_Answer}
+                time = {item[0].answer.Date_Answer}
+                isRelevant={item[0].Is_Relevant}
+                like = {item[0].answer.Total_Like}
+                is_like = {item[0].answer.Status_User_Like}
                 commentar={jum_commentar}
                 onPress={() => navigation.navigate("Commentar", {listCommentar : item[1], id_answer : item[0].answer.Id_Answer, isSolved, id_question})}
                 question={item[0].answer.Answer}
@@ -228,34 +330,39 @@ const DetailQuestion = ({route, navigation}) => {
     
 
     return (
-        <View style={styles.container}>
+        <View style={styles.container}> 
+            <UnlockModal/>
             {isLoading &&
                 <LoadingIndicator/>
             }
             {!isLoading &&
                 <View>
-                { isSolved == "1" &&
-                    <View style={{height: 80, backgroundColor:WARNA_SUCCESS, alignItems:'center', justifyContent:'center'}}>
-                        <PlainText
-                            title={"Question Solved"}
-                            color={"#fff"}
-                            fontStyle={"bold"}
-                            fontSize = {14}
-                        />
-                        <PlainText
-                            title={"Jawaban relevan "}
-                            color={"#fff"}
-                            fontSize = {11}
-                        />
-                        <PlainText
-                            title={"adalah jawaban yang ada tanda centang"}
-                            color={"#fff"}
-                            fontSize = {11}
-                        />
-                    </View>
-                }
-                <View style={{height:'93%'}}>
+                
+                
+                
+                <View style={{height:'100%', paddingBottom:80}}>
+                    { isSolved == "1" &&
+                                <View style={{height: 80, backgroundColor:WARNA_SUCCESS, alignItems:'center', justifyContent:'center'}}>
+                                    <PlainText
+                                        title={"Question Solved"}
+                                        color={"#fff"}
+                                        fontStyle={"bold"}
+                                        fontSize = {14}
+                                    />
+                                    <PlainText
+                                        title={"Jawaban relevan "}
+                                        color={"#fff"}
+                                        fontSize = {11}
+                                    />
+                                    <PlainText
+                                        title={"adalah jawaban yang ada tanda centang"}
+                                        color={"#fff"}
+                                        fontSize = {11}
+                                    />
+                                </View>
+                            }
                     <ScrollView showsVerticalScrollIndicator={false} style={{paddingHorizontal : windowWidth * 0.05}}>
+                        
                         <QuestionCard
                             name = {dataQuestion.First_Name_Question + " " + dataQuestion.Last_Name_Question}
                             category = {dataQuestion.Sub_Kategori_Question}
@@ -276,64 +383,121 @@ const DetailQuestion = ({route, navigation}) => {
                             
                         </View>
 
-                        <SafeAreaView style={{flex :1}}
+                        { dataQuestion.Status_Question_User_key != "False" &&
+                            <SafeAreaView style={{flex :1}}
                             >
-                            {/* <LoadAnswer/> */}
-                            <FlatList
-                            data={dataAnswer}
-                            // keyExtractor={(item) => item[0].answer_0.id_Question.toString()}
-                            renderItem={renderAnswer}
-                            showsVerticalScrollIndicator={false}
-                            />
-                            
-                            {/* { listQuestionSearch == null &&
-                                <View style={{flexDirection :'row', alignItems:'center',alignContent:'center',
-                                justifyContent:'center', marginTop:50}}>
-                                <FastImage
-                                    style={{  width: 300, height: 300 }}
-                                    source={ImgNothingQuestion}
-                                    resizeMode={FastImage.resizeMode.contain}
+                                
+                                <FlatList
+                                data={dataAnswer}
+                                // keyExtractor={(item) => item[0].answer_0.id_Question.toString()}
+                                renderItem={renderAnswer}
+                                showsVerticalScrollIndicator={false}
                                 />
-                                </View>
-                            } */}
-                            
+                                
+                                
                             </SafeAreaView>
-                        {/* <AnswerCard
-                            name = 'Rezky Revindo'
-                            time = '1 d ago'
-                            isRelevant={false}
-                            like = '2'
-                            commentar='5'
-                            onPress={() => navigation.navigate("Commentar")}
-                            question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
-                        /> */}
-                        <View style={{padding:10}}></View>
+                        }
+                        { dataQuestion.Status_Question_User_key == "False" &&
+                            <SafeAreaView style={{flex :1}}
+                            >
+                                
+                                <FlatList
+                                data={dataAnswer}
+                                // keyExtractor={(item) => item[0].answer_0.id_Question.toString()}
+                                renderItem={renderAnswerLock}
+                                showsVerticalScrollIndicator={false}
+                                />
+                                
+                                
+                            </SafeAreaView>
+                        }
+                        
+                       
                     </ScrollView>
-                </View>
-                { !JSON.stringify(isSolved) != "true" &&
-                    <TouchableOpacity
-                        onPress={() => sheetRef.current.snapTo(0)}
-                        style={{height: 50, backgroundColor:WARNA_UTAMA, alignItems:'center', justifyContent:'center'}}>
-                        <PlainText
-                            title={"Answer"}
-                            color={"#000"}
-                            fontStyle={"bold"}
-                            fontSize = {14}
-                        />
                     
-                    </TouchableOpacity>
-                }
+                    
+                </View>
+
                 
-                <BottomSheet
-                    ref={sheetRef}
-                    snapPoints={['90%', "40%", 0]}
-                    initialSnap={2}
-                    borderRadius={10}
-                    renderContent={renderContent}
-                />
+                
+              
+               
+                
+                
+                
                 </View>
             }
-            
+            { dataQuestion.Status_Question_User_key == "False" &&
+                <TouchableOpacity
+                    onPress={() => setModalUnlock(true)}
+                    style={{height: 70, width:'100%', backgroundColor:WARNA_UTAMA, alignItems:'center', justifyContent:'center', alignContent:'center',
+                                position: 'absolute', 
+                                bottom: 0, }}>
+                    <PlainText
+                        title={"Unlock"}
+                        color={"#000"}
+                        fontStyle={"bold"}
+                        fontSize = {16}
+                    />
+                        <PlainText
+                        title={"menggunakan 3 point"}
+                        color={"#000"}
+                        
+                        fontSize = {14}
+                    />
+                
+                </TouchableOpacity>
+            }
+                    { isSolved == "0" && dataQuestion.Status_Question_User_Answer == "False" &&
+                    
+                        <TouchableOpacity
+                                onPress={() => sheetRef.current.snapTo(0)}
+                                style={{height: 70,
+                                width:"100%",
+                                backgroundColor:WARNA_UTAMA, 
+                                alignItems:'center', 
+                                justifyContent:'center', 
+                                position: 'absolute', 
+                                bottom: 0, }}>
+                                <PlainText
+                                    title={"Answer"}
+                                    color={"#000"}
+                                    fontStyle={"bold"}
+                                    fontSize = {14}
+                                />
+                            
+                            </TouchableOpacity>
+                            
+                        
+                    }
+                    { isSolved == "0" && dataQuestion.Status_Question_User_Answer == "True" &&
+                    
+                        <TouchableOpacity
+                                style={{height: 70,
+                                width:"100%",
+                                backgroundColor:WARNA_UTAMA, 
+                                alignItems:'center', 
+                                justifyContent:'center', 
+                                position: 'absolute', 
+                                bottom: 0, }}>
+                                <PlainText
+                                    title={"Kamu telah menjawab pertanyaan ini"}
+                                    color={"#000"}
+                                    fontStyle={"bold"}
+                                    fontSize = {14}
+                                />
+                            
+                            </TouchableOpacity>
+                            
+                        
+                    }
+              <BottomSheet
+                        ref={sheetRef}
+                        snapPoints={['90%', "40%", 0]}
+                        initialSnap={2}
+                        borderRadius={10}
+                        renderContent={renderContent}
+                    />
            
         </View>
         
@@ -357,7 +521,7 @@ const styles = StyleSheet.create({
 
     },
     container: {
-        height:windowHeight,
+        flex: 1 ,
         backgroundColor : '#FAFAFA',
     },
     headerContent : {
