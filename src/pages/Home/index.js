@@ -184,7 +184,9 @@ const Home = ({navigation}) => {
                     fontStyle={"bold"}
                     fontSize = {14}
               />
-              <TouchableOpacity style={styles.buttonSeeAll}>
+              <TouchableOpacity style={styles.buttonSeeAll}
+                onPress= {()=> navigation.navigate("MyQuestion")}
+              >
                 <PlainText
                       title={"More"}
                       color={'#000'}
@@ -239,48 +241,7 @@ const Home = ({navigation}) => {
               
             </View>
 
-            {/* <QuestionCard
-              onPress={() => {
-                  navigation.navigate('DetailQuestion',{
-                    isSolved: true 
-                  });
-              }}
-              name = 'Rezky Revindo'
-              category = 'Matematika'
-              time = "2021-02-17T00:39:53.000Z"
-              point = '+50'
-              answer = '0'
-              like = '1'
-              isSolved={true}
-              question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
-            />
-            <QuestionCard
-              onPress={() => {
-                      navigation.navigate('MyDetailQuestion');
-                  }}
-              name = 'Rezky Revindo'
-              category = 'Matematika'
-              time = "2021-02-17T00:39:53.000Z"
-              point = '+5'
-              isSolved={false}
-              answer = '2'
-              like = '1'
-              question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
-            />
-            <QuestionCard
-              onPress={() => {
-                      navigation.navigate('MyDetailQuestion');
-                  }}
-              name = 'Rezky Revindo'
-              category = 'Matematika'
-              time = "2021-02-17T00:39:53.000Z"
-              point = '+5'
-              isSolved={false}
-              answer = '2'
-              like = '1'
-              question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
-            />
-            */}
+            
         </View>
         
   );

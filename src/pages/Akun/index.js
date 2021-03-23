@@ -195,7 +195,8 @@ const Akun = ({navigation}) => {
                
             </View>
             <View style={{flexDirection : 'row'}}>
-                <TouchableOpacity style={styles.buttonIcon}>
+                <TouchableOpacity style={styles.buttonIcon}
+                onPress= {() => navigation.navigate("MyQuestion")}>
                     <View style={styles.buttonIconHeader}>
                         <IconSetting/>
                     </View>

@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, Splash, Akun, CreateQuestion, Login,RegisterSuccess, Register,DetailQuestion ,Verification, ConfirmationSuccess, 
   Landing,Explore, MyDetailQuestion ,Notification , KonfirmasiTopUp,ForgotPassword, ForgotPasswordSuccess, Interest, Commentar, TopUp,
-PembayaranTopUp, WaitingTopUp, Withdraw, PilihBank, AddAccountBank, WithdrawDetail, WithdrawKonfirmasi, Setting} from '../pages';
+PembayaranTopUp, WaitingTopUp, Withdraw, PilihBank, AddAccountBank, WithdrawDetail, WithdrawKonfirmasi, Setting, MyQuestion} from '../pages';
 import { BottomNavigator } from '../components';
 
 const Stack = createStackNavigator();
@@ -49,6 +49,16 @@ const Router = () => {
       options={
         {
           headerTitle : 'Top Up',
+          headerTitleStyle:{
+            alignSelf : 'center',
+            marginLeft : -60,
+            
+          },
+        }} />
+        <Stack.Screen name="MyQuestion" component={MyQuestion} 
+      options={
+        {
+          headerTitle : 'Pertanyaan Saya',
           headerTitleStyle:{
             alignSelf : 'center',
             marginLeft : -60,
@@ -204,6 +214,7 @@ const Router = () => {
           },
         }}
       />
+      
       <Stack.Screen name="MainApp" component={MainApp} options={{ headerShown: false }}/>
       <Stack.Screen name="Landing" component={Landing} options={{ headerShown: false }}/>
     </Stack.Navigator>
