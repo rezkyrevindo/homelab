@@ -28,11 +28,12 @@ import AddAccountBank   from './AddAccountBank'
 import WithdrawDetail from './WithdrawDetail'
 import WithdrawKonfirmasi from './WithdrawKonfirmasi'
 import MyQuestion from './MyQuestion'
+import MyAnswer from './MyAnswer'
 import Setting from './Setting'
 export { Splash, Pesanan, 
     CreateQuestion,
     Akun, Home, Login, Register, Verification , ConfirmationSuccess, Explore, Notification, Chat,
     MyDetailQuestion, DetailQuestion, Landing, RegisterSuccess, ForgotPassword,ForgotPasswordSuccess, Interest, Commentar,
     TopUp, PembayaranTopUp, KonfirmasiTopUp, WaitingTopUp, Withdraw, PilihBank, AddAccountBank, WithdrawDetail, WithdrawKonfirmasi,
-    Setting, MyQuestion
+    Setting, MyQuestion, MyAnswer
 }

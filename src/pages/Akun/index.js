@@ -208,7 +208,8 @@ const Akun = ({navigation}) => {
                         />
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonIcon}>
+                <TouchableOpacity style={styles.buttonIcon}
+                onPress= {() => navigation.navigate("MyAnswer")}>
                     <View style={styles.buttonIconHeader}>
                         <IconSetting/>
                     </View>
