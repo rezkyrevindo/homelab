@@ -44,7 +44,7 @@ const CreateQuestion = ({navigation}) => {
         const data = new FormData();
         if(photo != null){
             data.append("file", {
-                name: photo.fileName,
+                name: "photo",
                 type: photo.type,
                 uri:
                   Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
@@ -56,7 +56,7 @@ const CreateQuestion = ({navigation}) => {
           data.append(key, body[key]);
         });
         
-        console.log(JSON.stringify(data))
+        console.log("ISI FORM => " + JSON.stringify(data))
 
         return data;
       };
@@ -65,36 +65,91 @@ const CreateQuestion = ({navigation}) => {
         setLoading(true)
        
         
-
-        axios.post('https://askhomelab.com/api/create_question',
-            createFormData(filePath, {
-                id_category : data[2].category_id,
-                id_sub_category : selectedKategori,
-                points  : selectedPoint,
-                content : content
-            }),
-            {
-                headers : {
-                Accept : '*/*',
-                "Content-Type" :'application/x-www-form-urlencoded',
+        // fetch(
+        //     "https://askhomelab.com/api/create_question",
+        //     {
+        //         body : createFormData(filePath, {
+        //             id_category : data[2].category_id,
+        //             id_sub_category : selectedKategori,
+        //             points  : selectedPoint,
+        //             content : content
+        //         }),
+        //         method : "POST",
+        //         headers: {
+        //             headers : {
+        //             "Accept" : '*/*',
+        //             "Content-Type" :'multipart/form-data',
+        //             "Authorization" : 'Bearer '+token
+        //             }  
+        //         }, 
+        //     }
+        // ).then((response) => response.json())
+        // .catch((error) =>{
+        //     console.log("Error" + error)
+        // }).then((responseData) => {
+        //     console.log("succes " +responseData)
+        // }).done();
+        var formData = new FormData();
+        if (filePath != null){
+            formData.append('file', {
+                uri: filePath.uri,
+                type: filePath.type,
+                name: "Photo_React_Native",
+            });
+        }
+        
+        formData.append('id_category',data[2].category_id )
+        formData.append('id_sub_category', selectedKategori)
+        formData.append('point', selectedPoint)
+        formData.append('content', content)
+        console.log(formData)
+        var postData = {
+            method: 'POST',
+            headers: {
+                "Accept" : '*/*',
+                "Content-Type" :'multipart/form-data',
                 "Authorization" : 'Bearer '+token
-                }  
-            }, 
+            },
+            body: formData,
+        }
+        return fetch("https://askhomelab.com/api/create_question", postData)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            console.log(responseJson)
+                    updateProf(token).then(()=> navigation.replace("MainApp"))
+                    setLoading(false)
+
+        })
+        .catch((error) => {
+            
+            setLoading(false)
+            console.error(error.response)
+
+        });
+        // axios.post('https://askhomelab.com/api/create_question',
+        //     formData,
+        //     {
+        //         headers : {
+        //         "Accept" : '*/*',
+        //         "Content-Type" :'multipart/form-data',
+        //         "Authorization" : 'Bearer '+token
+        //         }  
+        //     }, 
            
            
             
-            )
-            .then(function (response) {
+        //     )
+        //     .then(function (response) {
                   
-                console.log(response)
-                updateProf(token).then(()=> navigation.replace("MainApp"))
-                setLoading(false)  
+        //         console.log(response)
+        //         updateProf(token).then(()=> navigation.replace("MainApp"))
+        //         setLoading(false)  
                     
-            }).catch(function (error) {
-                setLoading(false)
-                console.error(error.response)
+        //     }).catch(function (error) {
+        //         setLoading(false)
+        //         console.error(error.response)
                 
-            });
+        //     });
     }
 
     useEffect(() => {
