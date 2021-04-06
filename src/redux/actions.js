@@ -6,6 +6,18 @@ export const LOGOUT = "LOGOUT";
 export const UPDATE_PROFILE = "UPDATE_PROFILE"
 
 
+export const refresh = () =>{
+    try {
+        return async dispatch =>{
+            dispatch ({
+                type:"REFRESH"
+            })
+        }
+    }catch(error){
+        console.log(error)
+    }
+}
+
 export const updateProfile = (token) => {
     try {
          return async dispatch => {
@@ -31,7 +43,7 @@ export const updateProfile = (token) => {
     }
 };
 
-export const login = (email,password) => {
+export const login =  (email,password) => {
     try {
          return async dispatch => {
         

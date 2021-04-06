@@ -220,6 +220,7 @@ const DetailQuestion = ({route, navigation}) => {
                 onPress={() => navigation.navigate("Commentar", {listCommentar : item[1], id_answer : item[0].answer.Id_Answer, isSolved, id_question})}
                 question={item[0].answer.Answer}
                 id_answer = {item[0].answer.Id_Answer}
+                is_me = {item[0].answer.Status_User_Answer}
             />
         )
     }

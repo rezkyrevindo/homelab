@@ -31,50 +31,101 @@ const CommentCard = (props) => {
   const date = hitungSelisihHari(props.time)
   console.log(date)
     return (
-        <View >
-                <View style={{flexDirection:'row',margin:10}}>
-                    <FastImage source={DefaultProfile} style={{width : 50, height: 50}} />
-                    <View style={{
-                        flexDirection:'column',
-                        marginHorizontal:10
-                    }}>
-                        <View style={{
-                            flexDirection : 'row',marginBottom:10
-                        }}>
-                                <PlainText
-                                title={props.name}
-                                color={"#979797"}
-                                fontStyle={"bold"}
-                                fontSize = {11}
-                            />
-                            <PlainText
-                                title={date}
-                                color={"#979797"}
-                                fontStyle={"bold"}
-                                fontSize = {11}
-                                marginLeft = {10}
-                            />
-                        </View>
-                        <View style={{
-                            backgroundColor:'#ffff',
-                            paddingVertical:15,
-                            paddingHorizontal:10,
-                            maxWidth: windowWidth*0.7,
-                            borderTopEndRadius:20,
-                            borderBottomEndRadius:20,
-                            borderBottomStartRadius:20}}>
-                            <PlainText
-                                title={props.comment}
-                                color={"#424242"}
-                                fontStyle={"bold"}
-                                fontSize = {11}
-                                marginLeft = {10}
-                            /> 
-                        </View>
-                    </View>
+      <View>
+      { props.is_me == 'False' &&
+      <View >
+        <View style={{flexDirection:'row',margin:10}}>
+            <FastImage source={DefaultProfile} style={{width : 50, height: 50}} />
+            <View style={{
+                flexDirection:'column',
+                marginHorizontal:10
+            }}>
+                <View style={{
+                    flexDirection : 'row',marginBottom:10
+                }}>
+                        <PlainText
+                        title={props.name}
+                        color={"#979797"}
+                        fontStyle={"bold"}
+                        fontSize = {11}
+                    />
+                    <PlainText
+                        title={date}
+                        color={"#979797"}
+                        fontStyle={"bold"}
+                        fontSize = {11}
+                        marginLeft = {10}
+                    />
                 </View>
-                
+                <View style={{
+                    backgroundColor:'#ffff',
+                    paddingVertical:15,
+                    paddingHorizontal:10,
+                    maxWidth: windowWidth*0.7,
+                    borderTopEndRadius:20,
+                    borderBottomEndRadius:20,
+                    borderBottomStartRadius:20}}>
+                    <PlainText
+                        title={props.comment}
+                        color={"#424242"}
+                        fontStyle={"bold"}
+                        fontSize = {11}
+                        marginLeft = {10}
+                    /> 
+                </View>
             </View>
+        </View>
+        
+    </View>
+      } 
+      { props.is_me == 'True' &&
+      <View >
+        <View style={{flexDirection:'row-reverse',margin:10}}>
+            <FastImage source={DefaultProfile} style={{width : 50, height: 50}} />
+            <View style={{
+                flexDirection:'column',
+                marginHorizontal:10
+            }}>
+                <View style={{
+                    flexDirection : 'row',marginBottom:10
+                }}>
+                        <PlainText
+                        title={props.name}
+                        color={"#979797"}
+                        fontStyle={"bold"}
+                        fontSize = {11}
+                    />
+                    <PlainText
+                        title={date}
+                        color={"#979797"}
+                        fontStyle={"bold"}
+                        fontSize = {11}
+                        marginLeft = {10}
+                    />
+                </View>
+                <View style={{
+                    backgroundColor:'#ffff',
+                    paddingVertical:15,
+                    paddingHorizontal:10,
+                    maxWidth: windowWidth*0.7,
+                    borderTopStartRadius:20,
+                    borderBottomEndRadius:20,
+                    borderBottomStartRadius:20}}>
+                    <PlainText
+                        title={props.comment}
+                        color={"#424242"}
+                        fontStyle={"bold"}
+                        fontSize = {11}
+                        marginLeft = {10}
+                    /> 
+                </View>
+            </View>
+        </View>
+        
+    </View>
+      } 
+      </View>
+        
     )
 }
 

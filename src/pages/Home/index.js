@@ -215,31 +215,8 @@ const Home = ({navigation}) => {
               }
 
             
-            {/* <QuestionCard
-              onPress={() => {
-                      navigation.navigate('MyDetailQuestion');
-                  }}
-              name = 'Rezky Revindo'
-              category = 'Matematika'
-              time = "2021-02-17T00:39:53.000Z"
-              point = '+5'
-              isSolved={false}
-              answer = '2'
-              like = '1'
-              question={"I have a question, I hope you can explain it to me. What is the Big Bang theory? How does the Big Bang theory explain the origin of the universe?"}
-            /> */}
-            
-            
 
-            <View style={{flexDirection : 'row', justifyContent :'space-between', alignItems:'center', marginTop:20}}>
-              <PlainText
-                    title={"Top Question"}
-                    color={"#000"}
-                    fontStyle={"bold"}
-                    fontSize = {14}
-              />
-              
-            </View>
+           
 
             
         </View>

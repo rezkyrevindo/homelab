@@ -64,12 +64,23 @@ const AnswerCard = (props) => {
                 <View 
                 style={{flexDirection : 'column', justifyContent:'space-around', marginLeft: 10}}
                 >
-                  <PlainText
+                { props.is_me == 'True' &&
+                <PlainText
+                        title={"You"}
+                        color={"#000"}
+                        fontStyle={"bold"}
+                        fontSize = {13}
+                    />
+                }
+                { props.is_me == 'False' &&
+                <PlainText
                         title={props.name}
                         color={"#000"}
                         fontStyle={"bold"}
                         fontSize = {13}
                     />
+                }
+                 
                   <PlainText
                         title={date }
                         color={"#000"}

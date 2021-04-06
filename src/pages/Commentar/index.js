@@ -63,6 +63,7 @@ const Commentar = ({navigation, route}) => {
                     name= {item.comment.First_Name_Comment+" "+item.comment.Last_Name_Comment}
                     time = {item.comment.Date_Comment}
                     comment = {item.comment.Comment}
+                    is_me = {item.comment.Status_User_comment}
                 />
                 
             )
@@ -140,7 +141,7 @@ const styles = StyleSheet.create({
         backgroundColor : '#FFF2D7',
     },
     body : {
-        height: windowHeight-56,
+        height: windowHeight-26,
 
     },
     footer :{
