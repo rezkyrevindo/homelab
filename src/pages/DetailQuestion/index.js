@@ -10,12 +10,13 @@ import {
 } from 'react-native';
 import axios from 'axios'
 import BottomSheet from 'reanimated-bottom-sheet';
-import {IconCaretDown, IconDerajat,IconPicture,IconFont, IconPoints} from '../../assets';
+import {IconCaretDown, IconDerajat,IconPicture,IconFont, IconPoints, DefaultProfile} from '../../assets';
 import {PlainText, HeaderText, ButtonPrimary,AnswerCard,  QuestionCard, LoadingIndicator} from '../../components/';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
+import FastImage from 'react-native-fast-image'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56;
 
@@ -363,7 +364,15 @@ const DetailQuestion = ({route, navigation}) => {
                                 </View>
                             }
                     <ScrollView showsVerticalScrollIndicator={false} style={{paddingHorizontal : windowWidth * 0.05}}>
-                        
+                    {dataQuestion.File_Question != null &&
+                        <FastImage 
+                            source={{
+                                uri: "https://askhomelab.com/storage/"+ dataQuestion.File_Question,
+                            }}
+                            style={{width : windowWidth, height: 200}} />
+
+                    }
+                    
                         <QuestionCard
                             name = {dataQuestion.First_Name_Question + " " + dataQuestion.Last_Name_Question}
                             category = {dataQuestion.Sub_Kategori_Question}

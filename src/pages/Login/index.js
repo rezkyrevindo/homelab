@@ -15,7 +15,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
 
 import { useSelector, useDispatch } from 'react-redux';
-import { login, refresh } from '../../redux/actions';
+import { login, refresh , addLogin} from '../../redux/actions';
 
 
 
@@ -67,9 +67,47 @@ const Login = ({navigation}) => {
     const submit = async () => {
         
         setLoading(true)
-        await requestLogin(email,password).then( () =>{
-            loginCheck()
-        })
+        try{
+            await dispatch(addLogin(email,password))
+            navigation.replace("VerifikatorLogin")
+            setLoading(false)
+        }catch (err){
+            Snackbar.show({
+                text: "Username atau password salah",
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+                });
+            setLoading(false)
+        }
+        
+        
+        // console.error("ISI + "+login_check)
+        // if(login_check){
+        //     Snackbar.show({
+        //         text: "Login berhasil",
+        //         duration: Snackbar.LENGTH_INDEFINITE,
+        //         action: {
+        //             text: 'Ok',
+        //             textColor: WARNA_UTAMA,
+        //             onPress: () => { /* Do something. */ },
+        //         },  
+        //         });
+        //     navigation.replace('VerifikatorLogin')                
+        // }else{
+        //     Snackbar.show({
+        //         text: "Username atau password salah",
+        //         duration: Snackbar.LENGTH_INDEFINITE,
+        //         action: {
+        //             text: 'Ok',
+        //             textColor: WARNA_UTAMA,
+        //             onPress: () => { /* Do something. */ },
+        //         },  
+        //         });
+        // }
         
         
     }
@@ -237,3 +275,4 @@ const styles = StyleSheet.create({
     }, 
   
 })
+

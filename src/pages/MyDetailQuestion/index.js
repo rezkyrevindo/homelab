@@ -16,7 +16,7 @@ import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 import { useSelector, useDispatch } from 'react-redux';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+import FastImage from 'react-native-fast-image'
 const MyDetailQuestion = ({route,navigation}) => {
     const { token,data } = useSelector (state => state.authReducers);
     const {isSolved, id_question} = route.params;
@@ -225,6 +225,14 @@ const MyDetailQuestion = ({route,navigation}) => {
                 <View style={styles.container}>
                 <AnswerModal/>
                     <ScrollView showsVerticalScrollIndicator={false} style={{paddingHorizontal : windowWidth * 0.05}}>
+                    {dataQuestion.File_Question != null &&
+                        <FastImage 
+                            source={{
+                                uri: "https://askhomelab.com/storage/"+ dataQuestion.File_Question,
+                            }}
+                            style={{width : windowWidth, height: 200}} />
+
+                    }
                         <QuestionCard
                             name = {dataQuestion.First_Name_Question + " " + dataQuestion.Last_Name_Question}
                             category = {dataQuestion.Sub_Kategori_Question}
