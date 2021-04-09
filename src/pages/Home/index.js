@@ -90,8 +90,9 @@ const Home = ({navigation}) => {
         setLoading(false)
     })
     .catch(function (err) {
-      setLoading(false)
-        console.error(err.response)
+        setLoading(false)
+        setListMyQuestion(null)
+          
     });  
   }
 

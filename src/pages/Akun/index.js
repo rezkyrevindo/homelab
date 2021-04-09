@@ -14,6 +14,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../redux/actions';
+import FastImage from 'react-native-fast-image'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -58,13 +59,19 @@ const Akun = ({navigation}) => {
         <View style={styles.content}>
             <View style={styles.wrapCardProfile}>
                 <View style={{alignItems : 'center'}}>
-                    <Image source={DefaultProfile} style={{width : 100, height: 100, marginTop : -50}} />   
+                    {data[2].picture != null &&
+                        <FastImage source={{uri: "http://askhomelab.com/storage"+data[2].picture}} style={{width : 100, height: 100, marginTop : -50, borderRadius:100}}  />
+                    }
+                    {data[2].picture == null &&
+                        <FastImage source={DefaultProfile} style={{width : 100, height: 100, marginTop : -50}}  />
+                    }
+                    
                 </View>
                 
                
                 <View style={{alignItems : 'center'}}>
                     <PlainText
-                        title={data[2].first_name}
+                        title={data[2].first_name + " "+ data[2].last_name}
                         color={"#000"}
                         fontStyle={"bold"}
                         fontSize = {16}

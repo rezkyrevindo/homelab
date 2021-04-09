@@ -26,10 +26,49 @@ const MyDetailQuestion = ({route,navigation}) => {
     const [isLoading, setLoading] = useState(false)
     const [modalAnswer, setModalAnswer] = useState(false)
     const [selectedAnswer, setSelectedAnswer] = useState(null)
+    
+    const [modalGambar, setModalGambar] = useState(false)
 
     useEffect(() => {
         getDataQuestion()
     }, [])
+    const GambarModal = ()=>{
+        return (
+            <Modal
+                visible={modalGambar}
+                onTouchOutside={() => { setModalGambar(false)}}
+            >
+                <ModalContent >
+                    
+                <TouchableOpacity style={{ background:'#000000'}}
+                    onPress={()=>setModalGambar(false)}
+                >
+                                <PlainText
+                                    title={"x"}
+                                    color={"#000"}
+                                    fontSize= {20}
+                                    marginTop={50}
+                                    marginLeft={20}
+                                    fontStyle={"bold"}
+                                    
+                                />
+                </TouchableOpacity>
+                    <View style={{ width:windowWidth, height:windowHeight, alignItems:'center'}}>
+                    
+                    <FastImage 
+                            source={{
+                                uri: "https://askhomelab.com/storage/"+ dataQuestion.File_Question,
+                            }}
+                            style={{width : windowWidth, height: windowHeight}} 
+                            resizeMode={FastImage.resizeMode.contain}
+                            />
+                            
+                    </View>
+                    
+                </ModalContent>
+            </Modal>
+        )
+    }
 
 
     const verifyThisQuestion = async () => {
@@ -219,20 +258,24 @@ const MyDetailQuestion = ({route,navigation}) => {
             { isLoading &&
                 <LoadingIndicator/>
             }
+            <GambarModal/>
 
             { !isLoading &&
                 
                 <View style={styles.container}>
                 <AnswerModal/>
-                    <ScrollView showsVerticalScrollIndicator={false} style={{paddingHorizontal : windowWidth * 0.05}}>
+                    <ScrollView showsVerticalScrollIndicator={false} >
                     {dataQuestion.File_Question != null &&
+                    <TouchableOpacity onPress={()=> setModalGambar(true)}>
                         <FastImage 
                             source={{
                                 uri: "https://askhomelab.com/storage/"+ dataQuestion.File_Question,
                             }}
                             style={{width : windowWidth, height: 200}} />
+                            </TouchableOpacity>
 
                     }
+                    <View style={{paddingHorizontal : windowWidth * 0.05}}>
                         <QuestionCard
                             name = {dataQuestion.First_Name_Question + " " + dataQuestion.Last_Name_Question}
                             category = {dataQuestion.Sub_Kategori_Question}
@@ -276,6 +319,7 @@ const MyDetailQuestion = ({route,navigation}) => {
                             
                             </SafeAreaView>
                         <View style={{padding:10}}></View>
+                        </View>
                     </ScrollView>
                     { solved == "0" &&
                         <TouchableOpacity 

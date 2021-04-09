@@ -64,31 +64,6 @@ const CreateQuestion = ({navigation}) => {
     const addQuestion = async () => {
         setLoading(true)
        
-        
-        // fetch(
-        //     "https://askhomelab.com/api/create_question",
-        //     {
-        //         body : createFormData(filePath, {
-        //             id_category : data[2].category_id,
-        //             id_sub_category : selectedKategori,
-        //             points  : selectedPoint,
-        //             content : content
-        //         }),
-        //         method : "POST",
-        //         headers: {
-        //             headers : {
-        //             "Accept" : '*/*',
-        //             "Content-Type" :'multipart/form-data',
-        //             "Authorization" : 'Bearer '+token
-        //             }  
-        //         }, 
-        //     }
-        // ).then((response) => response.json())
-        // .catch((error) =>{
-        //     console.log("Error" + error)
-        // }).then((responseData) => {
-        //     console.log("succes " +responseData)
-        // }).done();
         var formData = new FormData();
         if (filePath != null){
             formData.append('file', {
@@ -126,30 +101,7 @@ const CreateQuestion = ({navigation}) => {
             console.error(error.response)
 
         });
-        // axios.post('https://askhomelab.com/api/create_question',
-        //     formData,
-        //     {
-        //         headers : {
-        //         "Accept" : '*/*',
-        //         "Content-Type" :'multipart/form-data',
-        //         "Authorization" : 'Bearer '+token
-        //         }  
-        //     }, 
-           
-           
-            
-        //     )
-        //     .then(function (response) {
-                  
-        //         console.log(response)
-        //         updateProf(token).then(()=> navigation.replace("MainApp"))
-        //         setLoading(false)  
-                    
-        //     }).catch(function (error) {
-        //         setLoading(false)
-        //         console.error(error.response)
-                
-        //     });
+       
     }
 
     useEffect(() => {
@@ -162,10 +114,10 @@ const CreateQuestion = ({navigation}) => {
               skipBackup: true,
               path: 'images',
             },
-            maxHeight : 600,
-            maxWidth : 600
+            maxHeight : 1000,
+            maxWidth : 1000
           };
-        launchImageLibrary(options, (response) => {
+        launchCamera(options, (response) => {
           console.log('Response = ', response);
     
           if (response.didCancel) {
@@ -351,6 +303,8 @@ const CreateQuestion = ({navigation}) => {
                     </View>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <View style={styles.content}>
+                       
+                            
                             <View style={styles.headerContent}>
                                 <View style={{alignItems : 'center'}}>
                                     <Image source={DefaultProfile} style={{width : 60, height: 60}} />   
@@ -410,12 +364,11 @@ const CreateQuestion = ({navigation}) => {
                             <View>
                             {sourceImg != null &&
                                 <FastImage
-                                style={{  width: 300, height: 300 }}
-                                source={sourceImg}
-                                resizeMode={FastImage.resizeMode.contain}
-                            />
-                            }
-                            
+                                    style={{  width: windowWidth, height: 200, marginLeft :-20 }}
+                                    source={sourceImg}
+                                    resizeMode={FastImage.resizeMode.contain}
+                                />
+                                }
                             </View>
                             <View style={styles.footerContent}>
                                 <IconFont  fill={'#000'} width={24} height={24}/>

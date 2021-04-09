@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {
     StyleSheet,
     View,
-    Dimensions,
+    Dimensions, SafeAreaView, FlatList,
     TouchableOpacity, StatusBar
   } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -15,7 +15,7 @@ import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
 import axios from 'axios'
 import Snackbar from 'react-native-snackbar';
-import qs from 'qs'
+import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 
 const Register = ({navigation}) => {
     const [isLoading, setLoading] = useState(false)
@@ -24,6 +24,16 @@ const Register = ({navigation}) => {
     const [namaDepan, setNamaDepan] = useState("")
     const [namaBelakang, setNamaBelakang] = useState("")
     const [confPassword, setConfPassword]= useState("")
+    const [selectedImage, setSelectedImage] = useState("/users/1.png")
+    const [listImage, setListImage] = useState([
+        {id:"/users/1.png", name:"http://askhomelab.com/storage/users/1.png"},
+        {id:"/users/2.png", name:"http://askhomelab.com/storage/users/2.png"},
+        {id:"/users/3.png", name:"http://askhomelab.com/storage/users/3.png"},
+        {id:"/users/4.png", name:"http://askhomelab.com/storage/users/4.png"},
+        {id:"/users/5.png", name:"http://askhomelab.com/storage/users/5.png"},
+        {id:"/users/6.png", name:"http://askhomelab.com/storage/users/6.png"},
+    ])
+    const [modalGambar, setModalGambar] = useState(false)
     
     const submit = async () => {
         console.log(""+email + password)
@@ -42,6 +52,7 @@ const Register = ({navigation}) => {
         data.append("first_name", namaDepan)
         data.append("last_name", namaBelakang)
         data.append("password_confirmation", confPassword)
+        data.append("img", selectedImage)
         
         axios.post('https://askhomelab.com/api/register',
          data,
@@ -72,10 +83,58 @@ const Register = ({navigation}) => {
 
 
     }
+    const RenderGambar = ({item}) => {
+        return (
+            <TouchableOpacity
+            style={{margin:1, flex :1 , flexDirection:'column', }}
+                onPress={()=> {
+                    setSelectedImage(item.id)
+                    setModalGambar(false)
+                    }}
+            >
+                        <FastImage 
+                            style={{width:100, height:100}} 
+                            source={{
+                                uri : "http://askhomelab.com/storage"+item.id
+                            }}
+                            resizeMode={FastImage.resizeMode.contain}
+                        ></FastImage>
+            </TouchableOpacity>
+           
+        )
+    }
 
+    const GambarModal = ()=>{
+        return (
+            <Modal
+                visible={modalGambar}
+                onTouchOutside={() => { setModalGambar(false)}}
+            >
+                <ModalContent>
+                    <View style={{ width:windowWidth*0.5, alignItems:'center'}}>
+                        
+                    <SafeAreaView style={{marginTop:10, flexDirection : 'row', paddingBottom : 5}}>
+                        <FlatList
+                        maxHeight={windowHeight * 0.5}
+                        data={listImage}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={RenderGambar}
+                        showsHorizontalScrollIndicator={false}
+                        extraData={selectedImage}
+                        numColumns={2}
+                        />
+                        
+                    </SafeAreaView>
+                    </View>
+                    
+                </ModalContent>
+            </Modal>
+        )
+    }
 
     const renderContent = () => (
         <View style={{height : windowHeight, backgroundColor:'white',}}>
+        <GambarModal/>
             <ScrollView>
             <View>
                 <StatusBar  
@@ -84,14 +143,25 @@ const Register = ({navigation}) => {
             </View>
                 <View style={{width:50,height:3, backgroundColor:WARNA_UTAMA, alignSelf:'center', marginTop:20}}></View>
                 <View style={{alignItems:'center'}}>
-                    <TouchableOpacity style={{width:100, height:100, backgroundColor:'#C4C4C4', marginTop:20, borderRadius:100, alignItems:"center", justifyContent:'center'}}>
+                    <TouchableOpacity style={{width:100, height:100, backgroundColor:'#C4C4C4', marginTop:20, borderRadius:100, alignItems:"center", justifyContent:'center'}}
+                        onPress= {() => setModalGambar(true)}
+                    >
+                       
                         <FastImage 
-                            style={{width:30, height:30}} 
+                            style={{width:100, height:100, borderRadius:100}} 
+                            source={{
+                                uri : "http://askhomelab.com/storage"+selectedImage
+                            }}
+                            resizeMode={FastImage.resizeMode.contain}
+                        ></FastImage>
+                        
+                    </TouchableOpacity>
+                    <FastImage 
+                            style={{width:30, height:30, marginTop:-65}} 
                             source={ImgIcon}
                             resizeMode={FastImage.resizeMode.contain}
                         ></FastImage>
-                    </TouchableOpacity>
-                    <View style={{flexDirection:"row", justifyContent:"space-between", width:windowWidth *0.85}}>
+                    <View style={{flexDirection:"row", justifyContent:"space-between", width:windowWidth *0.85, marginTop:20}}>
                         <InputText 
                             width       = {windowWidth * 0.40}
                             placeholder = "Nama Depan" 

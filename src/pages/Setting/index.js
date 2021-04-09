@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {
-    StyleSheet,
+    StyleSheet, SafeAreaView, FlatList,
     View,Text, TextInput, TouchableOpacity,
     Dimensions,StatusBar, TouchableHighlight, Button
   } from 'react-native';
@@ -18,6 +18,7 @@ const windowHeight = Dimensions.get('window').height - 56;
 import { useSelector, useDispatch } from 'react-redux';
 import { updateProfile } from '../../redux/actions';
 import axios from 'axios'
+import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 const Setting = ({navigation}) => {
     const { token,data } = useSelector (state => state.authReducers);
     const dispatch = useDispatch();
@@ -27,7 +28,16 @@ const Setting = ({navigation}) => {
     const [namaDepan, setNamaDepan] = useState(data[2].first_name)
     const [namaBelakang, setNamaBelakang] = useState(data[2].last_name)
     const [isLoading, setLoading] = useState(false)
-    
+    const [selectedImage, setSelectedImage] = useState(data[2].picture)
+    const [listImage, setListImage] = useState([
+        {id:"/users/1.png", name:"http://askhomelab.com/storage/users/1.png"},
+        {id:"/users/2.png", name:"http://askhomelab.com/storage/users/2.png"},
+        {id:"/users/3.png", name:"http://askhomelab.com/storage/users/3.png"},
+        {id:"/users/4.png", name:"http://askhomelab.com/storage/users/4.png"},
+        {id:"/users/5.png", name:"http://askhomelab.com/storage/users/5.png"},
+        {id:"/users/6.png", name:"http://askhomelab.com/storage/users/6.png"},
+    ])
+    const [modalGambar, setModalGambar] = useState(false)
 
     const submit = async () => {
         
@@ -36,7 +46,8 @@ const Setting = ({navigation}) => {
         data.append("universitas", universitas)
         data.append("first_name", namaDepan)
         data.append("last_name", namaBelakang)
-        data.append("no_hp", noHp)
+        data.append("handphone", noHp)
+        data.append("picture", selectedImage)
         
         axios.post('https://askhomelab.com/api/update_settings',
          data,
@@ -69,8 +80,58 @@ const Setting = ({navigation}) => {
 
 
     }
+    const RenderGambar = ({item}) => {
+        return (
+            <TouchableOpacity
+            style={{margin:1, flex :1 , flexDirection:'column', }}
+                onPress={()=> {
+                    setSelectedImage(item.id)
+                    setModalGambar(false)
+                    }}
+            >
+                        <FastImage 
+                            style={{width:100, height:100}} 
+                            source={{
+                                uri : "http://askhomelab.com/storage"+item.id
+                            }}
+                            resizeMode={FastImage.resizeMode.contain}
+                        ></FastImage>
+            </TouchableOpacity>
+           
+        )
+    }
+
+    const GambarModal = ()=>{
+        return (
+            <Modal
+                visible={modalGambar}
+                onTouchOutside={() => { setModalGambar(false)}}
+            >
+                <ModalContent>
+                    <View style={{ width:windowWidth*0.5, alignItems:'center'}}>
+                        
+                    <SafeAreaView style={{marginTop:10, flexDirection : 'row', paddingBottom : 5}}>
+                        <FlatList
+                        maxHeight={windowHeight * 0.5}
+                        data={listImage}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={RenderGambar}
+                        showsHorizontalScrollIndicator={false}
+                        extraData={selectedImage}
+                        numColumns={2}
+                        />
+                        
+                    </SafeAreaView>
+                    </View>
+                    
+                </ModalContent>
+            </Modal>
+        )
+    }
+
     return (
         <View style={styles.container}>
+        <GambarModal/>
         <ScrollView>
             { isLoading &&
                 <LoadingIndicator/>
@@ -104,14 +165,25 @@ const Setting = ({navigation}) => {
                                     />
                             </View>
                             <View style={{alignContent:'center', alignItems:'center'}}>
-                            <TouchableOpacity style={{width:100, height:100, backgroundColor:'#C4C4C4', marginTop:20, borderRadius:100, alignItems:"center", justifyContent:'center', alignContent:'center'}}>
+                            <TouchableOpacity style={{width:100, height:100, backgroundColor:'#C4C4C4', marginTop:20, borderRadius:100, alignItems:"center", justifyContent:'center'}}
+                                onPress= {() => setModalGambar(true)}
+                            >
+                            
                                 <FastImage 
-                                    style={{width:30, height:30}} 
-                                    source={ImgIcon}
+                                    style={{width:100, height:100, borderRadius:100}} 
+                                    source={{
+                                        uri : "http://askhomelab.com/storage"+selectedImage
+                                    }}
                                     resizeMode={FastImage.resizeMode.contain}
                                 ></FastImage>
+                                
                             </TouchableOpacity>
-                            <View style={{flexDirection:"row", justifyContent:"space-between", width:windowWidth *0.85}}>
+                            <FastImage 
+                                style={{width:30, height:30, marginTop:-65}} 
+                                source={ImgIcon}
+                                resizeMode={FastImage.resizeMode.contain}
+                            ></FastImage>
+                            <View style={{flexDirection:"row", justifyContent:"space-between", width:windowWidth *0.85, marginTop:30}}>
                                 <InputText 
                                     width       = {windowWidth * 0.40}
                                     placeholder = "Nama Depan" 

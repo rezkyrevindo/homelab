@@ -1,5 +1,5 @@
 import React,  { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image , Linking} from 'react-native'
 import PlainText from '../PlainText'
 import { DefaultProfile, IconLike, IconLikeActive, IconCheck, IconLock} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
@@ -31,6 +31,15 @@ const AnswerCard = (props) => {
   const { token,data } = useSelector (state => state.authReducers);
   const [like, setLike] = useState(props.like)
   const [isLike, setIsLike] = useState(props.is_like)
+  function validURL(str) {
+    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    return !!pattern.test(str);
+  }
   const addLike = () =>{
     var data = new FormData()
     data.append('id_answer', props.id_answer)
@@ -138,7 +147,60 @@ const AnswerCard = (props) => {
                       fontSize = {13}
                       />
                   </TouchableOpacity>
+                  
+                  
                 }
+                { props.type_reference == "url" && !props.is_lock &&
+                <TouchableOpacity style={styles.cardQuestionRef}
+                 
+                    
+                  > 
+                      <PlainText
+                        title={"Referensi"}
+                        color={"#000"}
+                        fontSize = {13}
+                        fontStyle="bold"
+                        />
+                    <TouchableOpacity   style={{backgroundColor:WARNA_UTAMA, borderRadius:20, marginTop:10, padding:10, alignItems:'center'}}
+                       onPress=  {() => {
+                      Linking.canOpenURL(props.reference).then(supported => {
+                        if (supported) {
+                          Linking.openURL(props.reference);
+                        } else {
+                          console.log("Don't know how to open URI: " + props.reference);
+                        }
+                      });
+                    
+                  }
+                       }>
+                          <PlainText
+                            title={"Klik Disini"}
+                            color={"#000"}
+                            fontSize = {13}
+                            
+                            />
+                        </TouchableOpacity>
+                </TouchableOpacity>
+                    
+                  } 
+                  { props.type_reference != "url" && !props.is_lock &&
+                  <View style={styles.cardQuestionRef}> 
+                      <PlainText
+                        title={"Referensi"}
+                        color={"#000"}
+                        fontSize = {13}
+                        fontStyle="bold"
+                        />
+                    <TouchableOpacity    >
+                          <PlainText
+                            title={props.reference}
+                            color={"#000"}
+                            fontSize = {13}
+                            marginTop={10}
+                            />
+                        </TouchableOpacity>
+                </View>
+                  } 
                 { !props.is_lock &&
                   <View style={styles.cardQuestionFooter}>
                     <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
@@ -219,12 +281,19 @@ const styles = StyleSheet.create({
     borderTopStartRadius : 20 
   },
   cardQuestionContent : {
-    padding:20
-    
+    padding:20,
+  },
+  cardQuestionRef : {
+    padding:20,
+    borderTopColor:WARNA_ABU_ABU,
+    borderTopWidth:1,
   },
   cardQuestionFooter : {
     padding:20,
-    paddingTop : 0,
+    paddingTop : 20,
+    borderTopColor:WARNA_ABU_ABU,
+    borderTopWidth:1,
+    
     
   },
   buttonSeeAll :{
