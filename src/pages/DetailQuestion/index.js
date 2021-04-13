@@ -631,6 +631,28 @@ const DetailQuestion = ({route, navigation}) => {
                         
                     }
                     { isSolved == "1"  &&
+                        <View style={{height: 80,width:'100%', backgroundColor:WARNA_UTAMA, alignItems:'center', justifyContent:'center',
+                            position: 'absolute', 
+                        bottom: 0,}}>
+                            <PlainText
+                                title={"Pertanyaan dan Jawaban"}
+                                color={"#fff"}
+                                fontStyle={"bold"}
+                                fontSize = {14}
+                            />
+                            <PlainText
+                                title={"Sedang di review oleh "}
+                                color={"#fff"}
+                                fontSize = {11}
+                            />
+                            <PlainText
+                                title={"Admin"}
+                                color={"#fff"}
+                                fontSize = {11}
+                            />
+                        </View>
+                    }
+                    { isSolved == "2"  &&
                                 <View style={{height: 80,width:'100%', backgroundColor:WARNA_SUCCESS, alignItems:'center', justifyContent:'center',
                                  position: 'absolute', 
                                 bottom: 0,}}>

@@ -31,10 +31,11 @@ import MyQuestion from './MyQuestion'
 import MyAnswer from './MyAnswer'
 import Setting from './Setting'
 import VerifikatorLogin from './VerifikatorLogin'
+import MyUnlockQuestion from './MyUnlockQuestion'
 export { Splash, Pesanan, 
     CreateQuestion,
     Akun, Home, Login, Register, Verification , ConfirmationSuccess, Explore, Notification, Chat,
     MyDetailQuestion, DetailQuestion, Landing, RegisterSuccess, ForgotPassword,ForgotPasswordSuccess, Interest, Commentar,
     TopUp, PembayaranTopUp, KonfirmasiTopUp, WaitingTopUp, Withdraw, PilihBank, AddAccountBank, WithdrawDetail, WithdrawKonfirmasi,
-    Setting, MyQuestion, MyAnswer, VerifikatorLogin
+    Setting, MyQuestion, MyAnswer, VerifikatorLogin , MyUnlockQuestion
 }

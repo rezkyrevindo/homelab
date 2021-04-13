@@ -104,7 +104,7 @@ const Home = ({navigation}) => {
         setLoading(true)
         var data = new FormData();        
         data.append('searching', search)
-        data.append('is_solved', "1")
+        data.append('is_solved', "2")
         axios.post('https://askhomelab.com/api/all_data',
           data,
           {

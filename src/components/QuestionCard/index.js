@@ -59,7 +59,7 @@ const QuestionCard = (props) => {
                       fontStyle= {"bold"}
                   />
                 <IconPoints style={{marginLeft: 5}}/>
-                {props.isSolved == "1" &&
+                {props.isSolved == "2" &&
                   <IconCheck style={{marginLeft:10}} width={24} height={24} fill={'#fff'}/>
                 }
               </View>

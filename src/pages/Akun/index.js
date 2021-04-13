@@ -229,13 +229,15 @@ const Akun = ({navigation}) => {
                     </View>
                 </TouchableOpacity>
                 
-                <TouchableOpacity style={styles.buttonIcon}>
+                <TouchableOpacity style={styles.buttonIcon}
+                    onPress = { () =>  navigation.navigate("MyUnlockQuestion")} 
+                >
                     <View style={styles.buttonIconHeader}>
                         <IconSetting/>
                     </View>
                     <View style={styles.buttonIconText}>
                         <PlainText
-                            title={"History"}
+                            title={"Unlock Question"}
                             color={"#000"}
                             fontSize = {12}
                         />
