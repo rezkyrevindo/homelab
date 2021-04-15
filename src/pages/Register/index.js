@@ -14,16 +14,22 @@ const windowHeight = Dimensions.get('window').height -56;
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
 import axios from 'axios'
+import validate from '../../utils/validate'
 import Snackbar from 'react-native-snackbar';
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 
 const Register = ({navigation}) => {
     const [isLoading, setLoading] = useState(false)
     const [email, setEmail] = useState("")
+    const [emailError, setEmailError] = useState("first")
     const [password, setPassword] = useState("")
+    const [passwordError, setPasswordError] = useState("first")
     const [namaDepan, setNamaDepan] = useState("")
+    const [namaDepanError, setNamaDepanError] = useState("first")
     const [namaBelakang, setNamaBelakang] = useState("")
+    const [namaBelakangError, setNamaBelakangError] = useState("first")
     const [confPassword, setConfPassword]= useState("")
+    const [confPasswordError, setConfPasswordError] = useState("first")
     const [selectedImage, setSelectedImage] = useState("/users/1.png")
     const [listImage, setListImage] = useState([
         {id:"/users/1.png", name:"http://askhomelab.com/storage/users/1.png"},
@@ -35,10 +41,82 @@ const Register = ({navigation}) => {
     ])
     const [modalGambar, setModalGambar] = useState(false)
     
+
+    const constraints = {
+        email: {
+            presence: {
+                message: "cannot be blank."
+            },
+            email: {
+                message: 'must contain a valid email address'
+            },
+            length: {
+                minimum: 8,
+                message: 'must be at least 8 characters'
+            }
+        },
+        password: {
+            presence: {
+                message: "cannot be blank."
+            },
+            length: {
+                minimum: 6,
+                message: 'must be at least 6 characters'
+            }
+        },
+        namaDepan : {
+            presence: {allowEmpty: false}
+        },
+        namaBelakang : {
+            presence: {allowEmpty: false}
+        },
+        confirmPassword : {
+            equality: "password"
+        }
+      }
+      
+      
+      const validator = (field, value) => {
+        // Creates an object based on the field name and field value
+        // e.g. let object = {email: 'email@example.com'}
+        let object = {}
+        object[field] = value
+      
+        let constraint = constraints[field]
+        // console.log(object, constraint)
+      
+        // Validate against the constraint and hold the error messages
+        const result = validate(object, { [field]: constraint })
+        console.log(result)
+      
+        // If there is an error message, return it!
+        if (result) {
+          // Return only the field error message if there are multiple
+          return result[field][0]
+        }
+      
+        return null
+      }
+
     const submit = async () => {
-        console.log(""+email + password)
+        
 
         setLoading(true)
+
+        let emailError = validator('email', email)
+        let passwordError = validator('password', password)
+        let namaDepanError = validator('namaDepan', namaDepan)
+        let namaBelakangError = validator('namaBelakang', namaBelakang)
+        let confPasswordError = validator('confirmPassword', confPassword)
+        if(emailError != null || passwordError != null || namaBelakangError!=null || namaDepanError != null || confPasswordError != null  ){
+            setEmailError(emailError)
+            setPasswordError(passwordError)
+            setNamaBelakangError(namaBelakangError)
+            setNamaDepanError(namaDepanError)
+            setConfPasswordError(confPasswordError)
+            setLoading(false)
+            return;
+        }
 
         const url = "https://askhomelab.com/api/register"
         const config = {
@@ -168,6 +246,7 @@ const Register = ({navigation}) => {
                             secureTextEntry = {false} 
                             onChangeText = {(text) => setNamaDepan(text)}
                             value={namaDepan}
+                            error={namaDepanError}
                             />
                         <InputText 
                             width       = {windowWidth * 0.40}
@@ -175,6 +254,7 @@ const Register = ({navigation}) => {
                             secureTextEntry = {false} 
                             onChangeText = {(text) => setNamaBelakang(text)}
                             value={namaBelakang}
+                            error={namaBelakangError}
                             />
                     </View>
                     <InputText 
@@ -183,6 +263,7 @@ const Register = ({navigation}) => {
                         secureTextEntry = {false} 
                         onChangeText = {(text) => setEmail(text)}
                         value={email}
+                        error={emailError}
                         />
                     
                     <InputText 
@@ -191,6 +272,7 @@ const Register = ({navigation}) => {
                         secureTextEntry = {true}
                         onChangeText = {(text) => setPassword(text)}
                         value={password}
+                        error={passwordError}
                         />
                     <InputText 
                         width       = {windowWidth * 0.85}
@@ -198,6 +280,7 @@ const Register = ({navigation}) => {
                         secureTextEntry = {true}
                         onChangeText = {(text) => setConfPassword(text)}
                             value={confPassword}
+                            error={confPasswordError}
                         />
                 </View>
            

@@ -10,6 +10,7 @@ import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, Loading
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
 import Snackbar from 'react-native-snackbar';
+import validate from '../../utils/validate'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
@@ -25,15 +26,65 @@ const Login = ({navigation}) => {
     const dispatch = useDispatch();
     const setRefresh = ()=> dispatch(refresh())
     const requestLogin = (email,password) => dispatch(login(email,password));
-
     const [isLoading, setLoading] = useState(false)
     const [email, setEmail] = useState("")
+    const [emailError, setEmailError]  = useState("first")
     const [password, setPassword] = useState("")
+    const [passwordError, setPasswordError] =  useState("first")
+
+    const constraints = {
+        email: {
+            presence: {
+                message: "cannot be blank."
+            },
+            email: {
+                message: 'must contain a valid email address'
+            },
+            length: {
+                minimum: 8,
+                message: 'must be at least 8 characters'
+            }
+        },
+        password: {
+            presence: {
+                message: "cannot be blank."
+            },
+            length: {
+                minimum: 6,
+                message: 'must be at least 6 characters'
+            }
+        }
+      }
+      
+      
+      const validator = (field, value) => {
+        // Creates an object based on the field name and field value
+        // e.g. let object = {email: 'email@example.com'}
+        let object = {}
+        object[field] = value
+      
+        let constraint = constraints[field]
+        // console.log(object, constraint)
+      
+        // Validate against the constraint and hold the error messages
+        const result = validate(object, { [field]: constraint })
+        console.log(result)
+      
+        // If there is an error message, return it!
+        if (result) {
+          // Return only the field error message if there are multiple
+          return result[field][0]
+        }
+      
+        return null
+      }
 
     const loginCheck =  () =>{
         console.log(setRefresh())
         console.log("check isi token "+ token)
+        
         if(token == "false"){
+            
             Snackbar.show({
             text: "Username atau password salah",
             duration: Snackbar.LENGTH_INDEFINITE,
@@ -68,6 +119,15 @@ const Login = ({navigation}) => {
         
         setLoading(true)
         try{
+            let emailError = validator('email', email)
+            let passwordError = validator('password', password)
+            if(emailError != null || passwordError != null){
+                setEmailError(emailError)
+                setPasswordError(passwordError)
+                setLoading(false)
+                return;
+            }
+
             await dispatch(addLogin(email,password))
             navigation.replace("VerifikatorLogin")
             setLoading(false)
@@ -85,30 +145,7 @@ const Login = ({navigation}) => {
         }
         
         
-        // console.error("ISI + "+login_check)
-        // if(login_check){
-        //     Snackbar.show({
-        //         text: "Login berhasil",
-        //         duration: Snackbar.LENGTH_INDEFINITE,
-        //         action: {
-        //             text: 'Ok',
-        //             textColor: WARNA_UTAMA,
-        //             onPress: () => { /* Do something. */ },
-        //         },  
-        //         });
-        //     navigation.replace('VerifikatorLogin')                
-        // }else{
-        //     Snackbar.show({
-        //         text: "Username atau password salah",
-        //         duration: Snackbar.LENGTH_INDEFINITE,
-        //         action: {
-        //             text: 'Ok',
-        //             textColor: WARNA_UTAMA,
-        //             onPress: () => { /* Do something. */ },
-        //         },  
-        //         });
-        // }
-        
+       
         
     }
 
@@ -130,6 +167,7 @@ const Login = ({navigation}) => {
                         secureTextEntry = {false} 
                         onChangeText= {(text) => setEmail(text)}
                         value={email}
+                        error ={emailError}
                         />
                     <InputText 
                         width       = {windowWidth * 0.8}
@@ -137,6 +175,7 @@ const Login = ({navigation}) => {
                         secureTextEntry = {true}
                         onChangeText= {(text) => setPassword(text)}
                         value={password}
+                        error ={passwordError}
                         />
                 </View>
 
