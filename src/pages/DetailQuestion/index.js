@@ -12,7 +12,7 @@ import axios from 'axios'
 import BottomSheet from 'reanimated-bottom-sheet';
 import {IconCaretDown, IconDerajat,IconPicture,IconFont, IconPoints, DefaultProfile} from '../../assets';
 import {PlainText, HeaderText, ButtonPrimary,AnswerCard,  QuestionCard, LoadingIndicator} from '../../components/';
-import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
+import {WARNA_WARNING, WARNA_UTAMA, WARNA_SUCCESS, WARNA_ABU_ABU, OpenSans} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
@@ -20,7 +20,8 @@ import FastImage from 'react-native-fast-image'
 
 import ImagePicker,{showImagePicker,launchCamera, launchImageLibrary} from 'react-native-image-picker';
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height -56;
+const windowHeight = Dimensions.get('window').height -56
+import validate from '../../utils/validate'
 
 
 const DetailQuestion = ({route, navigation}) => {
@@ -38,6 +39,7 @@ const DetailQuestion = ({route, navigation}) => {
     const [dataQuestion, setDataQuestion] = useState([])
     const [dataAnswer, setDataAnswer] = useState([])
     const [reference, setReference] = useState(null)
+    const [referenceError, setReferenceError] = useState("first")
     const [type_reference, setTypeReference] = useState({'id': 'url','name': 'URL'})
     const [content, setContent] = useState("")
     const listType = [{'id': 'url','name': 'URL'}, {'id':'document description',"name" : "Notes"}]
@@ -56,6 +58,39 @@ const DetailQuestion = ({route, navigation}) => {
     useEffect(() => {
         getDataQuestion()
     }, [])
+
+    const constraints = {
+        yourInput: {
+            url: true,
+            presence: {allowEmpty: false}
+        },
+        note : {
+            presence: {allowEmpty: false}
+        },
+      }
+      
+      
+      const validator = (field, value) => {
+        // Creates an object based on the field name and field value
+        // e.g. let object = {email: 'email@example.com'}
+        let object = {}
+        object[field] = value
+      
+        let constraint = constraints[field]
+        // console.log(object, constraint)
+      
+        // Validate against the constraint and hold the error messages
+        const result = validate(object, { [field]: constraint })
+        console.log(result)
+      
+        // If there is an error message, return it!
+        if (result) {
+          // Return only the field error message if there are multiple
+          return result[field][0]
+        }
+      
+        return null
+      }
 
     const GambarModal = ()=>{
         return (
@@ -142,9 +177,24 @@ const DetailQuestion = ({route, navigation}) => {
     }
 
     const addAnswer = async () => {
+        var referenceError = null
+        if(type_reference.id == "url"){
+            referenceError = validator('yourInput', reference)
+        }else{
+            referenceError = validator('note', reference)
+        }
+        
+        
+        if(referenceError != null){
+            setReferenceError(referenceError)
+            return;
+        }
+
         setLoading(true)
         sheetRef.current.snapTo(2)
         
+        
+
         var data = new FormData()
         if (filePath != null){
             data.append('file', {
@@ -446,6 +496,21 @@ const DetailQuestion = ({route, navigation}) => {
                             onChangeText= {(text) => setReference(text)}
                             value={reference}
                         />
+                        {referenceError != null && referenceError != "first" &&
+                                <View style={{
+                                    borderTopColor:WARNA_ABU_ABU,
+                                    padding:10,
+                                    borderTopWidth:1,
+                                    alignItems:'center'
+                                    
+                                }}>
+                                <PlainText
+                                    title={referenceError}
+                                    color={WARNA_WARNING}
+                                    fontSize= {11}
+                                />   
+                                </View>
+                        }
                     </View>
 
                     <View style={styles.footerContent}>

@@ -10,18 +10,19 @@ import {
 import {IconSearchActive, ImgNothingAsked,ImgNothingQuestion, IconPoints} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard, LoadingIndicator} from '../../components/';
 import FastImage from 'react-native-fast-image'
-import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_DISABLE, OpenSansBold, OpenSans} from '../../utils/constant';
+import {BASE_URL_API,WARNA_ABU_ABU, WARNA_UTAMA, WARNA_DISABLE, OpenSansBold, OpenSans} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
 import axios from 'axios'
+import { updateProfile } from '../../redux/actions';
 import { useSelector, useDispatch } from 'react-redux';
-
-
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height-56;
 const headerHeight = windowHeight * 0.25;
 const StatusBarHeight = 30;
 
 const Home = ({navigation}) => {
+  const dispatch = useDispatch();
+  const updateProf = (token) => dispatch(updateProfile(token));
   const [selectedQuestion, setSelectedQuestion] = useState(null)
   const { token,data } = useSelector (state => state.authReducers);
   const [search, setSearch] = useState("")
@@ -43,28 +44,30 @@ const Home = ({navigation}) => {
   }, [selectedMyQuestion])
 
   useEffect(() => {
+    updateProf(token)
     getMyQuestion()
+    
   }, [])
 
   const filterQuestion = (question)=>{
-      
-      console.log("Size array : "+listMyQuestion.length)
-      if( listMyQuestion.length == 0){
-        var i = 0
-        question.map((data) =>{
-          if( data.Solved_Status == 0  && i < 3){
-            const newArray = listMyQuestion
-            newArray.push(data)
-            
-            setListMyQuestion(newArray)
-            i+=1
-            
-          }
-        })
-      }else{
-        const newArray = listMyQuestion
-        setListMyQuestion(newArray)
+    
+      var i = 0
+      var found = false
+      question.map((data) =>{
+        if( data.Solved_Status == 0  && i < 3){
+          const newArray = listMyQuestion
+          newArray.push(data)
+          
+          setListMyQuestion(newArray)
+          i+=1
+          found = true
+          
+        }
+      })
+      if(!found){
+        setListMyQuestion(null)
       }
+        
       
   }
 
@@ -72,7 +75,7 @@ const Home = ({navigation}) => {
     setLoading(true)
     axios({
         method :'get',
-        url :'https://askhomelab.com/api/my_question',
+        url : BASE_URL_API+'my_question',
         headers :{
             "Authorization" : "Bearer "+token
         }
@@ -80,13 +83,11 @@ const Home = ({navigation}) => {
         if (response.data.My_Question.length > 0){
           setListMyQuestion([])
           filterQuestion(response.data.My_Question)
-          
-          
-          console.log(response.data.My_Question)
         }else{
           setListMyQuestion(null)
-          console.info("Unable to fetch data from API")
+          
         }
+        console.info(response.data)
         setLoading(false)
     })
     .catch(function (err) {
@@ -105,7 +106,7 @@ const Home = ({navigation}) => {
         var data = new FormData();        
         data.append('searching', search)
         data.append('is_solved', "2")
-        axios.post('https://askhomelab.com/api/all_data',
+        axios.post(BASE_URL_API+'all_data',
           data,
           {
               headers : {
@@ -206,9 +207,9 @@ const Home = ({navigation}) => {
               }
               { listMyQuestion == null &&
                 <View style={{flexDirection :'row', alignItems:'center',alignContent:'center',
-                justifyContent:'center', marginTop:50}}>
+                justifyContent:'center', flex:1}}>
                   <FastImage
-                      style={{  width: 300, height: 300 }}
+                      style={{  width: 250, height: 250 }}
                       source={ImgNothingAsked}
                       resizeMode={FastImage.resizeMode.contain}
                   />
@@ -259,31 +260,24 @@ const Home = ({navigation}) => {
                     resizeMode={FastImage.resizeMode.contain}
                 />
                 </View>
-              }
-             
+              } 
             </SafeAreaView>
             
-            
-
-
-           
-         
-          
         </SafeAreaView>
         
-       
+    
   );
- 
+
   const sheetRef = React.useRef(null);
 
   return (
     <SafeAreaView style={styles.page}>
-            <View>
-                <StatusBar  
-                backgroundColor={WARNA_UTAMA} 
-                barStyle="dark-content" />
-            </View>
-    <ScrollView  >
+      <View>
+          <StatusBar  
+          backgroundColor={WARNA_UTAMA} 
+          barStyle="dark-content" />
+      </View>
+      <ScrollView  >
         <View style={styles.header}>
           <View style={styles.headerWrap}>
             <View style={{width : windowWidth * 0.9,flexDirection : 'row' , justifyContent : 'space-between'}}>
@@ -314,7 +308,7 @@ const Home = ({navigation}) => {
                 alignContent:'center', justifyContent:'center', 
                 paddingHorizontal:20,
               }}>
-               
+          
 
                 <View style={{alignItems:'center', alignContent:'center', flexDirection:'row',  }}>
                     <IconPoints/>
@@ -345,6 +339,7 @@ const Home = ({navigation}) => {
                 onChangeText = {(text) => setSearch(text)}
                 value= {search}
                 onBlur={ ()=> getSearchingQuestion()}
+                error={"first"}
                 />
 
                 <IconSearchActive style={styles.searchIcon}/>
@@ -368,7 +363,7 @@ const Home = ({navigation}) => {
           </View>
           
         }
-       
+      
         
         </ScrollView>
         { search != "" && isSearch &&
@@ -412,7 +407,9 @@ export default Home;
 
 const styles = StyleSheet.create({
   page: {
-    flex : 1
+    flex : 1,
+    
+    backgroundColor : '#FAFAFA',
    
   },
   header: {

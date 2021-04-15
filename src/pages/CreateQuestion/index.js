@@ -40,26 +40,7 @@ const CreateQuestion = ({navigation}) => {
     const [sourceImg, setSourceImg] = useState(null)
     const [content, setContent] = useState("")
 
-    const createFormData = (photo, body) => {
-        const data = new FormData();
-        if(photo != null){
-            data.append("file", {
-                name: "photo",
-                type: photo.type,
-                uri:
-                  Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
-              });
-        }
-        
-      
-        Object.keys(body).forEach(key => {
-          data.append(key, body[key]);
-        });
-        
-        console.log("ISI FORM => " + JSON.stringify(data))
-
-        return data;
-      };
+    
 
     const addQuestion = async () => {
         setLoading(true)

@@ -6,3 +6,6 @@ export const WARNA_WARNING =  '#FF5252';
 export const WARNA_SUCCESS = "#6CC070";
 export const OpenSans = "OpenSans-Regular";
 export const OpenSansBold = "OpenSans-Bold";
+
+export const BASE_URL_API = "https://askhomelab.com/api/";
+export const BASE_URL_IMG = "http://askhomelab.com/storage/";
