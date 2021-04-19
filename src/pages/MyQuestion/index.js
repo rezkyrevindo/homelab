@@ -5,7 +5,7 @@ import {
   Image,
   View,SafeAreaView, FlatList,
   TouchableHighlight,
-  Dimensions, StatusBar, TouchableOpacity, 
+  Dimensions, StatusBar, TouchableOpacity, LogBox,
 } from 'react-native';
 import {IconSearchActive, ImgNothingAsked,ImgNothingQuestion, IconPoints} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard, LoadingIndicator} from '../../components/';
@@ -34,6 +34,7 @@ const MyQuestion = ({navigation}) => {
   }, [selectedMyQuestion])
 
   useEffect(()=> {
+    LogBox.ignoreLogs(['Warning']); 
       getMyQuestion()
   }, [])
 
@@ -78,18 +79,17 @@ const MyQuestion = ({navigation}) => {
   }
 
     return (
-        <SafeAreaView style={styles.page}>
+        <ScrollView style={styles.page}>
             <View>
                 <StatusBar  
                 backgroundColor={WARNA_UTAMA} 
                 barStyle="dark-content" />
             </View>
-        <ScrollView  >
        
             
         
         { !isLoading &&
-            <View style={styles.content}>
+            <SafeAreaView style={styles.content}>
             
             
                 { listMyQuestion != null &&
@@ -111,7 +111,7 @@ const MyQuestion = ({navigation}) => {
                     />
                 </View>
                 }
-        </View>
+        </SafeAreaView>
         }
         
         { isLoading &&
@@ -125,7 +125,6 @@ const MyQuestion = ({navigation}) => {
         
         </ScrollView>
        
-        </SafeAreaView>
     )
 }
 
@@ -134,7 +133,8 @@ export default MyQuestion
 
 const styles = StyleSheet.create({
     page: {
-      flex : 1
+      flex : 1,
+      backgroundColor : '#FAFAFA',
      
     },
     header: {

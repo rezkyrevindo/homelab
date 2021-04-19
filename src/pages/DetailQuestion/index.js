@@ -12,7 +12,7 @@ import axios from 'axios'
 import BottomSheet from 'reanimated-bottom-sheet';
 import {IconCaretDown, IconDerajat,IconPicture,IconFont, IconPoints, DefaultProfile} from '../../assets';
 import {PlainText, HeaderText, ButtonPrimary,AnswerCard,  QuestionCard, LoadingIndicator} from '../../components/';
-import {WARNA_WARNING, WARNA_UTAMA, WARNA_SUCCESS, WARNA_ABU_ABU, OpenSans} from '../../utils/constant';
+import {WARNA_WARNING, WARNA_UTAMA, WARNA_SUCCESS, WARNA_ABU_ABU, OpenSans, BASE_URL_API, BASE_URL_IMG} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
@@ -22,7 +22,7 @@ import ImagePicker,{showImagePicker,launchCamera, launchImageLibrary} from 'reac
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56
 import validate from '../../utils/validate'
-
+import Snackbar from 'react-native-snackbar';
 
 const DetailQuestion = ({route, navigation}) => {
     
@@ -117,7 +117,7 @@ const DetailQuestion = ({route, navigation}) => {
                     
                     <FastImage 
                             source={{
-                                uri: "https://askhomelab.com/storage/"+ dataQuestion.File_Question,
+                                uri: BASE_URL_IMG+ dataQuestion.File_Question,
                             }}
                             style={{width : windowWidth, height: windowHeight}} 
                             resizeMode={FastImage.resizeMode.contain}
@@ -183,6 +183,19 @@ const DetailQuestion = ({route, navigation}) => {
         }else{
             referenceError = validator('note', reference)
         }
+
+        if(content == ""){
+            Snackbar.show({
+                text: "Jawaban tidak boleh kosong",
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+                });
+            return;
+        }
         
         
         if(referenceError != null){
@@ -204,12 +217,11 @@ const DetailQuestion = ({route, navigation}) => {
             });
         }
         data.append('id_question', id_question)
-        // data.append('img', img)
         data.append('answer', content)
         data.append('reference', reference)
         data.append('type_reference', type_reference.id)
 
-        axios.post ('https://askhomelab.com/api/create_answer',
+        axios.post (BASE_URL_API+'create_answer',
         data,
         {
             headers : {
@@ -236,7 +248,7 @@ const DetailQuestion = ({route, navigation}) => {
         var data = new FormData()
         data.append('id_question', id_question)
 
-        axios.post ('https://askhomelab.com/api/unlock_question',
+        axios.post (BASE_URL_API+'unlock_question',
         data,
         {
             headers : {
@@ -336,7 +348,7 @@ const DetailQuestion = ({route, navigation}) => {
         setLoading(true)
         var data = new FormData()
         data.append('id_question' , id_question)
-        axios.post('https://askhomelab.com/api/detail_question',
+        axios.post(BASE_URL_API+'detail_question',
         data,
         {
             headers : {
@@ -391,6 +403,8 @@ const DetailQuestion = ({route, navigation}) => {
                 img= {item[0].answer.Image_Answer}
                 type_reference = {item[0].answer.Type_Reference}
                 reference={item[0].answer.Reference}
+                picture = {item[0].answer.Photo_User_Answer}
+                
             />
         )
     }
@@ -560,7 +574,7 @@ const DetailQuestion = ({route, navigation}) => {
                     <TouchableOpacity onPress={()=> setModalGambar(true)}>
                         <FastImage 
                             source={{
-                                uri: "https://askhomelab.com/storage/"+ dataQuestion.File_Question,
+                                uri: BASE_URL_IMG+ dataQuestion.File_Question,
                             }}
                             style={{width : windowWidth, height: 200}} />
                             </TouchableOpacity>
@@ -575,6 +589,7 @@ const DetailQuestion = ({route, navigation}) => {
                             isSolved={dataQuestion.Solved_Question}
                             question={dataQuestion.Content_Question}
                             answer = {dataAnswer.length}
+                            picture = {dataQuestion.Photo_User_Question}
                         />
 
                         <View style={{flexDirection : 'row', justifyContent :'space-between', alignItems:'center', marginTop:20}}>

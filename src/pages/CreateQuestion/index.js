@@ -13,7 +13,7 @@ import {
   import { useSelector, useDispatch } from 'react-redux';
 import {IconCaretDown, IconDerajat,IconPicture,IconFont, IconPoints, DefaultProfile} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard, ButtonPrimary, LoadingIndicator} from '../../components/';
-import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_DISABLE, OpenSansBold, OpenSans} from '../../utils/constant';
+import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_DISABLE, BASE_URL_IMG, BASE_URL_API} from '../../utils/constant';
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 import {ScrollView} from 'react-native-gesture-handler';
 const windowWidth = Dimensions.get('window').width;
@@ -22,6 +22,8 @@ import { updateProfile } from '../../redux/actions';
 import axios from 'axios'
 import FastImage from 'react-native-fast-image'
 import ImagePicker,{showImagePicker,launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import Snackbar from 'react-native-snackbar';
+
 const CreateQuestion = ({navigation}) => {
     const { token, data } = useSelector (state => state.authReducers);
     const [modalKategori, setModalKategori] = useState(false)
@@ -43,8 +45,32 @@ const CreateQuestion = ({navigation}) => {
     
 
     const addQuestion = async () => {
+        if(selectedKategoriName == "Pilih Kategori"){
+            Snackbar.show({
+                text: "Silahkan pilih kategori",
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+                });
+            return;
+        }
+        if(content == ""){
+            Snackbar.show({
+                text: "Pertanyaan tidak boleh kosong",
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+                });
+            return;
+        }
         setLoading(true)
-       
+        
         var formData = new FormData();
         if (filePath != null){
             formData.append('file', {
@@ -58,7 +84,7 @@ const CreateQuestion = ({navigation}) => {
         formData.append('id_sub_category', selectedKategori)
         formData.append('point', selectedPoint)
         formData.append('content', content)
-        console.log(formData)
+        
         var postData = {
             method: 'POST',
             headers: {
@@ -68,7 +94,7 @@ const CreateQuestion = ({navigation}) => {
             },
             body: formData,
         }
-        return fetch("https://askhomelab.com/api/create_question", postData)
+        return fetch(BASE_URL_API+"create_question", postData)
         .then((response) => response.json())
         .then((responseJson) => {
             console.log(responseJson)
@@ -128,7 +154,7 @@ const CreateQuestion = ({navigation}) => {
     const getCategory = async () =>{
         setLoading(true)
 
-        axios.get('https://askhomelab.com/api/sub_category', {
+        axios.get(BASE_URL_API+'sub_category', {
             headers: {
                 "Authorization" : "Bearer " + token 
             }
@@ -288,7 +314,12 @@ const CreateQuestion = ({navigation}) => {
                             
                             <View style={styles.headerContent}>
                                 <View style={{alignItems : 'center'}}>
-                                    <Image source={DefaultProfile} style={{width : 60, height: 60}} />   
+                                {data[2].picture != null &&
+                                    <FastImage source={{uri: BASE_URL_IMG+data[2].picture}} style={{width : 60, height: 60, borderRadius:100}}  />
+                                }
+                                {data[2].picture == null &&
+                                    <FastImage source={DefaultProfile} style={{width : 60, height: 60}}  />
+                                }
                                 </View>
                                 <TouchableOpacity style={{flexDirection :'row', alignItems:'center'}} onPress={()=> setModalPoint(true)}>
                                     <IconPoints/>

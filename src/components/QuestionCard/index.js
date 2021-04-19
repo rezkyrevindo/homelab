@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import PlainText from '../PlainText'
 import { DefaultProfile, IconPoints, IconLike,IconLikeActive, IconCheck} from '../../assets';
-import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
+import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, BASE_URL_API, BASE_URL_IMG, OpenSans} from '../../utils/constant';
 import FastImage from 'react-native-fast-image'
 function hitungSelisihHari(tgl1){
   var miliday = 60 * 60 * 1000;
@@ -33,7 +33,12 @@ const QuestionCard = (props) => {
          style={styles.cardQuestion}>
             <View style={styles.cardQuestionHeader}>
               <View style={{flexDirection : 'row'}}>
-                <FastImage source={DefaultProfile} style={{width : 50, height: 50}} />
+                {props.picture != null &&
+                    <FastImage source={{uri: BASE_URL_IMG+props.picture}} style={{width : 60, height: 60, borderRadius:100}}  />
+                }
+                {props.picture == null &&
+                    <FastImage source={DefaultProfile} style={{width : 60, height: 60}}  />
+                }
                 <View 
                 style={{flexDirection : 'column', justifyContent:'space-around', marginLeft: 10}}
                 >

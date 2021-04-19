@@ -5,7 +5,7 @@ import {
   Image,
   View,SafeAreaView, FlatList,
   TouchableHighlight,
-  Dimensions, StatusBar, TouchableOpacity, 
+  Dimensions, StatusBar, TouchableOpacity, LogBox,
 } from 'react-native';
 import {IconSearchActive, ImgNothingAsked,ImgNothingQuestion, IconPoints} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard, LoadingIndicator} from '../../components/';
@@ -44,6 +44,7 @@ const Home = ({navigation}) => {
   }, [selectedMyQuestion])
 
   useEffect(() => {
+    LogBox.ignoreLogs(['Warning']); 
     updateProf(token)
     getMyQuestion()
     
@@ -138,7 +139,7 @@ const Home = ({navigation}) => {
     return (
       <QuestionCard
         onPress={() => {
-              setSelectedQuestion(item)
+          navigation.navigate('DetailQuestion', {isSolved: item.Solved_Status,id_question: item.id_Question });
             }}
         name = {item.User_Question}
         category = {item.Sub_Category}
@@ -159,7 +160,7 @@ const Home = ({navigation}) => {
       return (
         <QuestionCard
           onPress={() => {
-                setSelectedMyQuestion(item)
+            navigation.navigate('MyDetailQuestion', {isSolved: item.Solved_Status,id_question: item.id_Question });
               }}
           name = {item.User_Question}
           category = {item.Sub_Category}

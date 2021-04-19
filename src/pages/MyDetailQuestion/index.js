@@ -238,17 +238,25 @@ const MyDetailQuestion = ({route,navigation}) => {
             }
             
         }))
+
         
         return (
             <AnswerCard
+                is_lock ={false}
                 name = {item[0].answer.First_Name_Answer + " "+item[0].answer.Last_Name_Answer}
                 time = {item[0].answer.Date_Answer}
                 isRelevant={item[0].Is_Relevant}
                 like = {item[0].answer.Total_Like}
+                is_like = {item[0].answer.Status_User_Like}
                 commentar={jum_commentar}
                 onPress={() => navigation.navigate("Commentar", {listCommentar : item[1], id_answer : item[0].answer.Id_Answer, isSolved, id_question})}
                 question={item[0].answer.Answer}
                 id_answer = {item[0].answer.Id_Answer}
+                is_me = {item[0].answer.Status_User_Answer}
+                img= {item[0].answer.Image_Answer}
+                type_reference = {item[0].answer.Type_Reference}
+                reference={item[0].answer.Reference}
+                picture = {item[0].answer.Photo_User_Answer}
             />
         )
     }
@@ -284,6 +292,7 @@ const MyDetailQuestion = ({route,navigation}) => {
                             isSolved={dataQuestion.Solved_Question}
                             question={dataQuestion.Content_Question}
                             answer = {dataAnswer.length}
+                            picture = {dataQuestion.Photo_User_Question}
                         />
 
                         <View style={{flexDirection : 'row', justifyContent :'space-between', alignItems:'center', marginTop:20}}>

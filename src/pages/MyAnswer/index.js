@@ -2,7 +2,7 @@ import React, {useState,useEffect} from 'react';
 import {
   StyleSheet,
   Text,
-  Image,
+  Image, LogBox,
   View,SafeAreaView, FlatList,
   TouchableHighlight,
   Dimensions, StatusBar, TouchableOpacity, 
@@ -34,7 +34,9 @@ const MyAnswer = ({navigation}) => {
   }, [selectedMyQuestion])
 
   useEffect(()=> {
-      getMyQuestion()
+    LogBox.ignoreLogs(['Warning']);  
+    getMyQuestion()
+      
   }, [])
 
   const getMyQuestion = async () => {
@@ -46,10 +48,10 @@ const MyAnswer = ({navigation}) => {
             "Authorization" : "Bearer "+token
         }
     }) .then(function (response) {
-          setListMyQuestion(response.data.My_Question)
+          setListMyQuestion(response.data.My_Answer)
           
           
-          console.log(response.data.My_Question)
+          console.log(response.data.My_Answer)
         
             setLoading(false)
     })
@@ -59,7 +61,7 @@ const MyAnswer = ({navigation}) => {
     });  
   }
   const renderItemMyQuestion = ({item}) =>{
-        
+  
         return (
             <AnswerCard
                 is_lock ={false}
@@ -67,9 +69,15 @@ const MyAnswer = ({navigation}) => {
                 time = {item.Date_Answer}
                 isRelevant={item.Is_Relevant}
                 like = {item.Total_Like}
-                
+                is_like = {"True"}
+                commentar={0}
+                onPress={() => navigation.navigate("DetailQuestion", {isSolved : false , id_question : item.Id_Question })}
                 question={item.Answer}
                 id_answer = {item.Id_Answer}
+                is_me = {"True"}
+                img= {item.File_Answer}
+                type_reference = {item.Type_Reference}
+                reference={item.Reference}
             />
         
       )
@@ -77,24 +85,24 @@ const MyAnswer = ({navigation}) => {
   }
 
     return (
-        <SafeAreaView style={styles.page}>
+        <ScrollView style={styles.page}>
             <View>
                 <StatusBar  
                 backgroundColor={WARNA_UTAMA} 
                 barStyle="dark-content" />
             </View>
-        <ScrollView  >
+        
        
             
         
         { !isLoading &&
-            <View style={styles.content}>
+            <SafeAreaView style={styles.content}>
             
             
                 { listMyQuestion != null &&
                     <FlatList
                 data={listMyQuestion}
-                keyExtractor={(item) => item.id_Question.toString()}
+                keyExtractor={(item) => item.Id_Answer.toString()}
                 renderItem={renderItemMyQuestion}
                 showsVerticalScrollIndicator={false}
                 
@@ -110,7 +118,7 @@ const MyAnswer = ({navigation}) => {
                     />
                 </View>
                 }
-        </View>
+        </SafeAreaView>
         }
         
         { isLoading &&
@@ -124,7 +132,7 @@ const MyAnswer = ({navigation}) => {
         
         </ScrollView>
        
-        </SafeAreaView>
+        
     )
 }
 
@@ -133,7 +141,8 @@ export default MyAnswer
 
 const styles = StyleSheet.create({
     page: {
-      flex : 1
+      flex : 1,
+      backgroundColor : '#FAFAFA',
      
     },
     header: {
@@ -148,6 +157,7 @@ const styles = StyleSheet.create({
     },
     
     content: {
+      flex:1,
       backgroundColor : '#FAFAFA',
       borderTopLeftRadius : 30,
       borderTopRightRadius : 30,

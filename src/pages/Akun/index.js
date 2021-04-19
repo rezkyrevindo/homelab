@@ -83,7 +83,7 @@ const Akun = ({navigation}) => {
                     /> 
 
                     <PlainText
-                        title={"Telkom University"}
+                        title={data[2].universitas != "null" ? data[2].universitas : "Belum mengatur asal universitas"}
                         color={'#111111'}
                         fontSize = {11}
                         marginBottom = {10}

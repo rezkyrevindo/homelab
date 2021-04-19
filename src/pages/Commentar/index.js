@@ -25,6 +25,7 @@ const Commentar = ({navigation, route}) => {
     const { token,data } = useSelector (state => state.authReducers);
     const {listCommentar, id_answer, isSolved, id_question} = route.params;
     const [reply, setReply] = useState("")
+    const [listComment, setListComment] = useState(listCommentar)
 
     const addComment = async () => {
         setLoading(true)
@@ -42,12 +43,31 @@ const Commentar = ({navigation, route}) => {
                 "Authorization" : "Bearer "+token
                 }  
         }).then(function(response) {
-            
-            navigation.navigate("DetailQuestion" , {iSolved: isSolved , id_question : id_question})
+            let new_comment = {
+                'comment':{
+                    'First_Name_Comment':'Hallo',
+                    'Last_Name_Comment': 'Hallo',
+                    'Date_Comment': new Date(),
+                    'Status_User_comment' : 'True',
+                    'Comment' : reply,
+                }
+            }
+            setListComment([...listComment, new_comment])
             setLoading(false)
         }).catch(function(error){
             setLoading(false)
-            console.error(error.response.status)
+            let new_comment = {
+                'comment':{
+                    'First_Name_Comment':'Hallo',
+                    'Last_Name_Comment': 'Hallo',
+                    'Date_Comment': new Date(),
+                    'Status_User_comment' : 'True',
+                    'Comment' : reply,
+                    'Photo_User_Comment' : data[2].picture
+                }
+            }
+            setListComment([...listComment, new_comment])
+            
         })
     }
 
@@ -64,6 +84,7 @@ const Commentar = ({navigation, route}) => {
                     time = {item.comment.Date_Comment}
                     comment = {item.comment.Comment}
                     is_me = {item.comment.Status_User_comment}
+                    picture = {item.comment.Photo_User_Comment}
                 />
                 
             )
@@ -71,13 +92,13 @@ const Commentar = ({navigation, route}) => {
     }
 
     const checkComment = ()=>{
-        
+        console.log("jum_coment:"+listComment)
         var jum_commentar = 0; 
-        listCommentar.map(data=>{
+        listComment.map(data=>{
             if(data.comment == "comment_is_null"){
                 jum_commentar = "No"
             }else{
-                jum_commentar = listCommentar.length
+                jum_commentar = listComment.length
             }
             
         })
@@ -92,13 +113,13 @@ const Commentar = ({navigation, route}) => {
             }
             {!isLoading && 
                 <View style={styles.body}>
-                <ScrollView >
+                
                     <SafeAreaView style={{flex :1}}
                                     >
                     
                     
                     <FlatList
-                            data={listCommentar}
+                            data={listComment}
                             keyExtractor={(item) => console.log(item)}
                             renderItem={renderComment}
                             showsVerticalScrollIndicator={false}
@@ -108,7 +129,7 @@ const Commentar = ({navigation, route}) => {
                     
                     </SafeAreaView>
                
-            </ScrollView>
+            
             <View style={styles.footer}> 
                 <InputText 
                     width       = {windowWidth * 0.7}
@@ -118,6 +139,7 @@ const Commentar = ({navigation, route}) => {
                     value={reply}
                     marginTop={0}
                     height = {40}
+                    error="first"
                     />
                 <ButtonPrimary 
                     title="Send"
@@ -141,7 +163,7 @@ const styles = StyleSheet.create({
         backgroundColor : '#FFF2D7',
     },
     body : {
-        height: windowHeight-26,
+        flex:1
 
     },
     footer :{
@@ -154,7 +176,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-
+        bottom:0,
         elevation: 5,
         justifyContent:'space-between',
         alignItems:'center',

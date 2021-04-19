@@ -5,16 +5,17 @@ import {
   Image,SafeAreaView,
   View,
   ImageBackground, FlatList,
-  Dimensions, StatusBar, TouchableOpacity, 
+  Dimensions, StatusBar, TouchableOpacity, LogBox,
 } from 'react-native';
 import {IconCaretDown, IconPoints, ImgNothingQuestion} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard, LoadingIndicator} from '../../components/';
-import { WARNA_UTAMA, WARNA_DISABLE, OpenSans} from '../../utils/constant';
+import { WARNA_UTAMA, WARNA_DISABLE, OpenSans, BASE_URL_API, BASE_URL_IMG} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios'
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals'
 import FastImage from 'react-native-fast-image'
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -41,6 +42,7 @@ const Explore = ({navigation}) => {
 
 
   useEffect(() => {
+    LogBox.ignoreLogs(['Warning']); 
     getCategory()
   }, [])
 
@@ -55,7 +57,7 @@ const Explore = ({navigation}) => {
   const getCategory = async () =>{
         setLoading(true)
 
-        axios.get('https://askhomelab.com/api/sub_category', {
+        axios.get(BASE_URL_API+'sub_category', {
             headers: {
                 "Authorization" : "Bearer " + token 
             }
@@ -86,7 +88,7 @@ const Explore = ({navigation}) => {
     }
     
     data.append('is_solved', "0")
-    axios.post('https://askhomelab.com/api/all_data',
+    axios.post(BASE_URL_API+'all_data',
       data,
       {
           headers : {
@@ -113,6 +115,7 @@ const Explore = ({navigation}) => {
   }
   
   const renderItem = ({item}) =>{
+      console.log(item)
       return (
         <QuestionCard
           onPress={() => {
@@ -125,6 +128,7 @@ const Explore = ({navigation}) => {
           isSolved={item.Solved_Status}
           answer = {item.Total_Answer}
           question={item.Content_Question}
+          
         />
       )
     }

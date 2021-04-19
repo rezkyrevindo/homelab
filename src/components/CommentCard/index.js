@@ -2,7 +2,7 @@ import React,  { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native'
 import PlainText from '../PlainText'
 import { DefaultProfile, IconLike, IconLikeActive, IconCheck} from '../../assets';
-import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
+import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, BASE_URL_IMG} from '../../utils/constant';
 import FastImage from 'react-native-fast-image'
 
 const windowWidth = Dimensions.get('window').width;
@@ -81,7 +81,12 @@ const CommentCard = (props) => {
       { props.is_me == 'True' &&
       <View >
         <View style={{flexDirection:'row-reverse',margin:10}}>
-            <FastImage source={DefaultProfile} style={{width : 50, height: 50}} />
+        {props.picture != null &&
+                    <FastImage source={{uri: BASE_URL_IMG+props.picture}} style={{width : 50, height: 50, borderRadius:100}}  />
+                }
+                {props.picture == null &&
+                    <FastImage source={DefaultProfile} style={{width : 50, height: 50}}  />
+                }
             <View style={{
                 flexDirection:'column',
                 marginHorizontal:10
@@ -90,7 +95,7 @@ const CommentCard = (props) => {
                     flexDirection : 'row',marginBottom:10
                 }}>
                         <PlainText
-                        title={props.name}
+                        title={"Kamu"}
                         color={"#979797"}
                         fontStyle={"bold"}
                         fontSize = {11}

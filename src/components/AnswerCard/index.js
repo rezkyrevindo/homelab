@@ -1,12 +1,15 @@
 import React,  { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image , Linking} from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions , Linking} from 'react-native'
 import PlainText from '../PlainText'
 import { DefaultProfile, IconLike, IconLikeActive, IconCheck, IconLock} from '../../assets';
-import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
+import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, BASE_URL_API,BASE_URL_IMG} from '../../utils/constant';
 import FastImage from 'react-native-fast-image'
 import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height -56
 
+import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 function hitungSelisihHari(tgl1){
   var miliday = 60 * 60 * 1000;
 
@@ -27,7 +30,9 @@ function hitungSelisihHari(tgl1){
     return Math.floor(selisih) + " minutes ago"
   }
 }
+
 const AnswerCard = (props) => {
+  const [modalGambar, setModalGambar] = useState(false)
   const { token,data } = useSelector (state => state.authReducers);
   const [like, setLike] = useState(props.like)
   const [isLike, setIsLike] = useState(props.is_like)
@@ -60,6 +65,43 @@ const AnswerCard = (props) => {
         console.error(error)
     })
   }
+  const GambarModal = ()=>{
+    return (
+        <Modal
+            visible={modalGambar}
+            onTouchOutside={() => { setModalGambar(false)}}
+        >
+            <ModalContent >
+                
+            <TouchableOpacity style={{ background:'#000000'}}
+                onPress={()=>setModalGambar(false)}
+            >
+                            <PlainText
+                                title={"x"}
+                                color={"#000"}
+                                fontSize= {20}
+                                marginTop={20}
+                                marginLeft={20}
+                                fontStyle={"bold"}
+                                
+                            />
+            </TouchableOpacity>
+                <View style={{ width:windowWidth, height:windowHeight, alignItems:'center'}}>
+                {props.img != null &&
+                <FastImage 
+                        source={{
+                            uri: BASE_URL_IMG+ props.img,
+                        }}
+                        style={{width : windowWidth, height: windowHeight}} 
+                        resizeMode={FastImage.resizeMode.contain}
+                        />
+                   }
+                </View>
+                
+            </ModalContent>
+        </Modal>
+    )
+}
 
   const date = hitungSelisihHari(props.time)
   console.log(date)
@@ -67,9 +109,15 @@ const AnswerCard = (props) => {
         <View 
           
          style={styles.cardQuestion}>
+         <GambarModal/>
             <View style={styles.cardQuestionHeader}>
               <View style={{flexDirection : 'row'}}>
-                <FastImage source={DefaultProfile} style={{width : 50, height: 50}} />
+              {props.picture != null &&
+                    <FastImage source={{uri: BASE_URL_IMG+props.picture}} style={{width : 60, height: 60, borderRadius:100}}  />
+                }
+                {props.picture == null &&
+                    <FastImage source={DefaultProfile} style={{width : 60, height: 60}}  />
+                }
                 <View 
                 style={{flexDirection : 'column', justifyContent:'space-around', marginLeft: 10}}
                 >
@@ -97,6 +145,7 @@ const AnswerCard = (props) => {
                     />
                 </View>
               </View>
+              
                 {props.isRelevant == true &&
                     <View style={{flexDirection:'row', alignItems : 'center'}}>
                         
@@ -115,7 +164,7 @@ const AnswerCard = (props) => {
                       fontSize = {13}
                       />
                   </TouchableOpacity>
-                 
+                
                 }
 
                 { props.is_lock && 
@@ -136,8 +185,18 @@ const AnswerCard = (props) => {
                     
                     
                   </TouchableOpacity>
-                 
+                
                 }
+                {props.img != null && !props.is_lock &&
+                    <TouchableOpacity onPress= {()=> setModalGambar(true)} >
+                        <FastImage 
+                            source={{
+                                uri: BASE_URL_IMG+ props.img,
+                            }}
+                            style={{width : windowWidth, height: 200}} />
+                            </TouchableOpacity>
+
+                    }
 
                 { !props.is_lock &&
                   <TouchableOpacity   onPress={props.onPress} style={styles.cardQuestionContent}>

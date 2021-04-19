@@ -24,7 +24,7 @@ const Setting = ({navigation}) => {
     const dispatch = useDispatch();
     const updateProf = (token) => dispatch(updateProfile(token));
     const [noHp, setNoHp] = useState(data[2].handphone)
-    const [universitas, setUniversitas] = useState(data[2].universitas)
+    const [universitas, setUniversitas] = useState(data[2].universitas!="null"? data[2].universitas:"")
     const [namaDepan, setNamaDepan] = useState(data[2].first_name)
     const [namaBelakang, setNamaBelakang] = useState(data[2].last_name)
     const [isLoading, setLoading] = useState(false)
@@ -59,8 +59,16 @@ const Setting = ({navigation}) => {
           }  
         })
           .then(function (response) {
-            console.log(response.data)
             
+            Snackbar.show({
+                text: "Berhasil memperbarui Profile",
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+                });
             updateProf(token).then(() => setLoading(false))
             
           })
@@ -130,9 +138,8 @@ const Setting = ({navigation}) => {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
         <GambarModal/>
-        <ScrollView>
             { isLoading &&
                 <LoadingIndicator/>
             }
@@ -190,6 +197,7 @@ const Setting = ({navigation}) => {
                                     secureTextEntry = {false} 
                                     onChangeText = {(text) => setNamaDepan(text)}
                                     value={namaDepan}
+                                    error="first"
                                     />
                                 <InputText 
                                     width       = {windowWidth * 0.40}
@@ -197,6 +205,7 @@ const Setting = ({navigation}) => {
                                     secureTextEntry = {false} 
                                     onChangeText = {(text) => setNamaBelakang(text)}
                                     value={namaBelakang}
+                                    error="first"
                                     />
                             </View>
                             <InputText 
@@ -205,6 +214,7 @@ const Setting = ({navigation}) => {
                                 secureTextEntry = {false} 
                                 onChangeText = {(text) => setNoHp(text)}
                                 value={noHp}
+                                error="first"
                                 />
                             
                             <InputText 
@@ -213,6 +223,7 @@ const Setting = ({navigation}) => {
                                 secureTextEntry = {false}
                                 onChangeText = {(text) => setUniversitas(text)}
                                 value={universitas}
+                                error="first"
                                 />
                             <View style={{alignItems:'center', marginBottom:20}}>
                                 <ButtonPrimary  
@@ -238,7 +249,7 @@ const Setting = ({navigation}) => {
             
             }
             </ScrollView>
-            </View>
+            
     )
 }
 

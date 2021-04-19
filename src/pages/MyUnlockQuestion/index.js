@@ -5,7 +5,7 @@ import {
   Image,
   View,SafeAreaView, FlatList,
   TouchableHighlight,
-  Dimensions, StatusBar, TouchableOpacity, 
+  Dimensions, StatusBar, TouchableOpacity, LogBox,
 } from 'react-native';
 import {IconSearchActive, ImgNothingAsked,ImgNothingQuestion, IconPoints} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard, LoadingIndicator} from '../../components/';
@@ -34,6 +34,7 @@ const MyUnlockQuestion = ({navigation}) => {
   }, [selectedMyQuestion])
 
   useEffect(()=> {
+    LogBox.ignoreLogs(['Warning']); 
       getMyQuestion()
   }, [])
 
@@ -139,8 +140,8 @@ export default MyUnlockQuestion
 
 const styles = StyleSheet.create({
     page: {
-      flex : 1
-     
+      flex : 1,
+      backgroundColor : '#FAFAFA',
     },
     header: {
       backgroundColor : WARNA_UTAMA,
@@ -154,6 +155,7 @@ const styles = StyleSheet.create({
     },
     
     content: {
+      flex:1,
       backgroundColor : '#FAFAFA',
       borderTopLeftRadius : 30,
       borderTopRightRadius : 30,
