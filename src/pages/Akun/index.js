@@ -7,7 +7,7 @@ import {
   ImageBackground,
   Dimensions, StatusBar, TouchableOpacity, 
 } from 'react-native';
-import {IconSetting, DefaultProfile, IconPoints, IconPointsWhite, IconTopUp, IconWithdraw} from '../../assets';
+import {IconSetting, DefaultProfile, IconUnlock, IconAnswer, IconQuestion, IconPointsWhite, IconTopUp, IconWithdraw} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard} from '../../components/';
 import { WARNA_UTAMA, WARNA_DISABLE, OpenSans} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -83,7 +83,7 @@ const Akun = ({navigation}) => {
                     /> 
 
                     <PlainText
-                        title={data[2].universitas != "null" ? data[2].universitas : "Belum mengatur asal universitas"}
+                        title={data[2].universitas != null ? data[2].universitas : "Belum mengatur asal universitas"}
                         color={'#111111'}
                         fontSize = {11}
                         marginBottom = {10}
@@ -205,7 +205,7 @@ const Akun = ({navigation}) => {
                 <TouchableOpacity style={styles.buttonIcon}
                 onPress= {() => navigation.navigate("MyQuestion")}>
                     <View style={styles.buttonIconHeader}>
-                        <IconSetting/>
+                    <FastImage source={IconQuestion} style={{width : 32, height: 32}}   />
                     </View>
                     <View style={styles.buttonIconText}>
                         <PlainText
@@ -218,7 +218,7 @@ const Akun = ({navigation}) => {
                 <TouchableOpacity style={styles.buttonIcon}
                 onPress= {() => navigation.navigate("MyAnswer")}>
                     <View style={styles.buttonIconHeader}>
-                        <IconSetting/>
+                    <FastImage source={IconAnswer} style={{width : 32, height: 32}}   />
                     </View>
                     <View style={styles.buttonIconText}>
                         <PlainText
@@ -233,17 +233,17 @@ const Akun = ({navigation}) => {
                     onPress = { () =>  navigation.navigate("MyUnlockQuestion")} 
                 >
                     <View style={styles.buttonIconHeader}>
-                        <IconSetting/>
+                        <FastImage source={IconUnlock} style={{width : 32, height: 32}}   />
                     </View>
                     <View style={styles.buttonIconText}>
                         <PlainText
-                            title={"Unlock Question"}
+                            title={"Unlocks"}
                             color={"#000"}
                             fontSize = {12}
                         />
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonIcon}
+                {/* <TouchableOpacity style={styles.buttonIcon}
                     onPress = { () =>  requestLogout(token).then(()=> navigation.replace("Landing"))} 
                 >
                     <View style={styles.buttonIconHeader}>
@@ -256,7 +256,7 @@ const Akun = ({navigation}) => {
                             fontSize = {12}
                         />
                     </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
 
           
@@ -310,7 +310,8 @@ const styles = StyleSheet.create({
     buttonIconText:{
         marginTop : 10,
         alignItems:'center',
-        justifyContent : 'center'
+        justifyContent : 'center',
+        
     },
 
   headerWrap : {

@@ -182,6 +182,8 @@ const Router = () => {
             alignSelf : 'center',
             
           },
+          headerLeft :null
+          
         }}
       />
       <Stack.Screen name="RegisterSuccess" component={RegisterSuccess} 

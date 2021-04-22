@@ -8,7 +8,7 @@ const windowHeight = Dimensions.get('window').height;
 
 import PlainText from '../PlainText'
 
-const InputText = ({placeholder, secureTextEntry, width,borderRadius, textAlign, marginTop, paddingRight, onChangeText, value,onBlur, height, error}) => {
+const InputText = ({autoFocus,onSubmitEditing,keyboardType,placeholder, secureTextEntry, width,borderRadius, textAlign, marginTop, paddingRight, onChangeText, value,onBlur, height, error}) => {
     return (
         <View>
             {error == null || error == "first" &&
@@ -24,10 +24,13 @@ const InputText = ({placeholder, secureTextEntry, width,borderRadius, textAlign,
                 onChangeText={onChangeText}
                 value={value}
                 onBlur={onBlur}
+                keyboardType = {keyboardType}
+                onSubmitEditing = {onSubmitEditing}
+                autoFocus = {autoFocus}
                 />
             }
 
-            {error != null && error != "first" &&
+            {error != null && error != "first"  &&
                 <View>
                     <TextInput 
                         width           = {width}
@@ -41,6 +44,8 @@ const InputText = ({placeholder, secureTextEntry, width,borderRadius, textAlign,
                         onChangeText={onChangeText}
                         value={value}
                         onBlur={onBlur}
+                        keyboardType = {keyboardType}
+                onSubmitEditing = {onSubmitEditing}
                     />
                         <PlainText
                             title={error}

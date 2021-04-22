@@ -12,7 +12,7 @@ const Splash = ({ navigation }) => {
             }else if(token != 'false' && data[2].category_id != null){
                 navigation.replace('MainApp');
             }else{
-                navigation.replace('Landing');
+                navigation.replace('Landing')
             }
             
         }, 3000)

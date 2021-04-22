@@ -108,15 +108,32 @@ const Register = ({navigation}) => {
         let namaDepanError = validator('namaDepan', namaDepan)
         let namaBelakangError = validator('namaBelakang', namaBelakang)
         let confPasswordError = validator('confirmPassword', confPassword)
-        if(emailError != null || passwordError != null || namaBelakangError!=null || namaDepanError != null || confPasswordError != null  ){
+        if(emailError != null){
             setEmailError(emailError)
-            setPasswordError(passwordError)
-            setNamaBelakangError(namaBelakangError)
-            setNamaDepanError(namaDepanError)
-            setConfPasswordError(confPasswordError)
             setLoading(false)
             return;
         }
+        if(passwordError != null){
+            setPasswordError(passwordError)
+            setLoading(false)
+            return;
+        }
+        if(namaBelakangError != null){
+            setNamaBelakangError(namaBelakangError)
+            setLoading(false)
+            return;
+        }
+
+        if(namaDepanError != null){
+            setNamaDepanError(namaDepanError)
+            setLoading(false)
+            return;
+        }
+        if(confPasswordError != null){
+            setConfPasswordError(confPasswordError)
+            setLoading(false)
+        }
+       
 
         const url = "https://askhomelab.com/api/register"
         const config = {
@@ -142,20 +159,12 @@ const Register = ({navigation}) => {
         })
           .then(function (response) {
             
-            navigation.navigate('RegisterSuccess')
+            navigation.replace('Verification',  {token: response.data.token })
+
             setLoading(false)
           })
           .catch(function (error) {
-                Snackbar.show({
-                text: error.response.data.message,
-                duration: Snackbar.LENGTH_INDEFINITE,
-                action: {
-                    text: 'Ok',
-                    textColor: WARNA_UTAMA,
-                    onPress: () => { /* Do something. */ },
-                },  
-              });
-              console.log(error.response)
+               
               setLoading(false)
           });
 
@@ -353,7 +362,7 @@ export default Register
 
 const styles = StyleSheet.create({
     container:{
-        height:windowHeight,
+        flex:1,
         backgroundColor:'white' 
     },
     header: {

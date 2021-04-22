@@ -56,7 +56,7 @@ const MyQuestion = ({navigation}) => {
     })
     .catch(function (err) {
          setLoading(false)
-        console.error(err.response)
+         setListMyQuestion(null)
     });  
   }
   const renderItemMyQuestion = ({item}) =>{

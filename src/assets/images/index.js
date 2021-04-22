@@ -25,9 +25,11 @@ import ImgNothingAsked from './img_nothing_asked.png'
 import ImgNothingQuestion from './img_nothing_question.png'
 import ImgSetting from './img_setting.png'
 import ImgLock from './lock.png'
-
+import IconAnswer from './icon_answer.png'
+import IconUnlock from './icon_unlock.png'
+import IconQuestion from './icon_question.png'
 
 export { Logo, LogoHorizontal , DefaultProfile, LoginImg, RegisterImg, VerificationImg, Background, Points,
 ImgLanding, ImgLogin, IconLoading, ImgSignup, ImgIcon, ImgSuccess, ImgForgotPassword, ImgBisnis, IconLock,
 ImgAddAccount, ImgKonfirmasi, ImgPayment, ImgWaiting, ImgWithdraw, ImgNothingAsked,
-ImgNothingAnswer, ImgNothingQuestion , ImgSetting, ImgLock}
+ImgNothingAnswer, ImgNothingQuestion , ImgSetting, ImgLock,IconAnswer,IconUnlock,IconQuestion}

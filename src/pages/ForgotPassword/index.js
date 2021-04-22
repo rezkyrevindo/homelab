@@ -47,6 +47,7 @@ const ForgotPassword = ({navigation}) => {
                         secureTextEntry = {false} 
                         onChangeText= {(text) => setEmail(text)}
                         value={email}
+                        error= "first"
                         />
                     
                 </View>

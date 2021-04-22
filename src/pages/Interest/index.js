@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react'
 import {
     StyleSheet,
     View,StatusBar,SafeAreaView , FlatList,
-    Dimensions,TouchableOpacity, 
+    Dimensions,TouchableOpacity, TouchableHighlight
   } from 'react-native';
 import {ImgBisnis, IconLock} from '../../assets';
-import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
+import {WARNA_UTAMA, WARNA_ABU_ABU,WARNA_WARNING, BASE_URL_API, BASE_URL_IMG} from '../../utils/constant';
 import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator} from '../../components'
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
@@ -31,7 +31,7 @@ const Interest = ({navigation}) => {
     const getInterest = async () =>{
         setLoading(true)
 
-        axios.get('https://askhomelab.com/api/detail_category', {
+        axios.get(BASE_URL_API+'detail_category', {
             headers: {
                 "Authorization" : "Bearer " + token 
             }
@@ -51,7 +51,7 @@ const Interest = ({navigation}) => {
         var data = new FormData();        
         data.append('category_id', selectedId)
 
-        axios.post('https://askhomelab.com/api/update_settings',
+        axios.post(BASE_URL_API+'category_setting',
         data,
         {
             headers : {
@@ -71,31 +71,68 @@ const Interest = ({navigation}) => {
     }
 
     const renderItem = ({item}) =>{
-        const opacity = item.id === selectedId ? 0.5 : 1;
-        
+        const opacity = item.id === selectedId ? 1 : 0.6
+        const selected = item.id === selectedId ?  {alignItems:'center', borderWidth:1,
+        borderColor:WARNA_UTAMA, borderRadius:20, padding:10} : {alignItems:'center'}
         return (
-            <TouchableOpacity 
+            <View >
+            { item.status == "1" &&
+                <TouchableOpacity 
+                activeOpacity={0.6}
+                underlayColor="#DDDDDD"
                 onPress={() => setSelectedId(item.id)}
-                style={{backgroundColor:'#fff'}}
+                style={{backgroundColor : "#fff", flex:1,padding:10,alignItems:'center',justifyContent:'center', alignContent:"center"}}
             >
-                <View  style={{alignItems:'center'}}>
+                <View  style={selected}>
                     <FastImage 
-                        style={{    width : windowWidth * 0.9 , 
-                                    height: windowHeight * 0.2, 
-                                    opacity : opacity}} 
-                        source={ImgBisnis}
+                        style={{    width : windowWidth * 0.4 , 
+                                    height: windowHeight * 0.2,
+                                    opacity : opacity,
+                                    
+                                    }} 
+                        source={{uri : BASE_URL_IMG + item.img}}
                         resizeMode={FastImage.resizeMode.contain}
                     ></FastImage>
                     <PlainText
-                        fontSize={24}
+                        fontSize={18}
                         title={item.name}
                         fontStyle={"bold"}
-                        color={"#fff"}   
-                        marginTop={-windowHeight * 0.12}  
+                        color={"#000"}   
                     />
                 </View>
                 
             </TouchableOpacity>
+        }
+        { item.status == "0" &&
+                <TouchableOpacity 
+                style={{backgroundColor : "#fff", flex:1, padding:10, alignContent:"center"}}
+            >
+                <View  style={{alignItems:'center', borderWidth:1,
+                        borderColor:WARNA_ABU_ABU, borderRadius:20, padding:10}}>
+                    <FastImage 
+                        style={{    width : windowWidth * 0.4 , 
+                                    height: windowHeight * 0.2, 
+                                    opacity : opacity,}} 
+                        source={{uri : BASE_URL_IMG + item.img}}
+                        resizeMode={FastImage.resizeMode.contain}
+                    ></FastImage>
+                    <PlainText
+                        fontSize={18}
+                        title={item.name}
+                        fontStyle={"bold"}
+                        color={"#000"}   
+                    />
+                    <PlainText
+                        fontSize={12}
+                        title={"Coming Soon"}
+                        fontStyle={"bold"}
+                        color={"#000"}   
+                    />
+                </View>
+                
+            </TouchableOpacity>
+        }
+        </View>
 )
     }
 
@@ -118,7 +155,9 @@ const Interest = ({navigation}) => {
                             keyExtractor={(item) => item.id.toString()}
                             renderItem={renderItem}
                             extraData={selectedId}
-                            showsVerticalScrollIndicator={false}
+                            
+                            numColumns={2}
+                            
                             />
                     </SafeAreaView>
                     <SafeAreaView style={{flex:1}}>
@@ -136,7 +175,7 @@ const Interest = ({navigation}) => {
                         }
                         
                         
-                       
+                    
                     </SafeAreaView>
                 </SafeAreaView>
             }
@@ -150,8 +189,7 @@ const styles = StyleSheet.create({
     container:{
         flex:8,
         backgroundColor:'white',
-        
-        
+        alignItems:'center'
     },
     header: {
         padding : 20,

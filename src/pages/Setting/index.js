@@ -4,9 +4,9 @@ import {
     View,Text, TextInput, TouchableOpacity,
     Dimensions,StatusBar, TouchableHighlight, Button
   } from 'react-native';
-import {ImgSetting , IconUserActive, ImgIcon} from '../../assets';
+import {ImgSetting , IconUserActive, ImgIcon, IconCaretUp, IconCaretLeft} from '../../assets';
 import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
-import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator} from '../../components'
+import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator, IconSetting} from '../../components'
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
 import Snackbar from 'react-native-snackbar';
@@ -19,7 +19,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateProfile } from '../../redux/actions';
 import axios from 'axios'
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
+
 const Setting = ({navigation}) => {
+    
+    const requestLogout = (token) => dispatch(logout(token));
     const { token,data } = useSelector (state => state.authReducers);
     const dispatch = useDispatch();
     const updateProf = (token) => dispatch(updateProfile(token));
@@ -38,6 +41,7 @@ const Setting = ({navigation}) => {
         {id:"/users/6.png", name:"http://askhomelab.com/storage/users/6.png"},
     ])
     const [modalGambar, setModalGambar] = useState(false)
+    const [profileMinimize, setProfileMinimize] = useState(false)
 
     const submit = async () => {
         
@@ -161,88 +165,117 @@ const Setting = ({navigation}) => {
                 
                     <View style={styles.body}>
                         <View style={styles.bodyContent}>
-                            <View style={{padding:20, backgroundColor :'#fff', borderTopEndRadius:10, borderTopStartRadius:10, flexDirection:'row', alignItems:'center'}}>
-                                <IconUserActive width={24} height={24}/>
-                                <PlainText
-                                        title={"Profile"}
-                                        color={"#000"}
-                                        fontSize= {14}
-                                        fontStyle={"bold"}
-                                        marginLeft={20}
-                                    />
-                            </View>
-                            <View style={{alignContent:'center', alignItems:'center'}}>
-                            <TouchableOpacity style={{width:100, height:100, backgroundColor:'#C4C4C4', marginTop:20, borderRadius:100, alignItems:"center", justifyContent:'center'}}
-                                onPress= {() => setModalGambar(true)}
-                            >
-                            
-                                <FastImage 
-                                    style={{width:100, height:100, borderRadius:100}} 
-                                    source={{
-                                        uri : "http://askhomelab.com/storage"+selectedImage
-                                    }}
-                                    resizeMode={FastImage.resizeMode.contain}
-                                ></FastImage>
-                                
+                            <TouchableOpacity 
+                                onPress={()=>{
+                                    if(profileMinimize){
+                                        setProfileMinimize(false)
+                                    }else{
+                                        setProfileMinimize(true)
+                                    }
+                                } }
+                            style={{padding:20, backgroundColor :'#fff', borderRadius:10, flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                                <View style={{flexDirection : 'row'}}>
+                                    <IconUserActive width={24} height={24}/>
+                                    <PlainText
+                                            title={"Profile"}
+                                            color={"#000"}
+                                            fontSize= {14}
+                                            fontStyle={"bold"}
+                                            marginLeft={20}
+                                        />
+                                </View>
+                                <View>
+                                    {profileMinimize &&
+                                        <IconCaretUp/>
+                                    }
+                                    {!profileMinimize &&
+                                        <IconCaretUp style={{transform: [{rotateX: '180deg'}]}}/>
+                                    }
+                                </View>
                             </TouchableOpacity>
-                            <FastImage 
-                                style={{width:30, height:30, marginTop:-65}} 
-                                source={ImgIcon}
-                                resizeMode={FastImage.resizeMode.contain}
-                            ></FastImage>
-                            <View style={{flexDirection:"row", justifyContent:"space-between", width:windowWidth *0.85, marginTop:30}}>
-                                <InputText 
-                                    width       = {windowWidth * 0.40}
-                                    placeholder = "Nama Depan" 
-                                    secureTextEntry = {false} 
-                                    onChangeText = {(text) => setNamaDepan(text)}
-                                    value={namaDepan}
-                                    error="first"
-                                    />
-                                <InputText 
-                                    width       = {windowWidth * 0.40}
-                                    placeholder = "Nama Belakang" 
-                                    secureTextEntry = {false} 
-                                    onChangeText = {(text) => setNamaBelakang(text)}
-                                    value={namaBelakang}
-                                    error="first"
-                                    />
-                            </View>
-                            <InputText 
-                                width       = {windowWidth * 0.85}
-                                placeholder = "Nomor HP" 
-                                secureTextEntry = {false} 
-                                onChangeText = {(text) => setNoHp(text)}
-                                value={noHp}
-                                error="first"
-                                />
+                            {profileMinimize && 
+                                <View style={{alignContent:'center', alignItems:'center'}}>
+                                    <TouchableOpacity style={{width:100, height:100, backgroundColor:'#C4C4C4', marginTop:20, borderRadius:100, alignItems:"center", justifyContent:'center'}}
+                                        onPress= {() => setModalGambar(true)}
+                                    >
+                                    
+                                        <FastImage 
+                                            style={{width:100, height:100, borderRadius:100}} 
+                                            source={{
+                                                uri : "http://askhomelab.com/storage"+selectedImage
+                                            }}
+                                            resizeMode={FastImage.resizeMode.contain}
+                                        ></FastImage>
+                                        
+                                    </TouchableOpacity>
+                                    <FastImage 
+                                        style={{width:30, height:30, marginTop:-65}} 
+                                        source={ImgIcon}
+                                        resizeMode={FastImage.resizeMode.contain}
+                                    ></FastImage>
+                                    <View style={{flexDirection:"row", justifyContent:"space-between", width:windowWidth *0.85, marginTop:30}}>
+                                        <InputText 
+                                            width       = {windowWidth * 0.40}
+                                            placeholder = "Nama Depan" 
+                                            secureTextEntry = {false} 
+                                            onChangeText = {(text) => setNamaDepan(text)}
+                                            value={namaDepan}
+                                            error="first"
+                                            />
+                                        <InputText 
+                                            width       = {windowWidth * 0.40}
+                                            placeholder = "Nama Belakang" 
+                                            secureTextEntry = {false} 
+                                            onChangeText = {(text) => setNamaBelakang(text)}
+                                            value={namaBelakang}
+                                            error="first"
+                                            />
+                                    </View>
+                                    <InputText 
+                                        width       = {windowWidth * 0.85}
+                                        placeholder = "Nomor HP" 
+                                        secureTextEntry = {false} 
+                                        onChangeText = {(text) => setNoHp(text)}
+                                        value={noHp}
+                                        error="first"
+                                        />
+                                    
+                                    <InputText 
+                                        width       = {windowWidth * 0.85}
+                                        placeholder = "Universitas" 
+                                        secureTextEntry = {false}
+                                        onChangeText = {(text) => setUniversitas(text)}
+                                        value={universitas}
+                                        error="first"
+                                        />
+                                    <View style={{alignItems:'center', marginBottom:20}}>
+                                        <ButtonPrimary  
+                                            onPress={() => {
+                                                submit()
+                                            }}
+                                            title="Perbarui"
+                                            width={windowWidth*0.6}
+                                            marginTop   = {windowHeight * 0.033}
+                                        />
+                                    </View>
+                                </View>
+                            }
                             
-                            <InputText 
-                                width       = {windowWidth * 0.85}
-                                placeholder = "Universitas" 
-                                secureTextEntry = {false}
-                                onChangeText = {(text) => setUniversitas(text)}
-                                value={universitas}
-                                error="first"
-                                />
-                            <View style={{alignItems:'center', marginBottom:20}}>
-                                <ButtonPrimary  
-                                    onPress={() => {
-                                        submit()
-                                    }}
-                                    title="Perbarui"
-                                    width={windowWidth*0.6}
-                                    marginTop   = {windowHeight * 0.033}
-                                />
-                            </View>
-                            </View>
                         </View>
 
                     
+                        <View style={{alignItems:'center', marginBottom:20}}>
+                                <ButtonPrimary  
+                                   onPress = { () =>  requestLogout(token).then(()=> navigation.replace("Landing"))} 
+                                    title="Logout"
+                                    width={windowWidth*0.8}
+                                    marginTop   = {windowHeight * 0.033}
+                                />
+                            </View>
                         
-                            
                                 
                     </View>
+                  
                    </View>
                 
             

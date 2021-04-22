@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {
     StyleSheet,
     Image,
@@ -9,12 +9,60 @@ import {
 import {ScrollView} from 'react-native-gesture-handler';
 import {LogoHorizontal} from '../../assets';
 import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
-import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, ButtonDefault} from '../../components'
+import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, ButtonDefault, LoadingIndicator} from '../../components'
+import axios from 'axios'
 
+import Snackbar from 'react-native-snackbar';
+import FastImage from 'react-native-fast-image'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Verification = ({navigation}) => {
+const Verification = ({route, navigation}) => {
+    const {token} = route.params.token;
+    const [isLoading, setLoading] = useState(false)
+    const [code, setCode] = useState('')
+
+
+
+    const submit = () =>{
+        setLoading(true)
+     
+        const data = new URLSearchParams()
+        
+        data.append("code", code)
+        
+        axios.post('https://askhomelab.com/api/verify_email',
+         data,
+        {
+          headers : {
+            Accept : '*/*',
+            "content-type" :'application/x-www-form-urlencoded'
+          }  
+        })
+          .then(function (response) {
+            if(response.data.message != "error"){
+                
+                navigation.replace('RegisterSuccess')
+            }else{
+                Snackbar.show({
+                    text:"Tidak cocok",
+                    duration: Snackbar.LENGTH_INDEFINITE,
+                    action: {
+                        text: 'Ok',
+                        textColor: WARNA_UTAMA,
+                        onPress: () => { /* Do something. */ },
+                    },  
+                    });
+            }
+
+            setLoading(false)
+          })
+          .catch(function (error) {
+               
+              setLoading(false)
+          });
+    }
+
     return (
         <View style = {styles.container}>
             <View>
@@ -24,9 +72,12 @@ const Verification = ({navigation}) => {
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.header}>
-                    <Image 
-                        
-                    style={styles.logo} source={LogoHorizontal}></Image>
+                    <FastImage 
+                            style={{width:200, height:100}} 
+                            source={LogoHorizontal}
+                            resizeMode={FastImage.resizeMode.contain}
+                        ></FastImage>
+                    
                 </View>
                 <View style={styles.body}>
                     <HeaderText
@@ -51,32 +102,20 @@ const Verification = ({navigation}) => {
                     </View>
 
                     <View style={{alignItems:'center'}}>
-                        <View style={{flexDirection:'row', width:windowWidth*0.6, justifyContent:'space-between'}}>
+                        <View style={{flexDirection:'row', width:windowWidth*0.6, justifyContent:'center'}}>
+                            
                             <InputText 
-                                width       = {windowWidth * 0.1}
-                                placeholder = "" 
-                                secureTextEntry = {false} 
-                                />
-                            <InputText 
-                                width       = {windowWidth * 0.1}
+                                autoFocus = {true}
+                                width       = {windowWidth * 0.6}
                                 placeholder = "" 
                                 secureTextEntry = {false}
+                                error= "first"
+                                onChangeText = {(text) => setCode(text)}
+                                value={code}
+                                keyboardType = "number-pad"
+                                textAlign="center"
                                 />
-                            <InputText 
-                                width       = {windowWidth * 0.1}
-                                placeholder = "" 
-                                secureTextEntry = {false}
-                                />
-                            <InputText 
-                                width       = {windowWidth * 0.1}
-                                placeholder = "" 
-                                secureTextEntry = {false}
-                                />
-                            <InputText 
-                                width       = {windowWidth * 0.1}
-                                placeholder = "" 
-                                secureTextEntry = {false}
-                                />
+                            
                         </View>
                     </View>
                 
@@ -85,7 +124,7 @@ const Verification = ({navigation}) => {
                     <View style={{alignItems:'center'}}>
                         <ButtonPrimary 
                             onPress={() => {
-                                navigation.navigate('ConfirmationSuccess');
+                                submit();
                             }} 
                             title="Next"
                             width={windowWidth*0.6}
@@ -132,8 +171,8 @@ const styles = StyleSheet.create({
         alignItems : 'center',
     },
     logo : {
-        width : windowWidth * 0.36,
-        height : windowHeight * 0.052
+        width : windowWidth * 0.14,
+        height : windowHeight * 0.06,
     },
     body:{
         flex:1,
