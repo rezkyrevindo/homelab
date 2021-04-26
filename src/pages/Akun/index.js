@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -27,7 +27,6 @@ const Akun = ({navigation}) => {
 
     const requestLogout = (token) => dispatch(logout(token));
     
-   
 
   return (
     <View style={styles.page}>

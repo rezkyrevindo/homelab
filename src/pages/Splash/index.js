@@ -2,22 +2,34 @@ import React, { useEffect } from 'react'
 import { StyleSheet, StatusBar, View, ImageBackground, Image } from 'react-native'
 import {Logo } from '../../assets'
 import { useSelector, useDispatch } from 'react-redux';
+
+import messaging from '@react-native-firebase/messaging';
 const Splash = ({ navigation }) => {
     const { token,data } = useSelector (state => state.authReducers);
     useEffect(() => {
        
         setTimeout( () => {
             if(token != 'false' && data[2].category_id == null){
+                subcribe(data[2].email)
                 navigation.replace('Interest')
             }else if(token != 'false' && data[2].category_id != null){
+                subcribe(data[2].email)
                 navigation.replace('MainApp');
             }else{
                 navigation.replace('Landing')
             }
-            
+            // navigation.replace('Landing')
         }, 3000)
     }, [navigation]);
 
+    const subcribe = async (email) =>{
+        messaging()
+        .subscribeToTopic(email.replace(/[^a-zA-Z0-9]/g, ""))
+        .then(() => {
+            console.log('Subscribed to topic!')
+            console.log("Topic Name : " + email.replace(/[^a-zA-Z0-9]/g, ""))
+        });
+    }
     return (
         
             <ImageBackground style={styles.background}>

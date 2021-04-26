@@ -11,12 +11,12 @@ import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
 import Snackbar from 'react-native-snackbar';
 import {ScrollView} from 'react-native-gesture-handler';
-
+import messaging from '@react-native-firebase/messaging';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
 
 import { useSelector, useDispatch } from 'react-redux';
-import { updateProfile } from '../../redux/actions';
+import { updateProfile, logout } from '../../redux/actions';
 import axios from 'axios'
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 
@@ -42,6 +42,16 @@ const Setting = ({navigation}) => {
     ])
     const [modalGambar, setModalGambar] = useState(false)
     const [profileMinimize, setProfileMinimize] = useState(false)
+
+    useEffect(() => {
+        
+    }, [])
+    
+   const unsubscribe = async (email) =>{
+        messaging()
+        .unsubscribeFromTopic(email.replace(/[^a-zA-Z0-9]/g, ""))
+        .then(() => console.log('Unsubscribed fom the topic!'));
+    }
 
     const submit = async () => {
         
@@ -266,7 +276,14 @@ const Setting = ({navigation}) => {
                     
                         <View style={{alignItems:'center', marginBottom:20}}>
                                 <ButtonPrimary  
-                                   onPress = { () =>  requestLogout(token).then(()=> navigation.replace("Landing"))} 
+                                   onPress = { () => {
+                                            requestLogout(token).then(()=> {
+                                                unsubscribe(data[2].email)  
+                                                navigation.replace("Landing")
+                                            })
+                                            
+                                        } 
+                                    } 
                                     title="Logout"
                                     width={windowWidth*0.8}
                                     marginTop   = {windowHeight * 0.033}
