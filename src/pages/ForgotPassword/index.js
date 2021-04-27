@@ -5,18 +5,91 @@ import {
     Dimensions,StatusBar
   } from 'react-native';
 import {ImgForgotPassword} from '../../assets';
-import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
+import {WARNA_UTAMA, WARNA_WARNING, BASE_URL_API} from '../../utils/constant';
 import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator} from '../../components'
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
+import validate from '../../utils/validate'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
 
 const ForgotPassword = ({navigation}) => {
     const [isLoading, setLoading] = useState(false)
     const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [emailError, setEmailError] = useState("first")
+    const constraints = {
+        email: {
+            presence: {
+                message: "cannot be blank."
+            },
+            email: {
+                message: 'must contain a valid email address'
+            },
+            length: {
+                minimum: 8,
+                message: 'must be at least 8 characters'
+            }
+        },
+       
+      }
+      
+      
+      const validator = (field, value) => {
+        // Creates an object based on the field name and field value
+        // e.g. let object = {email: 'email@example.com'}
+        let object = {}
+        object[field] = value
+      
+        let constraint = constraints[field]
+        // console.log(object, constraint)
+      
+        // Validate against the constraint and hold the error messages
+        const result = validate(object, { [field]: constraint })
+        console.log(result)
+      
+        // If there is an error message, return it!
+        if (result) {
+          // Return only the field error message if there are multiple
+          return result[field][0]
+        }
+      
+        return null
+      }
 
+      const submit = async () => {
+        
+
+        setLoading(true)
+
+        let emailError = validator('email', email)
+        if(emailError != null){
+            setEmailError(emailError)
+            setLoading(false)
+            return;
+        }
+       
+        axios.get(BASE_URL_API+'forgot_password/email?='+email,
+        {
+          headers : {
+            Accept : '*/*',
+            "content-type" :'application/x-www-form-urlencoded'
+          }  
+        })
+          .then(function (response) {
+            if(response.data.success){
+
+            }
+            navigation.replace('ForgotPasswordSuccess')
+
+            setLoading(false)
+          })
+          .catch(function (error) {
+               
+              setLoading(false)
+          });
+
+
+    }
     const renderContent = () => (
         <View style={{height : windowHeight, backgroundColor:'white',}}>
              <View>
@@ -47,7 +120,7 @@ const ForgotPassword = ({navigation}) => {
                         secureTextEntry = {false} 
                         onChangeText= {(text) => setEmail(text)}
                         value={email}
-                        error= "first"
+                        error= {emailError}
                         />
                     
                 </View>
@@ -57,7 +130,7 @@ const ForgotPassword = ({navigation}) => {
                 <View style={{alignItems:'center'}}>
                     <ButtonPrimary  
                         onPress={() => {
-                            navigation.navigate('ForgotPasswordSuccess');
+                            submit();
                         }}
                         title="Lanjutkan"
                         width={windowWidth*0.8}
