@@ -12,7 +12,7 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import validate from '../../utils/validate'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
-
+import axios from 'axios'
 const ForgotPassword = ({navigation}) => {
     const [isLoading, setLoading] = useState(false)
     const [email, setEmail] = useState("")
@@ -45,7 +45,7 @@ const ForgotPassword = ({navigation}) => {
       
         // Validate against the constraint and hold the error messages
         const result = validate(object, { [field]: constraint })
-        console.log(result)
+        // console.log(result)
       
         // If there is an error message, return it!
         if (result) {
@@ -68,24 +68,16 @@ const ForgotPassword = ({navigation}) => {
             return;
         }
        
-        axios.get(BASE_URL_API+'forgot_password/email?='+email,
-        {
-          headers : {
-            Accept : '*/*',
-            "content-type" :'application/x-www-form-urlencoded'
-          }  
-        })
+        axios.post(BASE_URL_API+'forgot_password?email='+email)
           .then(function (response) {
-            if(response.data.success){
-
-            }
+            // console.log("ini data"+JSON.stringify(response))
             navigation.replace('ForgotPasswordSuccess')
 
             setLoading(false)
           })
           .catch(function (error) {
-               
-              setLoading(false)
+            // console.log("ini data"+JSON.stringify(error))
+            setLoading(false)
           });
 
 

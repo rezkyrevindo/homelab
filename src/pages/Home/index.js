@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
   Image,
-  View,SafeAreaView, FlatList,
+  View,SafeAreaView, FlatList, PermissionsAndroid,
   TouchableHighlight,
   Dimensions, StatusBar, TouchableOpacity, LogBox,
 } from 'react-native';
@@ -15,6 +15,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import axios from 'axios'
 import { updateProfile } from '../../redux/actions';
 import { useSelector, useDispatch } from 'react-redux';
+import Snackbar from 'react-native-snackbar';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height-56;
 const headerHeight = windowHeight * 0.25;
@@ -34,6 +35,37 @@ const Home = ({navigation}) => {
   const [selectedMyQuestion, setSelectedMyQuestion] = useState(null)
 
 
+  const checkPermission = async () =>{
+    if (Platform.OS === 'android') {
+      PermissionsAndroid.requestMultiple(
+        [PermissionsAndroid.PERMISSIONS.CAMERA, 
+        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE]
+        ).then((result) => {
+          if ( result['android.permission.CAMERA']
+          && result['android.permission.READ_EXTERNAL_STORAGE']
+          && result['android.permission.WRITE_EXTERNAL_STORAGE'] === 'granted') {
+            
+          } else if (result['android.permission.CAMERA']
+          && result['android.permission.READ_EXTERNAL_STORAGE']
+          && result['android.permission.WRITE_EXTERNAL_STORAGE'] === 'never_ask_again') {
+            Snackbar.show({
+              text: "Please Go into Settings -> Applications -> APP_NAME -> Permissions and Allow permissions to continue",
+              duration: Snackbar.LENGTH_INDEFINITE,
+              action: {
+                  text: 'Ok',
+                  textColor: WARNA_UTAMA,
+                  onPress: () => { /* Do something. */ },
+              },  
+              });
+          }
+        });
+    }
+  }
+
   useEffect(() => {
     if(selectedQuestion != null)
     navigation.navigate('DetailQuestion', {isSolved: selectedQuestion.Solved_Status,id_question: selectedQuestion.id_Question });
@@ -44,9 +76,10 @@ const Home = ({navigation}) => {
   }, [selectedMyQuestion])
 
   useEffect(() => {
-    LogBox.ignoreLogs(['Warning']); 
+    
     updateProf(token)
     getMyQuestion()
+    checkPermission()
     
   }, [])
 
