@@ -5,15 +5,21 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import messaging from '@react-native-firebase/messaging';
 const Splash = ({ navigation }) => {
-    const { token,data } = useSelector (state => state.authReducers);
+    const { token,data, notification } = useSelector (state => state.authReducers);
+
     useEffect(() => {
-       
+       console.log("isi notification : "+ notification)
         setTimeout( () => {
             if(token != 'false' && data[2].category_id == null){
-                subcribe(data[2].email)
+                if(notification == "true"){
+                    subcribe(data[2].email)
+                }
+                
                 navigation.replace('Interest')
             }else if(token != 'false' && data[2].category_id != null){
-                subcribe(data[2].email)
+                if(notification == "true"){
+                    subcribe(data[2].email)
+                }
                 navigation.replace('MainApp');
             }else{
                 navigation.replace('Landing')

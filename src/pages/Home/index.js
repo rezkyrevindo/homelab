@@ -238,6 +238,7 @@ const Home = ({navigation}) => {
                 keyExtractor={(item) => item.id_Question.toString()}
                 renderItem={renderItemMyQuestion}
                 showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps='always'
                 
                 />
               }
@@ -263,7 +264,8 @@ const Home = ({navigation}) => {
   
   const SearchContent = () => (
         
-        <SafeAreaView style={styles.content}>
+        <SafeAreaView style={styles.content} 
+        keyboardShouldPersistTaps='always'>
 
         
             <View style={{flexDirection : 'row', justifyContent :'space-between', alignItems:'center', marginTop : 20}}>

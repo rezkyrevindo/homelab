@@ -62,11 +62,12 @@ const MyQuestion = ({navigation}) => {
   const renderItemMyQuestion = ({item}) =>{
     
         return (
-        <QuestionCard
-             onPress={() => {
-                setSelectedMyQuestion(item)
+          <QuestionCard
+          onPress={() => {
+            navigation.navigate('MyDetailQuestion', {isSolved: item.Solved_Status,id_question: item.id_Question });
               }}
-          name = {item.User_Question}
+              name = {item.First_Name + " "+ item.Last_Name}
+          picture = {item.Picture_User}
           category = {item.Sub_Category}
           time = {item.Date_Created}
           point = {item.Total_Point}
@@ -79,7 +80,8 @@ const MyQuestion = ({navigation}) => {
   }
 
     return (
-        <ScrollView style={styles.page}>
+        <ScrollView style={styles.page}
+        keyboardShouldPersistTaps='always'>
             <View>
                 <StatusBar  
                 backgroundColor={WARNA_UTAMA} 

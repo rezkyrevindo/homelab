@@ -4,6 +4,7 @@ import axios from 'axios';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = "LOGOUT";
 export const UPDATE_PROFILE = "UPDATE_PROFILE"
+export const NOTIF = "NOTIF"
 
 import Snackbar from 'react-native-snackbar';
 
@@ -47,6 +48,19 @@ export const updateProfile = (token) => {
     }
 };
 
+export const update_notification = (notif) =>{
+    try {
+        return async dispatch => {
+            dispatch({
+                type : NOTIF,
+                payload : notif
+            })
+        }
+    }catch (error){
+        console.log(error)
+    }
+}
+
 export const login =  (email,password) => {
     try {
         
@@ -79,21 +93,7 @@ export const login =  (email,password) => {
                                 onPress: () => { /* Do something. */ },
                             },  
                             });
-                        // axios.get('https://askhomelab.com/api/view_setting', {
-                        //     headers: {
-                        //         "Authorization" : 'Bearer ' + response.data.token
-                        //     }
-                        // }).then(function (res){
-                        //     dispatch({
-                        //         type : UPDATE_PROFILE,
-                        //         payload : res.data
-                        //     })
-                        //     console.log(res.data)
-                            
-                        // }).catch(function (err){
-                        //     console.log(err)
-                            
-                        // });
+                        
                     }else{
                         Snackbar.show({
                             text: "Username atau password salah",

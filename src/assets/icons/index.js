@@ -43,10 +43,14 @@ import IconCaretUp from './caret-up.svg'
 import IconCaretLeft from "./caret-left.svg"
 import IconWithdraw from './withdraw.svg'
 import IconTopUp from './topup.svg'
+import IconFaq from './ic_faq.svg'
+import IconFile from './ic_file.svg'
+import IconSecurity from './ic_security.svg'
+import IconInfo from './ic_info.svg'
 export {
   IconMenu,IconMenuActive, IconNotification,IconNotificationActive, IconSearch, IconSearchActive,
-  IconAkun,
-  IconAkunActive,
+  IconAkun,IconFaq,
+  IconAkunActive,IconFile,IconSecurity,IconInfo,
   IconHome,
   IconHomeActive,
   IconPesanan,

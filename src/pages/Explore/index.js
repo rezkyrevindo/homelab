@@ -32,9 +32,9 @@ const Explore = ({navigation}) => {
   const [selectedId, setSelectedId] = useState(null);
   const [listQuestion, setListQuestion] = useState([])
   const [opacity_bounty, setOpacityBounty] = useState(1)
-  const [selectedPoint, setSelectedPoint] = useState("25")
+  const [selectedPoint, setSelectedPoint] = useState("150")
   const [isLoadingContent, setLoadingContent] = useState(false)
-  const listPoints = [{id:'25', name:'25'}, {id:'15', name:'15'} , {id:'10', name:'10'},  {id:'5', name:'5'} ,  {id:'6', name:'All'}]
+  const listPoints = [{id:'110', name:'110'}, {id:'130', name:'130'} , {id:'150', name:'150'} ,{id:'6', name:'All'}]
   const [selectedQuestion, setSelectedQuestion] = useState(null)
   
   const [selectedKategoriName, setSelectedKategoriName] = useState('Pilih Tag')
@@ -291,7 +291,7 @@ const RenderKategori = ({item,index}) => {
             <TouchableOpacity style={{padding:10, alignItems:'center'}}
                 onPress={() => {
                     setSelectedId(item.id)
-                    setSelectedIndexTag(index)
+                    // setSelectedIndexTag(index)
                     setSelectedKategoriName(item.name)
                     setModalKategori(false)
                 }}

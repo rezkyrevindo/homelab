@@ -28,8 +28,8 @@ const CreateQuestion = ({navigation}) => {
     const { token, data } = useSelector (state => state.authReducers);
     const [modalKategori, setModalKategori] = useState(false)
     const [modalPoint, setModalPoint] = useState(false)
-    const points = [{'id':'25', 'name':'25'}, {'id':'20', 'name':'20'},{'id':'15', 'name':'15'}, {'id':'5', 'name':'5'}]
-    const [selectedPoint, setSelectedPoint] = useState('5')
+    const points = [{id:'110', name:'110'}, {id:'130', name:'130'} , {id:'150', name:'150'} ,{id:'6', name:'All'}]
+    const [selectedPoint, setSelectedPoint] = useState('110')
     const [listKategori, setListKategori] = useState([])
     const [selectedKategori, setSelectedKategori] = useState(null)
     const [selectedKategoriName, setSelectedKategoriName] = useState('Pilih Kategori')

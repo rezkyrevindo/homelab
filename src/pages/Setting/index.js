@@ -2,13 +2,12 @@ import React, {useState, useEffect} from 'react'
 import {
     StyleSheet, SafeAreaView, FlatList,
     View,Text, TextInput, TouchableOpacity,
-    Dimensions,StatusBar, TouchableHighlight, Button
+    Dimensions,StatusBar, TouchableHighlight, Button, Switch
   } from 'react-native';
-import {ImgSetting , IconUserActive, ImgIcon, IconCaretUp, IconCaretLeft} from '../../assets';
-import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
+import {ImgSetting , IconUserActive, ImgIcon, IconCaretUp,IconCaretLeft, IconPicture, IconSecurity, IconNotificationActive,IconNotification, IconInfo, IconFile, IconFaq} from '../../assets';
+import {WARNA_UTAMA, WARNA_WARNING,WARNA_SUCCESS, BASE_URL_API, BASE_URL_IMG} from '../../utils/constant';
 import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator, IconSetting} from '../../components'
 import FastImage from 'react-native-fast-image'
-import BottomSheet from 'reanimated-bottom-sheet';
 import Snackbar from 'react-native-snackbar';
 import {ScrollView} from 'react-native-gesture-handler';
 import messaging from '@react-native-firebase/messaging';
@@ -16,59 +15,150 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
 
 import { useSelector, useDispatch } from 'react-redux';
-import { updateProfile, logout } from '../../redux/actions';
+import { updateProfile, logout ,update_notification} from '../../redux/actions';
 import axios from 'axios'
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
+import ImagePicker,{showImagePicker,launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const Setting = ({navigation}) => {
     
     const requestLogout = (token) => dispatch(logout(token));
-    const { token,data } = useSelector (state => state.authReducers);
+    const { token,data, notification } = useSelector (state => state.authReducers);
     const dispatch = useDispatch();
     const updateProf = (token) => dispatch(updateProfile(token));
+    const updateNotif = (not)  => dispatch(update_notification(not))
+    
+    const [currentPassword, setCurrentPassword] = useState("")
+    const [password, setPassword] = useState("")
+    const [password_confirmation, setPasswordConfirmation] = useState("")
     const [noHp, setNoHp] = useState(data[2].handphone)
     const [universitas, setUniversitas] = useState(data[2].universitas!="null"? data[2].universitas:"")
     const [namaDepan, setNamaDepan] = useState(data[2].first_name)
     const [namaBelakang, setNamaBelakang] = useState(data[2].last_name)
     const [isLoading, setLoading] = useState(false)
-    const [selectedImage, setSelectedImage] = useState(data[2].picture)
+    const [selectedImage, setSelectedImage] = useState(BASE_URL_IMG+""+data[2].picture)
+    const [selectedImageType,setSelectedImageType] = useState("url")
     const [listImage, setListImage] = useState([
-        {id:"/users/1.png", name:"http://askhomelab.com/storage/users/1.png"},
-        {id:"/users/2.png", name:"http://askhomelab.com/storage/users/2.png"},
-        {id:"/users/3.png", name:"http://askhomelab.com/storage/users/3.png"},
-        {id:"/users/4.png", name:"http://askhomelab.com/storage/users/4.png"},
-        {id:"/users/5.png", name:"http://askhomelab.com/storage/users/5.png"},
-        {id:"/users/6.png", name:"http://askhomelab.com/storage/users/6.png"},
+        {id:"/users/1.png", name:BASE_URL_IMG+"users/1.png"},
+        {id:"/users/2.png", name:BASE_URL_IMG+"users/2.png"},
+        {id:"/users/3.png", name:BASE_URL_IMG+"users/3.png"},
+        {id:"/users/4.png", name:BASE_URL_IMG+"users/4.png"},
+        {id:"/users/5.png", name:BASE_URL_IMG+"users/5.png"},
+        {id:"/users/6.png", name:BASE_URL_IMG+"users/6.png"},
     ])
     const [modalGambar, setModalGambar] = useState(false)
     const [profileMinimize, setProfileMinimize] = useState(false)
+    const [passwordMinimize, setPasswordMinimize] = useState(false)
+    const [notificationMinimize, setNotificationMinimize] = useState(false)
+    const [infoMinimize, setInfoMinimize] = useState(false)
+    const [filePath, setFilePath] = useState(null)
+    const [isEnabled, setIsEnabled] = useState(notification == "true" ? true : false);
+    
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+    
 
     useEffect(() => {
-        
-    }, [])
+        console.log(isEnabled)
+        if(isEnabled){
+            updateNotif("true")
+            subcribe(data[2].email)
+        }else{
+            updateNotif("false")
+            unsubscribe(data[2].email)
+        }
+    }, [isEnabled])
+
+    const subcribe = async (email) =>{
+        messaging()
+        .subscribeToTopic(email.replace(/[^a-zA-Z0-9]/g, ""))
+        .then(() => {
+            console.log('Subscribed to topic!')
+           
+        });
+    }
     
    const unsubscribe = async (email) =>{
         messaging()
         .unsubscribeFromTopic(email.replace(/[^a-zA-Z0-9]/g, ""))
         .then(() => console.log('Unsubscribed fom the topic!'));
     }
+    const _launchImageLibrary = () => {
+        let options = {
+            storageOptions: {
+              skipBackup: true,
+              path: 'images',
+            },
+            maxHeight : 1000,
+            maxWidth : 1000
+          };
+          launchImageLibrary(options, (response) => {
+          console.log('Response = ', response);
+    
+          if (response.didCancel) {
+            // console.log('User cancelled image picker');
+          } else if (response.error) {
+            // console.log('ImagePicker Error: ', response.error);
+          } else if (response.customButton) {
+            // console.log('User tapped custom button: ', response.customButton);
+            alert(response.customButton);
+          } else {
+            const source = { uri: response.uri };
+            // console.log('response', JSON.stringify(response));
+            console.log("file ",{'uri': Platform.OS === "android" ? response.uri.replace("content://", "file://") : response.uri.replace("file://", ""), 'type': response.type,'name': response.fileName})
+            setModalGambar(false)
+            setSelectedImageType("upload")
+            setSourceImg(source)
+            setSelectedImage(source)
+            console.log(response)
+            setFilePath(response)
+            setFileData({'uri': Platform.OS === "android" ? response.uri.replace("content://", "file://") : response.uri.replace("file://", "") , 'type': response.type,'name': response.fileName})
+            setFileUri(response.uri)
+            
+          }
+        });
+    
+      }
 
     const submit = async () => {
         
         setLoading(true)
-        const data = new FormData()
-        data.append("universitas", universitas)
-        data.append("first_name", namaDepan)
-        data.append("last_name", namaBelakang)
-        data.append("handphone", noHp)
-        data.append("picture", selectedImage)
+        const formData = new FormData()
+        formData.append("universitas", universitas)
+        formData.append("first_name", namaDepan)
+        formData.append("last_name", namaBelakang)
+        formData.append("handphone", noHp)
+        formData.append("category_id", data[2].category_id)
+        formData.append("email", data[2].email)
+
+       
+        if(selectedImageType == "url"){
+            
+            
+            formData.append('file', {
+                uri: selectedImage,
+                type: 'image/png',
+                name: "Photo_React_Native",
+            });
+            
+        }else{
+            if (filePath != null){
+            
+                formData.append('file', {
+                    uri: filePath.uri,
+                    type: filePath.type,
+                    name: "Photo_React_Native",
+                });
+            }
+        }
+
         
         axios.post('https://askhomelab.com/api/update_settings',
-         data,
+        formData,
         {
           headers : {
             Accept : '*/*',
-            "content-type" :'application/x-www-form-urlencoded',
+            "content-type" :'multipart/form-data',
             "Authorization" : 'Bearer '+token
           }  
         })
@@ -102,15 +192,82 @@ const Setting = ({navigation}) => {
 
 
     }
+    const update_password = async () => {
+        
+        setLoading(true)
+        const formData = new FormData()
+        formData.append("password", password)
+        formData.append("current_password", currentPassword)
+        formData.append("password_confirmation", password_confirmation)
+
+       
+       
+        
+        axios.post('https://askhomelab.com/api/update_password',
+        formData,
+        {
+          headers : {
+            Accept : '*/*',
+            "content-type" :'multipart/form-data',
+            "Authorization" : 'Bearer '+token
+          }  
+        })
+          .then(function (response) {
+              console.log(response.data)
+            if(response.data.message == "Success"){
+                Snackbar.show({
+                    text: "Berhasil memperbarui Password",
+                    duration: Snackbar.LENGTH_INDEFINITE,
+                    action: {
+                        text: 'Ok',
+                        textColor: WARNA_UTAMA,
+                        onPress: () => { /* Do something. */ },
+                    },  
+                    });
+                    setPassword("")
+                    setPasswordConfirmation("")
+                    setCurrentPassword("")
+            }else{
+                Snackbar.show({
+                    text: response.data.message,
+                    duration: Snackbar.LENGTH_INDEFINITE,
+                    action: {
+                        text: 'Ok',
+                        textColor: WARNA_UTAMA,
+                        onPress: () => { /* Do something. */ },
+                    },  
+                    });
+            }
+            setLoading(false)
+            
+          })
+          .catch(function (error) {
+                Snackbar.show({
+                text: error.response,
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+              });
+              console.log(error)
+              setLoading(false)
+          });
+
+
+    }
     const RenderGambar = ({item}) => {
+        console.log(item.name)
         return (
             <TouchableOpacity
             style={{margin:1, flex :1 , flexDirection:'column', }}
                 onPress={()=> {
-                    setSelectedImage(item.id)
+                    setSelectedImage(item.name)
                     setModalGambar(false)
                     }}
-            >
+            >           
+            
                         <FastImage 
                             style={{width:100, height:100}} 
                             source={{
@@ -131,7 +288,13 @@ const Setting = ({navigation}) => {
             >
                 <ModalContent>
                     <View style={{ width:windowWidth*0.5, alignItems:'center'}}>
-                        
+                    <PlainText
+                        title={"Select Your Images"}
+                        color={"#000"}
+                        fontSize= {14}
+                        fontStyle={"bold"}
+                        marginLeft={20}
+                    />
                     <SafeAreaView style={{marginTop:10, flexDirection : 'row', paddingBottom : 5}}>
                         <FlatList
                         maxHeight={windowHeight * 0.5}
@@ -141,9 +304,25 @@ const Setting = ({navigation}) => {
                         showsHorizontalScrollIndicator={false}
                         extraData={selectedImage}
                         numColumns={2}
+                        keyboardShouldPersistTaps='always'
                         />
                         
                     </SafeAreaView>
+                    <TouchableOpacity
+                            style={{backgroundColor:WARNA_UTAMA, borderRadius:20, padding:20, alignItems:'center', flexDirection:'column',
+                            marginTop:20}}
+                            onPress={() => {
+                                _launchImageLibrary()
+                            }}
+                        >
+                            <IconPicture fill={'#000'} width={24} height={24}/>
+                            <PlainText
+                                title={"Gallery"}
+                                color={"#000"}
+                                fontSize= {14}
+                                fontStyle={"bold"}
+                            />
+                        </TouchableOpacity>
                     </View>
                     
                 </ModalContent>
@@ -152,7 +331,8 @@ const Setting = ({navigation}) => {
     }
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} 
+        keyboardShouldPersistTaps='always'>
         <GambarModal/>
             { isLoading &&
                 <LoadingIndicator/>
@@ -208,14 +388,23 @@ const Setting = ({navigation}) => {
                                     <TouchableOpacity style={{width:100, height:100, backgroundColor:'#C4C4C4', marginTop:20, borderRadius:100, alignItems:"center", justifyContent:'center'}}
                                         onPress= {() => setModalGambar(true)}
                                     >
-                                    
+                                        {selectedImageType == "url" &&
                                         <FastImage 
                                             style={{width:100, height:100, borderRadius:100}} 
                                             source={{
-                                                uri : "http://askhomelab.com/storage"+selectedImage
+                                                uri : selectedImage
                                             }}
                                             resizeMode={FastImage.resizeMode.contain}
                                         ></FastImage>
+                                        }
+                                        {selectedImageType != "url" &&
+                                        <FastImage 
+                                            style={{width:100, height:100, borderRadius:100}} 
+                                            source={selectedImage}
+                                            resizeMode={FastImage.resizeMode.contain}
+                                        ></FastImage>
+                                        }
+                                        
                                         
                                     </TouchableOpacity>
                                     <FastImage 
@@ -223,9 +412,9 @@ const Setting = ({navigation}) => {
                                         source={ImgIcon}
                                         resizeMode={FastImage.resizeMode.contain}
                                     ></FastImage>
-                                    <View style={{flexDirection:"row", justifyContent:"space-between", width:windowWidth *0.85, marginTop:30}}>
+                                    <View style={{flexDirection:"row", justifyContent:"space-between", width:windowWidth *0.7, marginTop:30}}>
                                         <InputText 
-                                            width       = {windowWidth * 0.40}
+                                            width       = {windowWidth * 0.32}
                                             placeholder = "Nama Depan" 
                                             secureTextEntry = {false} 
                                             onChangeText = {(text) => setNamaDepan(text)}
@@ -233,16 +422,17 @@ const Setting = ({navigation}) => {
                                             error="first"
                                             />
                                         <InputText 
-                                            width       = {windowWidth * 0.40}
+                                            width       = {windowWidth * 0.32}
                                             placeholder = "Nama Belakang" 
                                             secureTextEntry = {false} 
                                             onChangeText = {(text) => setNamaBelakang(text)}
                                             value={namaBelakang}
                                             error="first"
+                                            
                                             />
                                     </View>
                                     <InputText 
-                                        width       = {windowWidth * 0.85}
+                                        width       = {windowWidth * 0.7}
                                         placeholder = "Nomor HP" 
                                         secureTextEntry = {false} 
                                         onChangeText = {(text) => setNoHp(text)}
@@ -251,7 +441,7 @@ const Setting = ({navigation}) => {
                                         />
                                     
                                     <InputText 
-                                        width       = {windowWidth * 0.85}
+                                        width       = {windowWidth * 0.7}
                                         placeholder = "Universitas" 
                                         secureTextEntry = {false}
                                         onChangeText = {(text) => setUniversitas(text)}
@@ -268,6 +458,237 @@ const Setting = ({navigation}) => {
                                             marginTop   = {windowHeight * 0.033}
                                         />
                                     </View>
+                                </View>
+                            }
+                            
+                        </View>
+                        <View style={styles.bodyContent}>
+                            <TouchableOpacity 
+                                onPress={()=>{
+                                    if(passwordMinimize){
+                                        setPasswordMinimize(false)
+                                    }else{
+                                        setPasswordMinimize(true)
+                                    }
+                                } }
+                            style={{padding:20, backgroundColor :'#fff', borderRadius:10, flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                                <View style={{flexDirection : 'row'}}>
+                                    <IconSecurity width={24} height={24} />
+                                    <PlainText
+                                            title={"Change Password"}
+                                            color={"#000"}
+                                            fontSize= {14}
+                                            fontStyle={"bold"}
+                                            marginLeft={20}
+                                        />
+                                </View>
+                                <View>
+                                    {passwordMinimize &&
+                                        <IconCaretUp/>
+                                    }
+                                    {!passwordMinimize &&
+                                        <IconCaretUp style={{transform: [{rotateX: '180deg'}]}}/>
+                                    }
+                                </View>
+                            </TouchableOpacity>
+                            {passwordMinimize && 
+                                <View style={{alignContent:'center', alignItems:'center'}}>
+                                   
+                                    
+                                    <InputText 
+                                        width       = {windowWidth * 0.7}
+                                        placeholder = "Current Password" 
+                                        secureTextEntry = {true} 
+                                        onChangeText = {(text) => setCurrentPassword(text)}
+                                        value={currentPassword}
+                                        error="first"
+                                        />
+                                    <InputText 
+                                        width       = {windowWidth * 0.7}
+                                        placeholder = "Password Baru" 
+                                        secureTextEntry = {true} 
+                                        onChangeText = {(text) => setPassword(text)}
+                                        value={password}
+                                        error="first"
+                                        />
+                                    <InputText 
+                                        width       = {windowWidth * 0.7}
+                                        placeholder = "Current Password" 
+                                        secureTextEntry = {true} 
+                                        onChangeText = {(text) => setPasswordConfirmation(text)}
+                                        value={password_confirmation}
+                                        error="first"
+                                        />
+                                    
+                                   
+                                    <View style={{alignItems:'center', marginBottom:20}}>
+                                        <ButtonPrimary  
+                                            onPress={() => {
+                                                update_password()
+                                            }}
+                                            title="Perbarui"
+                                            width={windowWidth*0.6}
+                                            marginTop   = {windowHeight * 0.033}
+                                        />
+                                    </View>
+                                </View>
+                            }
+                            
+                        </View>
+                        <View style={styles.bodyContent}>
+                            <TouchableOpacity 
+                                onPress={()=>{
+                                    if(notificationMinimize){
+                                        setNotificationMinimize(false)
+                                    }else{
+                                        setNotificationMinimize(true)
+                                    }
+                                } }
+                            style={{padding:20, backgroundColor :'#fff', borderRadius:10, flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                                <View style={{flexDirection : 'row'}}>
+                                    <IconNotificationActive width={24} height={24} />
+                                    <PlainText
+                                            title={"Notification"}
+                                            color={"#000"}
+                                            fontSize= {14}
+                                            fontStyle={"bold"}
+                                            marginLeft={20}
+                                        />
+                                </View>
+                                <View>
+                                    {notificationMinimize &&
+                                        <IconCaretUp/>
+                                    }
+                                    {!notificationMinimize &&
+                                        <IconCaretUp style={{transform: [{rotateX: '180deg'}]}}/>
+                                    }
+                                </View>
+                            </TouchableOpacity>
+                            {notificationMinimize && 
+                                <View style={{alignContent:'center', alignItems:'center', padding:20}}>
+                                
+                                    <View style={{
+                                        flexDirection:'row',
+                                        justifyContent:'space-between'
+                                    }}>
+                                        <View style={{flexDirection:'row', alignItems:'center', flex:1}}>
+                                            <IconNotification width={24} height={24} fill={"#000"}/>
+                                            <PlainText
+                                                    title={"Notifikasi"}
+                                                    color={"#000"}
+                                                    fontSize= {11}
+                                                    fontStyle={"bold"}
+                                                    marginLeft={20}
+                                                />
+                                        </View>
+                                        <Switch
+                                            trackColor={{ false: WARNA_WARNING, true: WARNA_SUCCESS }}
+                                            thumbColor={isEnabled ? "#fff" : "#ffff"}
+                                            ios_backgroundColor="#3e3e3e"
+                                            onValueChange={toggleSwitch}
+                                            value={isEnabled}
+                                        />
+                                    </View>
+                                    
+                                </View>
+                            }
+                            
+                        </View>
+                        <View style={styles.bodyContent}>
+                            <TouchableOpacity 
+                                onPress={()=>{
+                                    if(infoMinimize){
+                                        setInfoMinimize(false)
+                                    }else{
+                                        setInfoMinimize(true)
+                                    }
+                                } }
+                            style={{padding:20, backgroundColor :'#fff', borderRadius:10, flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                                <View style={{flexDirection : 'row'}}>
+                                    <IconInfo width={24} height={24} />
+                                    <PlainText
+                                            title={"Tentang"}
+                                            color={"#000"}
+                                            fontSize= {14}
+                                            fontStyle={"bold"}
+                                            marginLeft={20}
+                                        />
+                                </View>
+                                <View>
+                                    {infoMinimize &&
+                                        <IconCaretUp/>
+                                    }
+                                    {!infoMinimize &&
+                                        <IconCaretUp style={{transform: [{rotateX: '180deg'}]}}/>
+                                    }
+                                </View>
+                            </TouchableOpacity>
+                            {infoMinimize && 
+                                <View style={{alignContent:'center', alignItems:'center', padding:20}}>
+                                
+                                    <View style={{
+                                        flexDirection:'row',
+                                        justifyContent:'space-between',
+                                        alignItems:'center',
+                                        
+                                        paddingBottom:10,
+                                        borderBottomWidth:1,
+                                        borderColor: "#DAD0D0"
+        
+                                    }}>
+                                        <View style={{flexDirection:'row', alignItems:'center', flex:1}}>
+                                            <IconFile width={24} height={24} fill={"#000"}/>
+                                            <PlainText
+                                                    title={"Syarat dan Ketentuan"}
+                                                    color={"#000"}
+                                                    fontSize= {11}
+                                                    fontStyle={"bold"}
+                                                    marginLeft={20}
+                                                />
+                                        </View>
+                                        <IconCaretLeft style={{height:24, width:24}}/>
+                                    </View>
+                                    <View style={{
+                                        flexDirection:'row',
+                                        justifyContent:'space-between',
+                                        alignItems:'center',
+                                        paddingTop:10,
+                                        paddingBottom:10,
+                                        borderBottomWidth:1,
+                                        borderColor: "#DAD0D0"
+                                    }}>
+                                        <View style={{flexDirection:'row', alignItems:'center', flex:1}}>
+                                            <IconFile width={24} height={24} fill={"#000"}/>
+                                            <PlainText
+                                                    title={"Kebijakan Privasi"}
+                                                    color={"#000"}
+                                                    fontSize= {11}
+                                                    fontStyle={"bold"}
+                                                    marginLeft={20}
+                                                />
+                                        </View>
+                                        <IconCaretLeft style={{height:24, width:24}}/>
+                                    </View>
+                                    <View style={{
+                                        flexDirection:'row',
+                                        justifyContent:'space-between',
+                                        alignItems:'center',
+                                        paddingTop:10,
+                                        paddingBottom:10,
+                                    }}>
+                                        <View style={{flexDirection:'row', alignItems:'center', flex:1}}>
+                                            <IconFaq width={24} height={24} fill={"#000"}/>
+                                            <PlainText
+                                                    title={"Frequently Ask Question"}
+                                                    color={"#000"}
+                                                    fontSize= {11}
+                                                    fontStyle={"bold"}
+                                                    marginLeft={20}
+                                                />
+                                        </View>
+                                        <IconCaretLeft style={{height:24, width:24}}/>
+                                    </View>
+                                    
                                 </View>
                             }
                             
