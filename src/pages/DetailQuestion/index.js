@@ -206,23 +206,25 @@ const DetailQuestion = ({route, navigation}) => {
         setLoading(true)
         sheetRef.current.snapTo(2)
         
+       
         
+       
 
-        var data = new FormData()
+        var formdata = new FormData()
         if (filePath != null){
-            data.append('file', {
+            formdata.append('file', {
                 uri: filePath.uri,
                 type: filePath.type,
                 name: "Photo_React_Native",
             });
         }
-        data.append('id_question', id_question)
-        data.append('answer', content)
-        data.append('reference', reference)
-        data.append('type_reference', type_reference.id)
+        formdata.append('id_question', id_question)
+        formdata.append('answer', content)
+        formdata.append('reference', reference)
+        formdata.append('type_reference', type_reference.id)
 
         axios.post (BASE_URL_API+'create_answer',
-        data,
+        formdata,
         {
             headers : {
                 Accept : '*/*',
@@ -231,7 +233,29 @@ const DetailQuestion = ({route, navigation}) => {
                 }  
         }).then(function(response) {
             
+            axios.post("https://fcm.googleapis.com/fcm/send", 
+            JSON.stringify(
+                {
+                    "to" : "/topics/rezkyrevindo3gmailcom", 
+                    "notification" : {
+                        "body" : data[2].first_name+" "+data[2].last_name+" menjawab pertanyaanmu",
+                        "title" : "Wah ada yang ngejawab pertanyaan mu"
+                    },
+                    "data" : {
+                        "body" : data[2].first_name+" "+data[2].last_name+" menjawab pertanyaanmu",
+                        "title" : "Wah ada yang ngejawab pertanyaan mu"
+                    }
+                }
             
+            ), 
+            {
+                headers : {
+                    Accept : '*/*',
+                    "content-type" :'application/json',
+                    "Authorization" : "key=AAAAaXjkBfM:APA91bHrxDkwpX85OxMN7f_ecBOpcxorsuxLAiNQDKuqPba_aVMhlrVFglvF47jhQ1RkDvam-NCDugMQMorA5q70XvuCr86v3olYhvy20nZ0bbYsUfduBfeqs5-UH83yH5HZnLxcdB78"
+                    }  
+            }
+            )
             setRefresh(refresh+1)
             setLoading(false)
         }).catch(function(error){

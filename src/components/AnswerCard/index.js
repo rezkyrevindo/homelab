@@ -46,11 +46,11 @@ const AnswerCard = (props) => {
     return !!pattern.test(str);
   }
   const addLike = () =>{
-    var data = new FormData()
-    data.append('id_answer', props.id_answer)
+    var form_data = new FormData()
+    form_data.append('id_answer', props.id_answer)
 
     axios.post ('https://askhomelab.com/api/like_answer',
-    data,
+    form_data,
     {
         headers : {
             Accept : '*/*',
@@ -59,6 +59,29 @@ const AnswerCard = (props) => {
             }  
     }).then(function(response) {
         console.log(response.data)
+        axios.post("https://fcm.googleapis.com/fcm/send", 
+        JSON.stringify(
+            {
+                "to" : "/topics/rezkyrevindo3gmailcom", 
+                "notification" : {
+                    "body" : data[2].first_name+" "+data[2].last_name+" menyukai jawabanmu",
+                    "title" : "Wah ada yang menyukai jawaban mu"
+                },
+                "data" : {
+                    "body" : data[2].first_name+" "+data[2].last_name+" menyukai jawabanmu",
+                    "title" : "Wah ada yang menyukai jawaban mu"
+                }
+            }
+        
+        ), 
+        {
+            headers : {
+                Accept : '*/*',
+                "content-type" :'application/json',
+                "Authorization" : "key=AAAAaXjkBfM:APA91bHrxDkwpX85OxMN7f_ecBOpcxorsuxLAiNQDKuqPba_aVMhlrVFglvF47jhQ1RkDvam-NCDugMQMorA5q70XvuCr86v3olYhvy20nZ0bbYsUfduBfeqs5-UH83yH5HZnLxcdB78"
+                }  
+        }
+        )
         setLike(like+1)
         setIsLike("True")
     }).catch(function(error){

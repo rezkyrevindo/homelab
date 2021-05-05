@@ -8,7 +8,7 @@ const Splash = ({ navigation }) => {
     const { token,data, notification } = useSelector (state => state.authReducers);
 
     useEffect(() => {
-       console.log("isi notification : "+ notification)
+    
         setTimeout( () => {
             if(token != 'false' && data[2].category_id == null){
                 if(notification == "true"){
@@ -29,11 +29,17 @@ const Splash = ({ navigation }) => {
     }, [navigation]);
 
     const subcribe = async (email) =>{
+        var asciiKeys = [];
+        for (var i = 0; i < email.length; i ++)
+        asciiKeys.push(email[i].charCodeAt(0));
+
+        console.log("ascii key "+asciiKeys.join(""))
         messaging()
+        // .subscribeToTopic(asciiKeys.join(""))
         .subscribeToTopic(email.replace(/[^a-zA-Z0-9]/g, ""))
         .then(() => {
-            console.log('Subscribed to topic!')
-            console.log("Topic Name : " + email.replace(/[^a-zA-Z0-9]/g, ""))
+            // console.log('Subscribed to topic!')
+            // console.log("Topic Name : " + email.replace(/[^a-zA-Z0-9]/g, ""))
         });
     }
     return (
@@ -45,7 +51,7 @@ const Splash = ({ navigation }) => {
                 <Image source={Logo} style={styles.logo} />
             </ImageBackground>
         
-      
+    
     )
 }
 
