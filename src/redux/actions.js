@@ -5,10 +5,13 @@ export const LOGIN = 'LOGIN';
 export const LOGOUT = "LOGOUT";
 export const UPDATE_PROFILE = "UPDATE_PROFILE"
 export const NOTIF = "NOTIF"
+export const TOPUP = "TOPUP"
+export const SNAP = "SNAP"
+
 
 import Snackbar from 'react-native-snackbar';
 
-import {WARNA_UTAMA, WARNA_WARNING} from '../utils/constant';
+import {WARNA_UTAMA, WARNA_WARNING,BASE_URL_API} from '../utils/constant';
 
 export const refresh = () =>{
     try {
@@ -131,6 +134,69 @@ export const login =  (email,password) => {
     }
 };
 
+
+
+export const topup =  (token, point, acum_price, description, status ) => {
+    try {
+        
+         return async dispatch => {
+            
+            var data = new FormData();        
+            data.append('point', point)
+            data.append('acum_price', acum_price)
+            data.append('description', description)
+            data.append('status', status)
+
+            axios.post('https://askhomelab.com/api/order',
+            data,
+            {
+                headers : {
+                Accept : '*/*',
+                "content-type" :'multipart/form-data',
+                "Authorization" : "Bearer "+token
+                }  
+               
+            })
+                .then(function (response) {
+                    if (response.data.message == "successful"){
+                        
+                        dispatch({
+                            type : TOPUP,
+                            payload :  ''
+                        })
+                    
+                        
+                    }else{
+                    
+                    }
+                })
+                .catch(function (error) {
+            
+                        dispatch({
+                            type : TOPUP,
+                        })
+                });
+        }
+    }catch (error){
+        console.log(error)
+    }
+};
+
+export const snap = (snap, client, production) =>{
+    try {
+        return async dispatch =>{
+           let data = {
+               snap, client, production
+           }
+           dispatch({
+            type : SNAP,
+            payload : data
+        })
+        }
+    }catch(error){
+        console.log(error)
+    }
+};
 export const addLogin = (email,password) => (dispatch) => {
     return new Promise( (resolve, reject) => {
         var successful= false

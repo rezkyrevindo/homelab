@@ -31,13 +31,13 @@ const ConfirmationSuccess = ({navigation}) => {
                 <View style={styles.body}>
                     <HeaderText
                         marginTop = {windowHeight * 0.054}
-                        title={"Confirmation Success"}
+                        title={"Beli Poin Berhasil"}
                         textAlign={"center"}
                     
                     />
                     <View style={{alignItems:'center'}}>
                         <PlainText
-                            title={"Your account has successfully confirmed"}
+                            title={"Pembayaran telah diterima"}
                             color={"#000"}
                             marginTop = {windowHeight * 0.033}
                             fontSize= {13}
@@ -52,9 +52,9 @@ const ConfirmationSuccess = ({navigation}) => {
                     <View style={{alignItems:'center'}}>
                         <ButtonPrimary 
                             onPress={() => {
-                                navigation.navigate('Login');
+                                navigation.replace('MainApp');
                             }}  
-                            title="Next"
+                            title="Done"
                             width={windowWidth*0.6}
                             marginTop   = {windowHeight * 0.04}
                         />

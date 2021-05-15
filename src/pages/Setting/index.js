@@ -4,7 +4,7 @@ import {
     View,Text, TextInput, TouchableOpacity,
     Dimensions,StatusBar, TouchableHighlight, Button, Switch
   } from 'react-native';
-import {ImgSetting , IconUserActive, ImgIcon, IconCaretUp,IconCaretLeft, IconPicture, IconSecurity, IconNotificationActive,IconNotification, IconInfo, IconFile, IconFaq} from '../../assets';
+import {ImgSetting , IconUserActive, ImgIcon, IconCaretUp,IconCaretLeft, IconPicture, IconCaretDown,IconSecurity, IconNotificationActive,IconNotification, IconInfo, IconFile, IconFaq} from '../../assets';
 import {WARNA_UTAMA, WARNA_WARNING,WARNA_SUCCESS, BASE_URL_API, BASE_URL_IMG} from '../../utils/constant';
 import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator, IconSetting} from '../../components'
 import FastImage from 'react-native-fast-image'
@@ -30,6 +30,9 @@ const Setting = ({navigation}) => {
     
     const [currentPassword, setCurrentPassword] = useState("")
     const [password, setPassword] = useState("")
+    const [no_rek, setNoRek] = useState(data[2].account_number)
+    const [bank, setBank] = useState(data[2].bank)
+    const [gender, setGender] = useState(data[2].gender)
     const [password_confirmation, setPasswordConfirmation] = useState("")
     const [noHp, setNoHp] = useState(data[2].handphone)
     const [universitas, setUniversitas] = useState(data[2].universitas!="null"? data[2].universitas:"")
@@ -46,7 +49,20 @@ const Setting = ({navigation}) => {
         {id:"/users/5.png", name:BASE_URL_IMG+"users/5.png"},
         {id:"/users/6.png", name:BASE_URL_IMG+"users/6.png"},
     ])
+    const [listBank, setListBank] = useState([
+        {id:"BRI", name:"BRI"},
+        {id:"BCA", name:"BCA"},
+        {id:"MANDIRI", name:"MANDIRI"},
+        {id:"BNI", name:"BNI"},
+    ])
+    const [listGender, setListGender] = useState([
+        {id:"Pria", name:"Pria"},
+        {id:"Wanita", name:"Wanita"}
+    ])
+
     const [modalGambar, setModalGambar] = useState(false)
+    const [modalGender, setModalGender] = useState(false)
+    const [modalBank, setModalBank]     = useState(false)
     const [profileMinimize, setProfileMinimize] = useState(false)
     const [passwordMinimize, setPasswordMinimize] = useState(false)
     const [notificationMinimize, setNotificationMinimize] = useState(false)
@@ -130,6 +146,10 @@ const Setting = ({navigation}) => {
         formData.append("handphone", noHp)
         formData.append("category_id", data[2].category_id)
         formData.append("email", data[2].email)
+        formData.append("gender", gender)
+        formData.append("no_rek", no_rek)
+        formData.append("bank", bank)
+        
 
        
         if(selectedImageType == "url"){
@@ -280,6 +300,119 @@ const Setting = ({navigation}) => {
         )
     }
 
+    const RenderGender = ({item}) => {
+        console.log(item.name)
+        return (
+            <TouchableOpacity style={{padding:10, alignItems:'center', borderRadius:15}}
+                    onPress={()=> {
+                    setGender(item.name)
+                    setModalGender(false)
+                    }}
+            >
+                <PlainText
+                    title={item.name}
+                    color={"#000"}
+                    fontSize= {14}
+                    fontStyle={"bold"}
+                />
+            </TouchableOpacity>
+           
+           
+        )
+    }
+
+    const GenderModal = ()=>{
+        return (
+            <Modal
+                visible={modalGender}
+                onTouchOutside={() => { setModalGender(false)}}
+            >
+                <ModalContent>
+                    <View style={{ width:windowWidth*0.5, alignItems:'center'}}>
+                    <PlainText
+                        title={"Select Your Gender"}
+                        color={"#000"}
+                        fontSize= {14}
+                        fontStyle={"bold"}
+                        marginLeft={20}
+                    />
+                    <SafeAreaView style={{marginTop:10, flexDirection : 'row', paddingBottom : 5}}>
+                        <FlatList
+                        maxHeight={windowHeight * 0.5}
+                        data={listGender}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={RenderGender}
+                        showsHorizontalScrollIndicator={false}
+                        extraData={gender}
+                        
+                        keyboardShouldPersistTaps='always'
+                        />
+                        
+                    </SafeAreaView>
+                   
+                    </View>
+                    
+                </ModalContent>
+            </Modal>
+        )
+    }
+    const RenderBank = ({item}) => {
+        console.log(item.name)
+        return (
+            <TouchableOpacity style={{padding:10, alignItems:'center', borderRadius:15}}
+                    onPress={()=> {
+                    setBank(item.name)
+                    setModalBank(false)
+                    }}
+            >
+                <PlainText
+                    title={item.name}
+                    color={"#000"}
+                    fontSize= {14}
+                    fontStyle={"bold"}
+                />
+            </TouchableOpacity>
+           
+           
+        )
+    }
+
+    const BankModal = ()=>{
+        return (
+            <Modal
+                visible={modalBank}
+                onTouchOutside={() => { setModalBank(false)}}
+            >
+                <ModalContent>
+                    <View style={{ width:windowWidth*0.5, alignItems:'center'}}>
+                    <PlainText
+                        title={"Select Your Bank"}
+                        color={"#000"}
+                        fontSize= {14}
+                        fontStyle={"bold"}
+                        marginLeft={20}
+                    />
+                    <SafeAreaView style={{marginTop:10, flexDirection : 'row', paddingBottom : 5}}>
+                        <FlatList
+                        maxHeight={windowHeight * 0.5}
+                        data={listBank}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={RenderBank}
+                        showsHorizontalScrollIndicator={false}
+                        extraData={bank}
+                        
+                        keyboardShouldPersistTaps='always'
+                        />
+                        
+                    </SafeAreaView>
+                   
+                    </View>
+                    
+                </ModalContent>
+            </Modal>
+        )
+    }
+
     const GambarModal = ()=>{
         return (
             <Modal
@@ -334,15 +467,12 @@ const Setting = ({navigation}) => {
         <ScrollView style={styles.container} 
         keyboardShouldPersistTaps='always'>
         <GambarModal/>
+        <GenderModal/>
+        <BankModal/>
             { isLoading &&
                 <LoadingIndicator/>
             }
             { !isLoading &&
-                
-            
-            
-            
-                    
                    <View>
                    <View style={styles.header}>
                         <FastImage 
@@ -448,6 +578,39 @@ const Setting = ({navigation}) => {
                                         value={universitas}
                                         error="first"
                                         />
+                                   
+                                    <TouchableOpacity style={{flexDirection :'row',alignContent:'center',justifyContent:'center', alignItems:'center'}} onPress={()=> setModalGender(true)}>
+                                        
+                                        <InputText 
+                                            width       = {windowWidth * 0.63}
+                                            placeholder = "Jenis Kelamin" 
+                                            secureTextEntry = {false}
+                                            
+                                            value={gender}
+                                            error="first"
+                                        />
+                                        <IconCaretDown style={{marginLeft:10,marginTop:30}} fill={"#000"} width={18} height={18} />
+                                    </TouchableOpacity>    
+                                    <InputText 
+                                        width       = {windowWidth * 0.7}
+                                        placeholder = "Nomor Rekening" 
+                                        secureTextEntry = {false}
+                                        onChangeText = {(text) => setNoRek(text)}
+                                        value={no_rek}
+                                        error="first"
+                                        />
+                                    <TouchableOpacity style={{flexDirection :'row',alignContent:'center',justifyContent:'center', alignItems:'center'}} onPress={()=> setModalBank(true)}>
+                                        
+                                        <InputText 
+                                            width       = {windowWidth * 0.63}
+                                            placeholder = "BANK" 
+                                            secureTextEntry = {false}
+                                            
+                                            value={bank}
+                                            error="first"
+                                        />
+                                        <IconCaretDown style={{marginLeft:10,marginTop:30}} fill={"#000"} width={18} height={18} />
+                                    </TouchableOpacity>   
                                     <View style={{alignItems:'center', marginBottom:20}}>
                                         <ButtonPrimary  
                                             onPress={() => {

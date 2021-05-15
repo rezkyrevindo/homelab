@@ -2,19 +2,26 @@ import React, {useState, useEffect} from 'react'
 import {
     StyleSheet,
     View,
-    Dimensions,StatusBar, TouchableHighlight
+    Dimensions,ScrollView, TouchableHighlight
   } from 'react-native';
 import {ImgLogin, IconPoints, IconRiwayat} from '../../assets';
 import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
 import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator} from '../../components'
-import FastImage from 'react-native-fast-image'
-import BottomSheet from 'reanimated-bottom-sheet';
+import { useSelector, useDispatch } from 'react-redux';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
 
 const TopUp = ({navigation}) => {
+    const { token,data, snapToken,clientKey, production  } = useSelector (state => state.authReducers);
+    
+    useEffect(() => {
+        if(snapToken !=''){
+            navigation.replace("PembayaranTopUp")
+        }
+    }, [])
+
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.header}>
                     <PlainText
                         fontSize={28}
@@ -70,7 +77,7 @@ const TopUp = ({navigation}) => {
                     </View>
             </View>
             <View style={styles.body}>
-                <TouchableHighlight onPress={()=> navigation.navigate("PembayaranTopUp")}>
+                <TouchableHighlight onPress={()=> navigation.replace("PembayaranTopUp")}>
                     <View style={{
                         
                         width:windowWidth * 0.4,
@@ -292,7 +299,7 @@ const TopUp = ({navigation}) => {
                 </TouchableHighlight>
                 
             </View>
-        </View>
+        </ScrollView>
     )
 }
 

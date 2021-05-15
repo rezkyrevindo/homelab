@@ -16,6 +16,7 @@ const InputText = ({autoFocus,onSubmitEditing,keyboardType,placeholder, secureTe
                 width           = {width}
                 secureTextEntry = {secureTextEntry}
                 placeholder = {placeholder} 
+                
                 style={styles.textInput_Style(borderRadius,marginTop, paddingRight, height, error)}
                 underlineColorAndroid='transparent'
                 paddingHorizontal={20}

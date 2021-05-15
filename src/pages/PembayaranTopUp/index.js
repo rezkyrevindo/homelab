@@ -1,124 +1,139 @@
 import React, {useState, useEffect} from 'react'
 import {
     StyleSheet,
-    View,
+    View,ScrollView,Button,Alert,
     Dimensions,StatusBar, TouchableHighlight, Text
   } from 'react-native';
 import {ImgPayment, IconWallet, IconCaretDown, IconCaretLeft, IconCaretUp} from '../../assets';
-import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
+import {WARNA_UTAMA, WARNA_WARNING, BASE_URL_API} from '../../utils/constant';
 import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator} from '../../components'
 import FastImage from 'react-native-fast-image'
 import BottomSheet from 'reanimated-bottom-sheet';
+import HTML from "react-native-render-html";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
-
+import axios from 'axios'
+import { useSelector, useDispatch } from 'react-redux';
+import { WebView } from 'react-native-webview';
+import { snap, topup } from '../../redux/actions';
 
 const PembayaranTopUp = ({navigation}) => {
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Button
+                    onPress={() =>{
+                        Alert.alert(
+                        "Batal Beli Point?",
+                        "Yakin membatalkan pembelian point?",
+                        [
+                            {
+                            text: "Cancel",
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel"
+                            },
+                            { text: "OK", onPress: () => {
+                            setSnap("","","")
+                            navigation.replace("MainApp")
+                            } }
+                        ]
+                        );
+                     }}
+                    title="Batal"
+                     color="#000"
+                />
+                ),
+        });
+      }, [navigation]);
+    const { token,data, snapToken,clientKey, production  } = useSelector (state => state.authReducers);
+    const dispatch = useDispatch();
+    
+    const topUp = (token,point,acum_price,description, status) => dispatch(topup(token,point, acum_price, description, status))
+    const setSnap = (snap1, client, production) => dispatch(snap(snap1, client, production))
+    const [isLoading, setLoading] = useState(false)
+    const acum_price = "24000"
+    const point = "600"
+    const [snapToken_, setSnapToken] = useState(snapToken)
+    const [webViewRef, setWebViewRef] = useState("")
+    const [serverKey, setServerKey] = useState("")
+    const [clientKey_, setClientKey] = useState(clientKey)
+    const [production_, setProduction] = useState(production)
+   
+    
+    
+
+    useEffect(() => {
+
+        console.log("INI TOKEN SKEARANG "+ snapToken)
+        if(snapToken !=''){
+            
+        }else{
+            getData();
+        }
+        
+    }, [])
+
+
+    const getData = async () =>{
+        setLoading(true)
+        
+        var data = new FormData()
+        data.append('acum_price' , acum_price)
+        axios.post(BASE_URL_API+'order_topup',
+        data,
+        {
+            headers : {
+            Accept : '*/*',
+            "content-type" :'multipart/form-data',
+            "Authorization" : "Bearer "+token
+            }  
+        })
+            .then(function (response) {
+                let data = response.data
+                setSnapToken(data.Snap_Token)
+                setClientKey(data.Midtrans_Client_Key)
+                setProduction(data.Midtrans_Production)
+                setSnap(data.Snap_Token, data.Midtrans_Client_Key, data.Midtrans_Production)
+                
+                
+                
+                console.log(response.data)
+                setLoading(false)
+            })
+            .catch(function (error) {
+                setLoading(false)
+                console.error(error)
+            });
+    }
+
+
     return (
         <View style={styles.container}>
-             <View style={styles.header}>
-                <FastImage 
-                    style={styles.logo} 
-                    source={ImgPayment}
-                    resizeMode={FastImage.resizeMode.contain}
-                ></FastImage>
-            </View>
-            <View style={styles.body}>
-                <View style={{
-                    alignItems:'center',
-                    width: windowWidth * 0.9,
-                    shadowColor: "#000",
-                    shadowOffset: {
-                        width: 0,
-                        height: 2,
-                    },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 3.84,
-
-                    elevation: 5,
-                    borderRadius:20,
+        {!isLoading &&
+        <WebView 
+            source={{ uri: 'http://192.168.43.227/binance/index.php?snap="'+snapToken_+'"&clientKey="'+clientKey_+'"&production="'+production_+'"' }}
+            onMessage={ (event) => {
+                    console.log(event.nativeEvent.data.status_code)
+                    var result = JSON.parse(event.nativeEvent.data);
+                    if(result.status_code == "409"){
+                        let description = "top-up"
+                        let status = 'success'
+                        topUp(token, point, acum_price, description, status)
+                        navigation.replace("ConfirmationSuccess")
+                       
+                    }else{
+                        webViewRef.reload()
+                    }
                     
-                }}>
-                    <View style={{
-                        backgroundColor : "#FFF9C4",
-                        width: windowWidth * 0.9,
-                        flexDirection:'row',
-                        justifyContent:'space-between',
-                        padding:10,
-                        paddingHorizontal:20,
-                        alignItems:'center',
-                        borderTopEndRadius:20,
-                        borderTopStartRadius:20
-                    }}> 
-                        <IconWallet />
-                        <View style={{flex:1, marginLeft:20}}>
-                        <PlainText
-                            fontSize={18}
-                            title="E-Wallet"
-                            fontStyle="bold"
-                            color={"#000"}     
-                        />
-                        </View>
-                         
-                        <IconCaretDown fill={"#000"} width={12} height={12}  />
-                    </View>
-                    <View style={{
-                        backgroundColor : "#fff",
-                        width: windowWidth * 0.9,
-                        padding:10,
-                        paddingHorizontal:20,
-                        alignItems:'center',
-                        borderBottomEndRadius:20,
-                        borderBottomStartRadius:20
-                    }}> 
-                        <TouchableHighlight onPress={() => navigation.navigate("KonfirmasiTopUp")}>
-                            <View style={{
-                                flexDirection:'row',
-                                justifyContent:'space-between',
-                                alignItems:'center',
-                                width: windowWidth * 0.8,
-                                borderColor:'#DAD0D0',
-                                borderBottomWidth:1,
-                                paddingVertical:20
-                            }}>
-                                <IconWallet />
-                                <View style={{flex:1, marginLeft:20}}>
-                                    <PlainText
-                                        fontSize={14}
-                                        title="Gopay"
-                                        fontStyle="bold"
-                                        color={"#000"}     
-                                    />
-                                </View>
-                                <IconCaretLeft/>
-                            </View>
-                        </TouchableHighlight>
-                        <View style={{
-                            flexDirection:'row',
-                            justifyContent:'space-between',
-                            alignItems:'center',
-                            width: windowWidth * 0.8,
-                            paddingVertical:20
-                        }}>
-                            <IconWallet />
-                            <View style={{flex:1, marginLeft:20}}>
-                                <PlainText
-                                    fontSize={14}
-                                    title="Gopay"
-                                    fontStyle="bold"
-                                    color={"#000"}     
-                                />
-                            </View>
-                            <IconCaretLeft/>
-                        </View>
-                        
-                         
-                    </View>
-                    
-                </View>
-                
-            </View>
+                }}
+            ref={ref => setWebViewRef(ref) }
+        />
+        }
+        {isLoading &&
+            <LoadingIndicator/>
+        }
         </View>
+        
     )
 }
 
