@@ -5,14 +5,16 @@ import {
     Dimensions,StatusBar, TouchableOpacity
   } from 'react-native';
 import {ImgWithdraw, IconPoints, IconRiwayat, IconWallet} from '../../assets';
-import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
+import {WARNA_UTAMA, WARNA_WARNING, BASE_URL_API} from '../../utils/constant';
 import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator} from '../../components'
 import FastImage from 'react-native-fast-image'
-import BottomSheet from 'reanimated-bottom-sheet';
+
+import { useSelector, useDispatch } from 'react-redux';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
 
 const Withdraw = ({navigation}) => {
+    const { token,data } = useSelector (state => state.authReducers);
     return (
         <View style={styles.container}>
              <View style={styles.header}>
@@ -65,7 +67,7 @@ const Withdraw = ({navigation}) => {
                             }}>
                                 <PlainText
                                     fontSize={24}
-                                    title="1.200"
+                                    title={data[2].point}
                                     color={"#000"}     
                                     fontStyle={"bold"}
                                 />
@@ -93,58 +95,78 @@ const Withdraw = ({navigation}) => {
                     <View style={{padding:20}}>
                         <PlainText
                             fontSize={14}
-                            title="Akun"
+                            title="Data Rekening Penarikan"
                             fontStyle="bold"
                             color={"#000"}     
                             marginTop={10}
                         />
-                        <TouchableOpacity style={{flexDirection:'row', marginTop:20, borderColor:'#DAD0D0',
-                                borderBottomWidth:1,paddingBottom:10}}
-                                onPress={()=>navigation.navigate('WithdrawDetail')}>
-                            <IconWallet/>
-                            <PlainText
-                                    fontSize={14}
-                                    title="Antonio Cassano"
-                                    color={"#000"}     
-                                    marginTop={0}
-                                    marginLeft={20}
-                                />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{flexDirection:'row', marginTop:20, borderColor:'#DAD0D0',
-                                borderBottomWidth:1,paddingBottom:10}}>
-                            <IconWallet/>
-                            <PlainText
-                                    fontSize={14}
-                                    title="Antonio Cassano"
-                                    color={"#000"}     
-                                    marginTop={0}
-                                    marginLeft={20}
-                                />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{flexDirection:'row', marginTop:20, borderColor:'#DAD0D0',
-                                borderBottomWidth:1,paddingBottom:10}}>
-                            <IconWallet/>
-                            <PlainText
-                                    fontSize={14}
-                                    title="Antonio Cassano"
-                                    color={"#000"}     
-                                    marginTop={0}
-                                    marginLeft={20}
-                                />
-                        </TouchableOpacity>
+                        {data[2].bank != "" &&
+                            <TouchableOpacity style={{flexDirection:'row', marginTop:20, borderColor:'#DAD0D0',
+                                    borderBottomWidth:1,paddingBottom:10, alignContent:'center', alignItems:'center'}}
+                                    onPress={()=>navigation.navigate('WithdrawDetail')}>
+                                <IconWallet/>
+                                <View style={{flexDirection:'column'}}>
+                                <PlainText
+                                        fontSize={18}
+                                        title={data[2].first_name +" "+data[2].last_name}
+                                        color={"#000"}     
+                                        marginTop={0}
+                                        marginLeft={20}
+                                        fontStyle={"bold"}
+                                    />
+                                <PlainText
+                                        fontSize={14}
+                                        title={data[2].bank +" - "+ data[2].account_number}
+                                        color={"#000"}     
+                                        marginTop={0}
+                                        marginLeft={20}
+                                    />    
+                                </View>
+                            
+                            </TouchableOpacity>
+                        }
+                        { data[2].bank == "" &&
+                            <TouchableOpacity style={{flexDirection:'row', marginTop:20, borderColor:'#DAD0D0',
+                                    borderBottomWidth:1,paddingBottom:10, alignContent:'center', alignItems:'center'}}
+                                    onPress={()=>navigation.navigate('Setting')}>
+                                <IconWallet/>
+                                <View style={{flexDirection:'column'}}>
+                                <PlainText
+                                        fontSize={18}
+                                        title={"Perbarui data rekening mu"}
+                                        color={"#000"}     
+                                        marginTop={0}
+                                        marginLeft={20}
+                                        fontStyle={"bold"}
+                                    />
+                                <PlainText
+                                        fontSize={14}
+                                        title={"Klik disini!"}
+                                        color={"#000"}     
+                                        marginTop={0}
+                                        marginLeft={20}
+                                    />    
+                                </View>
+                            
+                            </TouchableOpacity>
+                        }
+                        
                     </View>
                    
             </View>
+            {data[2].bank != "" &&
             <TouchableOpacity style={{backgroundColor:'#FFF9C4', height:50, alignItems:'center', justifyContent:'center'}}
-            onPress={()=> navigation.navigate("PilihBank")}>
-                        
-                <PlainText
-                    fontSize={14}
-                    title="Tambah Baru"
-                    color={"#000"}     
-                    fontStyle="bold"
-                />
-        </TouchableOpacity>
+                onPress={()=> navigation.navigate("WithdrawDetail")}>
+                            
+                    <PlainText
+                        fontSize={14}
+                        title="Lanjutkan"
+                        color={"#000"}     
+                        fontStyle="bold"
+                    />
+            </TouchableOpacity>
+            }
+            
         </View>
     )
 }
