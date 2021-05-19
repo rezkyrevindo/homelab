@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { WebView } from 'react-native-webview';
 import { snap, topup } from '../../redux/actions';
 
-const PembayaranTopUp = ({navigation}) => {
+const PembayaranTopUp = ({navigation, route}) => {
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
@@ -45,26 +45,25 @@ const PembayaranTopUp = ({navigation}) => {
                 ),
         });
       }, [navigation]);
+    const {_acum_price, _point} = route.params;
     const { token,data, snapToken,clientKey, production  } = useSelector (state => state.authReducers);
     const dispatch = useDispatch();
     
     const topUp = (token,point,acum_price,description, status) => dispatch(topup(token,point, acum_price, description, status))
     const setSnap = (snap1, client, production) => dispatch(snap(snap1, client, production))
     const [isLoading, setLoading] = useState(false)
-    const acum_price = "24000"
-    const point = "600"
+    const acum_price = _acum_price
+    const point = _point
     const [snapToken_, setSnapToken] = useState(snapToken)
     const [webViewRef, setWebViewRef] = useState("")
     const [serverKey, setServerKey] = useState("")
     const [clientKey_, setClientKey] = useState(clientKey)
     const [production_, setProduction] = useState(production)
-   
     
     
 
     useEffect(() => {
 
-        console.log("INI TOKEN SKEARANG "+ snapToken)
         if(snapToken !=''){
             
         }else{

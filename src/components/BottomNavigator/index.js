@@ -33,7 +33,13 @@ const BottomNavigator = ({ state, descriptors, navigation }) => {
             });
   
             if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
+              if(route.name =="AddQuestion"){
+                navigation.navigate("CreateQuestion");
+              }else{
+                navigation.navigate(route.name);
+              }
+              
+
             }
           };
   

@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, Splash, Akun, CreateQuestion, Login,RegisterSuccess, Register,DetailQuestion ,Verification, ConfirmationSuccess, 
   Landing,Explore, MyDetailQuestion ,Notification , KonfirmasiTopUp,ForgotPassword, ForgotPasswordSuccess, Interest, Commentar, TopUp,
 PembayaranTopUp, WaitingTopUp, Withdraw, PilihBank, AddAccountBank, WithdrawDetail, WithdrawKonfirmasi, Setting, MyQuestion, MyAnswer,
-VerifikatorLogin, MyUnlockQuestion} from '../pages';
+VerifikatorLogin, MyUnlockQuestion, BridgeCreateQuestion}  from '../pages';
 import { BottomNavigator } from '../components';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -13,9 +13,10 @@ const Tab = createBottomTabNavigator();
 const MainApp = () => {
   
   return (
-    <Tab.Navigator tabBar={props => <BottomNavigator {...props} />}>
+      <Tab.Navigator tabBar={props => <BottomNavigator {...props} />}>
         <Tab.Screen name="Home" component={Home} />
         <Tab.Screen name="Search" component={Explore} />
+        <Tab.Screen name="AddQuestion" component={BridgeCreateQuestion}  />
         <Tab.Screen name="Notification" component={Notification} />
         <Tab.Screen name="Profile" component={Akun} />
       </Tab.Navigator>
@@ -28,6 +29,7 @@ const Router = () => {
     <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }}/>
       <Stack.Screen name="CreateQuestion" component={CreateQuestion} options={{headerTitle: 'Create Question'}}/>
+      <Stack.Screen name="BridgeCreateQuestion" component={BridgeCreateQuestion} options={{headerShown:false}}/>
       <Stack.Screen name="MyDetailQuestion" component={MyDetailQuestion} options={{headerTitle: 'My Question'}}/>
       <Stack.Screen name="MyUnlockQuestion" component={MyUnlockQuestion} options={{headerTitle: 'My Unlock Question'}}/>
       <Stack.Screen name="DetailQuestion" component={DetailQuestion} options={{headerTitle: 'Question'}}/>

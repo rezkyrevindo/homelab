@@ -47,6 +47,7 @@ import IconFaq from './ic_faq.svg'
 import IconFile from './ic_file.svg'
 import IconSecurity from './ic_security.svg'
 import IconInfo from './ic_info.svg'
+import IconPlus from './ic_plus.svg'
 export {
   IconMenu,IconMenuActive, IconNotification,IconNotificationActive, IconSearch, IconSearchActive,
   IconAkun,IconFaq,
@@ -73,5 +74,5 @@ export {
   IconUser, IconUserActive, IconPointsWhite, IconSetting,
   IconCaretDown, IconPicture, IconFont,IconDerajat,
   IconLike,IconLikeActive, IconCheck, IconExplore, IconRiwayat, IconWallet,
-  IconCaretUp, IconCaretLeft, IconTopUp, IconWithdraw
+  IconCaretUp, IconCaretLeft, IconTopUp, IconWithdraw, IconPlus
 };

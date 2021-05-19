@@ -1,16 +1,16 @@
-import React, {useEffect, useState}  from 'react'
+import React, {useEffect, useState, useRef}  from 'react'
 import {
     StyleSheet,
     Text,
     Image,
     View,
     ImageBackground,FlatList,
-    TextInput,SafeAreaView,
-    Dimensions, StatusBar, TouchableOpacity, 
+    TextInput,SafeAreaView,TouchableWithoutFeedback ,
+    Dimensions, StatusBar, TouchableOpacity, TouchableHighlight
     
-  } from 'react-native';
+} from 'react-native';
 
-  import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {IconCaretDown, IconDerajat,IconPicture,IconFont, IconPoints, DefaultProfile} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard, ButtonPrimary, LoadingIndicator} from '../../components/';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_DISABLE, BASE_URL_IMG, BASE_URL_API} from '../../utils/constant';
@@ -24,11 +24,15 @@ import FastImage from 'react-native-fast-image'
 import ImagePicker,{showImagePicker,launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Snackbar from 'react-native-snackbar';
 
+import MathText from 'react-native-math';
+
+
 const CreateQuestion = ({navigation}) => {
+
     const { token, data } = useSelector (state => state.authReducers);
     const [modalKategori, setModalKategori] = useState(false)
     const [modalPoint, setModalPoint] = useState(false)
-    const points = [{id:'110', name:'110'}, {id:'130', name:'130'} , {id:'150', name:'150'} ,{id:'6', name:'All'}]
+    const points = [{id:'110', name:'110'}, {id:'130', name:'130'} , {id:'150', name:'150'} ]
     const [selectedPoint, setSelectedPoint] = useState('110')
     const [listKategori, setListKategori] = useState([])
     const [selectedKategori, setSelectedKategori] = useState(null)
@@ -41,7 +45,48 @@ const CreateQuestion = ({navigation}) => {
     const [fileUri, setFileUri] = useState(null)
     const [sourceImg, setSourceImg] = useState(null)
     const [content, setContent] = useState("")
-
+    const [isText, setIsText] = useState(true)
+    const [formula, setFormula] = useState("")
+    const [formulaSelection, setFormulaSelection]= useState({start: 0, end: 0})
+    const formulaRef = useRef(null);
+    const listKeyboard_1 = [
+        {value: '(', type:'char', output:'('},
+        {value: ')', type:'char', output:')'},
+        {value: '7', type:'char', output:'7'},
+        {value: '8', type:'char', output:'8'},
+        {value: '9', type:'char', output:'9'},
+        {value: '+', type:'char', output:'+'},
+        {value: 'x', type:'char', output:'x'},
+        {value: 'y', type:'char', output:'y'},
+        {value: '4', type:'char', output:'4'},
+        {value: '5', type:'char', output:'5'},
+        {value: '6', type:'char', output:'6'},
+        {value: '-', type:'char', output:'-'},
+        {value: 'x2', type:'char', output:'{?}^{2}'},
+        {value: 'xx', type:'char', output:'{?}^{?}'},
+        {value: '1', type:'char', output:'1'},
+        {value: '2', type:'char', output:'2'},
+        {value: '3', type:'char', output:'3'},
+        {value: 'X', type:'char', output:`\\times `},
+        {value: 'x/y', type:'char', output:`\\frac{?}{?}`},
+        {value: 'xXx/y', type:'char', output:'?\\times \\frac{?}{?}'},
+        {value: '0', type:'char', output:'0'},
+        {value: '.', type:'char', output:'.'},
+        {value: '=', type:'char', output:'='},
+        {value: '/', type:'char', output:'\\div '},
+        {value: '^', type:'char', output:'\\sqrt{?}'},
+        {value: 'akar^', type:'char', output:'\\sqrt[?]{?}'},
+        {value: '|x|', type:'char', output:'|?|'},
+        {value: '<', type:'char', output:'<'},
+        {value: '>', type:'char', output:'>'},
+        {value: 'B', type:'char', output:' \\\\ '},
+        {value: '123', type:'nav', output:'123'},
+        {value: 'pi', type:'nav', output:'pi'},
+        {value: 'abc', type:'nav', output:'abc'},
+        {value: '<=', type:'char', output:'\\leqslant'},
+        {value: '>=', type:'char', output:'\\geqslant'},
+        {value: 'D', type:'char', output:'D'},
+    ]
     
 
     const addQuestion = async () => {
@@ -79,16 +124,21 @@ const CreateQuestion = ({navigation}) => {
                 name: "Photo_React_Native",
             });
         }
+        if(formula != ""){
+            let new_content = `<u>Formula</u> <br><p><span class='latexEle' data-latex='${formula}'></span></p>`+""+content
+            formData.append('content', new_content)
+        }else{
+            formData.append('content', content)
+        }
         
         formData.append('id_category',data[2].category_id )
         formData.append('id_sub_category', selectedKategori)
         formData.append('point', selectedPoint)
-        formData.append('content', content)
         
         var postData = {
             method: 'POST',
             headers: {
-                "Accept" : '*/*',
+                'Accept': 'application/json, text/plain, */*',
                 "Content-Type" :'multipart/form-data',
                 "Authorization" : 'Bearer '+token
             },
@@ -105,7 +155,7 @@ const CreateQuestion = ({navigation}) => {
         .catch((error) => {
             
             setLoading(false)
-            console.error(error.response)
+            console.error(error)
 
         });
        
@@ -114,6 +164,10 @@ const CreateQuestion = ({navigation}) => {
     useEffect(() => {
        getCategory()
     }, [])
+
+    const addFormula = () =>{
+
+    }
 
     const _launchCamera = () => {
         let options = {
@@ -295,12 +349,13 @@ const CreateQuestion = ({navigation}) => {
     }
     return (
         <View style={styles.container}>
+            
             {isLoading &&
                 <LoadingIndicator/>
             }
             {!isLoading &&
                 
-                <View>
+                <View style={styles.container}> 
                     <KategoriModal/>
                     <PointModal/>
                     <View>
@@ -365,6 +420,19 @@ const CreateQuestion = ({navigation}) => {
                                             fontStyle={"bold"}
                                         />
                                 </View>
+                                { formula != "" &&
+                                    <View style={{width:windowWidth *0.9 , marginBottom:10,
+                                    padding:10,
+                                    borderBottomWidth:1,borderColor:'#dadada', alignContent:'center',}}>
+                                        <MathText
+                                        value={`<u>Formula</u> <br><p><span class='latexEle' data-latex='${formula}'></span></p>`}
+                                        style={{ height:100, alignItems: "center", justifyContent: "center" }}
+                                        textSize={15}
+                                        textColor={"#000000"}
+                                />
+                                    </View>
+                                    
+                                }   
                                 <TextInput
                                     numberOfLines={20}
                                     style={styles.inputContainer}
@@ -382,15 +450,54 @@ const CreateQuestion = ({navigation}) => {
                                 />
                                 }
                             </View>
-                            <View style={styles.footerContent}>
-                                <IconFont  fill={'#000'} width={24} height={24}/>
-                                <IconDerajat fill={'#000'} width={24} height={24}/>
-                                <TouchableOpacity 
-                                onPress= {()=>_launchCamera()}>
-                                <IconPicture fill={'#000'} width={24} height={24}/>
-                                </TouchableOpacity>
+                            
+                        </View>
+                    </ScrollView>
+                    <View style={styles.footerContent}>
+                    
+                       
 
+                        <View style={{
+                            width : windowWidth  ,
+                            paddingHorizontal : windowWidth * 0.05,
+                            backgroundColor : '#fff',
+                            flexDirection : 'row',
+                            justifyContent : 'space-between',
+                            alignItems:'center',
+                            }}>
+                            {isText &&
+                                <TouchableOpacity onPress={()=>setIsText(true)}>
+                                    <IconFont  fill={WARNA_UTAMA} width={18} height={18}/>
+                                </TouchableOpacity>
+                                    
                                 
+                            }
+                            {isText &&
+                                <TouchableOpacity onPress={()=>setIsText(false)}>
+                                    <IconDerajat fill={'#000'} width={18} height={18}/>
+                                    </TouchableOpacity>  
+                            }
+                            {!isText &&
+                                <TouchableOpacity onPress={()=>setIsText(true)}>
+                                    <IconFont  fill={"#000"} width={18} height={18}/>
+                                    </TouchableOpacity>
+                                
+                            }
+                            {!isText &&
+                                <TouchableOpacity onPress={()=>setIsText(false)}>
+                                    <IconDerajat fill={WARNA_UTAMA} width={18} height={18}/>
+                                    </TouchableOpacity>  
+                            }
+                           
+                           
+                            
+                            
+                            <TouchableOpacity 
+                            onPress= {()=>_launchCamera()}>
+                            <IconPicture fill={'#000'} width={18} height={18}/>
+                            </TouchableOpacity>
+
+                            {isText &&
                                 <TouchableOpacity
                                         style={styles.btn}
                                         onPress= {()=> addQuestion()}
@@ -402,9 +509,100 @@ const CreateQuestion = ({navigation}) => {
                                             fontStyle={"bold"}
                                         />
                                 </TouchableOpacity>
-                            </View>
+                            }
+                            {!isText &&
+                                <TouchableOpacity
+                                        style={styles.btn}
+                                        onPress= {()=> addFormula()}
+                                    >
+                                    <PlainText
+                                            title={"Add Formula"}
+                                            color={"#000"}
+                                            fontSize= {14}
+                                            fontStyle={"bold"}
+                                        />
+                                </TouchableOpacity>
+                            }
+                            
                         </View>
-                    </ScrollView>
+                        {!isText &&
+                            <View style={{
+                            width : windowWidth ,
+                            height: windowHeight *0.4,
+                            backgroundColor : '#dadada',
+                            marginTop:10,
+                            }}>
+                            
+                                <TextInput
+
+                                        ref={formulaRef}
+                                        style={{
+                                            backgroundColor:"#fff",
+                                            marginTop:10,
+                                            marginHorizontal:10,
+                                            borderRadius:10,
+                                            height:windowHeight*0.4 * 0.14,
+                                            paddingHorizontal:20,
+                                            
+
+                                        }}
+                                        allowFontScalling={true}
+                                        onChangeText= {(text) => setFormula(text)}
+                                        value={formula}
+                                        showSoftInputOnFocus= {false}
+                                        onSelectionChange={({ nativeEvent: { selection } }) => {
+                                            
+                                            setFormulaSelection(selection)
+                                            
+                                        }}
+                                        
+                                    />
+                                    <FlatList
+                                        style={{marginTop:10, marginHorizontal : 5,}}
+                                        data={ listKeyboard_1 }
+                                        keyExtractor={(item) => item.value.toString()}
+                                        renderItem={({item}) =>
+                                            <TouchableHighlight  style={{
+                                                
+                                                    justifyContent: 'center',
+                                                    flex:1,
+                                                    alignItems: 'center',
+                                                    height:windowHeight*0.4 * 0.1,
+                                                    borderRadius:5,
+                                                    margin: 5,
+                                                    backgroundColor: '#fff'
+                                            }}
+                                            onPress={()=> {
+                                                
+                                                if(item.value =="D"){
+                                                    let new_value = formula.substring(0, parseInt(formulaSelection.start)-1)  + formula.substring(formulaSelection.start)
+                                                    setFormula(new_value)
+                                                    
+                                                    setFormulaSelection({start:parseInt(formulaSelection.start)-1, end : parseInt(formulaSelection.end)-1 })
+                                                }else{
+                                                    let new_value = formula.substring(0, formulaSelection.start) + item.output + formula.substring(formulaSelection.start)
+                                                    setFormula(new_value)
+                                                    
+                                                    setFormulaSelection({start:parseInt(formulaSelection.start)+1, end : parseInt(formulaSelection.end)+1 })
+                                                }
+                                                }}
+                                            >
+                                                <Text style={{
+                                                    color: '#000',
+                                                    padding: 10,
+                                                    fontSize: 12,
+                                                    justifyContent: 'center',
+                                                }} > {item.value} </Text>
+                                            </TouchableHighlight>}
+                                        numColumns={6}
+                                        />
+                            </View>
+                        }
+                        
+                        
+                        
+                        
+                    </View>
                 </View>
             }
            
@@ -448,6 +646,7 @@ const styles = StyleSheet.create({
         backgroundColor : '#fff',
         flexDirection : 'column',
         justifyContent : 'space-between',
+        
         width : windowWidth * 0.9,
         borderRadius    : 10,
         shadowColor: "#000",
@@ -459,28 +658,17 @@ const styles = StyleSheet.create({
         shadowRadius: 2.22,
 
         elevation: 3,
-        marginBottom : 10
+        marginBottom : 50
     },
     footerContent :{
-        marginTop : 20,
+        bottom:0,
+        position: 'absolute', 
         
         backgroundColor : '#fff',
-        flexDirection : 'row',
-        justifyContent : 'space-between',
+        flexDirection : 'column',
+        alignContent:'center',
         alignItems:'center',
-        width : windowWidth * 0.9,
-        borderRadius    : 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-
-        elevation: 3,
-        marginBottom : 10,
-        paddingHorizontal: 20,
+        width : windowWidth ,
         paddingVertical : 10,
     },
     inputContainer: {

@@ -11,15 +11,15 @@ const Splash = ({ navigation }) => {
     
         setTimeout( () => {
             if(token != 'false' && data[2].category_id == null){
-                if(notification == "true"){
-                    subcribe(data[2].email)
-                }
+                // if(notification == "true"){
+                //     subcribe(data[2].email)
+                // }
                 
                 navigation.replace('Interest')
             }else if(token != 'false' && data[2].category_id != null){
-                if(notification == "true"){
-                    subcribe(data[2].email)
-                }
+                // if(notification == "true"){
+                //     subcribe(data[2].email)
+                // }
                 navigation.replace('MainApp');
             }else{
                 navigation.replace('Landing')

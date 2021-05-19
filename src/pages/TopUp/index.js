@@ -52,7 +52,7 @@ const TopUp = ({navigation}) => {
                         }}>
                             <PlainText
                                 fontSize={24}
-                                title="1.200"
+                                title={data[2].point}
                                 color={"#000"}     
                                 fontStyle={"bold"}
                             />
@@ -77,7 +77,7 @@ const TopUp = ({navigation}) => {
                     </View>
             </View>
             <View style={styles.body}>
-                <TouchableHighlight onPress={()=> navigation.replace("PembayaranTopUp")}>
+                <TouchableHighlight onPress={()=> navigation.replace("PembayaranTopUp", {"_acum_price" : "24000", "_point": "600"})}>
                     <View style={{
                         
                         width:windowWidth * 0.4,
@@ -103,7 +103,7 @@ const TopUp = ({navigation}) => {
                             <IconPoints width={100} height={100}/>
                             <PlainText
                                 fontSize={24}
-                                title="30 pt"
+                                title="600 pt"
                                 fontStyle={"bold"}
                                 color={"#000"}     
                             />
@@ -115,24 +115,26 @@ const TopUp = ({navigation}) => {
                             borderBottomStartRadius:20,
                             borderBottomEndRadius:20
                         }}>
-                            <PlainText
+                            {/* <PlainText
                                 fontSize={11}
-                                title="Rp 15.000"
+                                title="Rp 24.000"
                                 fontStyle={"bold"}
                                 color={"#FF5252"}  
                                 strikeTrought={true}
                                  
-                            />
+                            /> */}
                             <PlainText
                                 fontSize={18}
-                                title="Rp 10.000"
+                                title="Rp 24.000"
                                 fontStyle={"bold"}
                                 color={"#000"}     
                             />
                         </View>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight>
+                <TouchableHighlight
+                    onPress={()=>navigation.replace("PembayaranTopUp", {"_acum_price" : "37500", "_point": "1000"})}
+                >
                     <View style={{
                         
                         width:windowWidth * 0.4,
@@ -158,7 +160,7 @@ const TopUp = ({navigation}) => {
                             <IconPoints width={100} height={100}/>
                             <PlainText
                                 fontSize={24}
-                                title="60 pt"
+                                title="1000 pt"
                                 fontStyle={"bold"}
                                 color={"#000"}     
                             />
@@ -170,24 +172,26 @@ const TopUp = ({navigation}) => {
                             borderBottomStartRadius:20,
                             borderBottomEndRadius:20
                         }}>
-                            <PlainText
+                            {/* <PlainText
                                 fontSize={11}
                                 title="Rp 30.000"
                                 fontStyle={"bold"}
                                 color={"#FF5252"}  
                                 strikeTrought={true}
                                  
-                            />
+                            /> */}
                             <PlainText
                                 fontSize={18}
-                                title="Rp 20.000"
+                                title="Rp 37.000"
                                 fontStyle={"bold"}
                                 color={"#000"}     
                             />
                         </View>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight>
+                <TouchableHighlight
+                    onPress={()=>navigation.replace("PembayaranTopUp", {"_acum_price" : "66000", "_point": "2000"})}
+                >
                     <View style={{
                         
                         width:windowWidth * 0.4,
@@ -213,7 +217,7 @@ const TopUp = ({navigation}) => {
                             <IconPoints width={100} height={100}/>
                             <PlainText
                                 fontSize={24}
-                                title="100 pt"
+                                title="2000 pt"
                                 fontStyle={"bold"}
                                 color={"#000"}     
                             />
@@ -225,24 +229,26 @@ const TopUp = ({navigation}) => {
                             borderBottomStartRadius:20,
                             borderBottomEndRadius:20
                         }}>
-                            <PlainText
+                            {/* <PlainText
                                 fontSize={11}
                                 title="Rp 46.500"
                                 fontStyle={"bold"}
                                 color={"#FF5252"}  
                                 strikeTrought={true}
                                  
-                            />
+                            /> */}
                             <PlainText
                                 fontSize={18}
-                                title="Rp 31.000"
+                                title="Rp 66.000"
                                 fontStyle={"bold"}
                                 color={"#000"}     
                             />
                         </View>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight>
+                <TouchableHighlight
+                    onPress={()=>navigation.replace("PembayaranTopUp", {"_acum_price" : "123000", "_point": "4000"})}
+                >
                     <View style={{
                         
                         width:windowWidth * 0.4,
@@ -268,7 +274,7 @@ const TopUp = ({navigation}) => {
                             <IconPoints width={100} height={100}/>
                             <PlainText
                                 fontSize={24}
-                                title="150 pt"
+                                title="4000 pt"
                                 fontStyle={"bold"}
                                 color={"#000"}     
                             />
@@ -280,17 +286,17 @@ const TopUp = ({navigation}) => {
                             borderBottomStartRadius:20,
                             borderBottomEndRadius:20
                         }}>
-                            <PlainText
+                            {/* <PlainText
                                 fontSize={11}
                                 title="Rp 67.500"
                                 fontStyle={"bold"}
                                 color={"#FF5252"}  
                                 strikeTrought={true}
                                  
-                            />
+                            /> */}
                             <PlainText
                                 fontSize={18}
-                                title="Rp 45.000"
+                                title="Rp 123.000"
                                 fontStyle={"bold"}
                                 color={"#000"}     
                             />
