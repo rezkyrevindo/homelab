@@ -48,7 +48,9 @@ const DetailQuestion = ({route, navigation}) => {
     const [fileData, setFileData] = useState(null)
     const [fileUri, setFileUri] = useState(null)
     const [sourceImg, setSourceImg] = useState(null)
-    
+    const [idAnswer, setIdAnswer] = useState("")
+
+
     const dispatch = useDispatch();
     const updateProf = (token) => dispatch(updateProfile(token));
 
@@ -174,6 +176,87 @@ const DetailQuestion = ({route, navigation}) => {
             </View>
            
         )
+    }
+
+    const updateAnswer = async () =>{
+        var referenceError = null
+        if(type_reference.id == "url"){
+            referenceError = validator('yourInput', reference)
+        }else{
+            referenceError = validator('note', reference)
+        }
+
+        if(content == ""){
+            Snackbar.show({
+                text: "Jawaban tidak boleh kosong",
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+                });
+            return;
+        }
+        
+        
+        if(referenceError != null){
+            setReferenceError(referenceError)
+            return;
+        }
+
+        setLoading(true)
+        sheetRef.current.snapTo(2)
+        
+       
+        
+       
+
+        var formdata = new FormData()
+        
+        formdata.append('id_answer', idAnswer)
+        formdata.append('answr', content)
+        formdata.append('refrens', reference)
+        formdata.append('type_refrens', type_reference.id)
+
+        axios.post (BASE_URL_API+'edit_answer',
+        formdata,
+        {
+            headers : {
+                Accept : '*/*',
+                "content-type" :'multipart/form-data',
+                "Authorization" : "Bearer "+token
+                }  
+        }).then(function(response) {
+            
+            Snackbar.show({
+                text: "Berhasil memperbarui jawaban",
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+                });
+           
+            setRefresh(refresh+1)
+            setLoading(false)
+        }).catch(function(error){
+            Snackbar.show({
+                text: "Gagal memperbarui jawaban",
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'Ok',
+                    textColor: WARNA_UTAMA,
+                    onPress: () => { /* Do something. */ },
+                },  
+                });
+            setLoading(false)
+            setRefresh(refresh+1)
+            
+            
+            console.error(error.response.status)
+        })
     }
 
     const addAnswer = async () => {
@@ -406,6 +489,17 @@ const DetailQuestion = ({route, navigation}) => {
                 type_reference = {item[0].answer.Type_Reference}
                 reference={item[0].answer.Reference}
                 picture = {item[0].answer.Photo_User_Answer}
+                onEditAnswer = {() => {
+                    sheetRef.current.snapTo(1)
+                    setIdAnswer(item[0].answer.Id_Answer)
+                    setContent(item[0].answer.Answer)
+                    setReference(item[0].answer.Reference)
+                    if(item[0].answer.Type_Reference == "url"){
+                        setTypeReference({'id': 'url','name': 'URL'})
+                    }else{
+                        setTypeReference({'id':'document description',"name" : "Notes"})
+                    }
+                } }
                 
             />
         )
@@ -472,7 +566,7 @@ const DetailQuestion = ({route, navigation}) => {
                                 />
                         </View>
                         <TextInput
-                            numberOfLines={20}
+                            numberOfLines={10}
                             style={styles.inputContainer}
                             multiline = {true}
                             onChangeText= {(text) => setContent(text)}
@@ -538,7 +632,14 @@ const DetailQuestion = ({route, navigation}) => {
                         
                         <TouchableOpacity
                                 style={styles.btn}
-                                onPress= {()=> addAnswer()}
+                                onPress= {()=> {
+                                    if(idAnswer == ""){
+                                        addAnswer()
+                                    }else{
+                                        updateAnswer()
+                                    }
+                                    
+                                    }}
                             >
                             <PlainText
                                     title={"Send"}
@@ -672,7 +773,7 @@ const DetailQuestion = ({route, navigation}) => {
                     { isSolved == "0" && dataQuestion.Status_Question_User_Answer == "False" &&
                     
                         <TouchableOpacity
-                                onPress={() => sheetRef.current.snapTo(0)}
+                                onPress={() => sheetRef.current.snapTo(1)}
                                 style={{height: 70,
                                 width:"100%",
                                 backgroundColor:WARNA_UTAMA, 
@@ -757,9 +858,9 @@ const DetailQuestion = ({route, navigation}) => {
                                 </View>
                             }
                     
-              <BottomSheet
+                    <BottomSheet
                         ref={sheetRef}
-                        snapPoints={['93%', "40%", 0]}
+                        snapPoints={['75%', "40%", 0]}
                         initialSnap={2}
                         borderRadius={10}
                         renderContent={renderContent}

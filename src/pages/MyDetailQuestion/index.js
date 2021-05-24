@@ -214,18 +214,15 @@ const MyDetailQuestion = ({route,navigation}) => {
                 if (response.data){
                     setDataQuestion(response.data.Question)
                     setDataAnswer(response.data.Sub_Question)
-                    console.log(dataAnswer)
+                    
                     
                 }else{
                     setDataQuestion(null)
-                    console.info("Unable to fetch data from API")
-                    console.log(listQuestion)
                 }
                 setLoading(false)
             })
             .catch(function (error) {
                 setLoading(false)
-                console.error(error.response.status)
             });
     }
     const renderAnswer = ({item}) =>{
@@ -293,6 +290,7 @@ const MyDetailQuestion = ({route,navigation}) => {
                             question={dataQuestion.Content_Question}
                             answer = {dataAnswer.length}
                             picture = {dataQuestion.Photo_User_Question}
+                            onPress= {()=> navigation.navigate("UpdateQuestion" , {dataQuestion : dataQuestion})}
                         />
 
                         <View style={{flexDirection : 'row', justifyContent :'space-between', alignItems:'center', marginTop:20}}>

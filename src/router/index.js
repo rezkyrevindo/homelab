@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, Splash, Akun, CreateQuestion, Login,RegisterSuccess, Register,DetailQuestion ,Verification, ConfirmationSuccess, 
   Landing,Explore, MyDetailQuestion ,History , KonfirmasiTopUp,ForgotPassword, ForgotPasswordSuccess, Interest, Commentar, TopUp,
 PembayaranTopUp, WaitingTopUp, Withdraw, PilihBank, AddAccountBank, WithdrawDetail, WithdrawKonfirmasi, Setting, MyQuestion, MyAnswer,
-VerifikatorLogin, MyUnlockQuestion}  from '../pages';
+VerifikatorLogin, MyUnlockQuestion, UpdateQuestion}  from '../pages';
 import { BottomNavigator } from '../components';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -29,6 +29,7 @@ const Router = () => {
     <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }}/>
       <Stack.Screen name="CreateQuestion" component={CreateQuestion} options={{headerTitle: 'Create Question'}}/>
+      <Stack.Screen name="UpdateQuestion" component={UpdateQuestion} options={{headerTitle: 'Update Question'}}/>
       
       <Stack.Screen name="MyDetailQuestion" component={MyDetailQuestion} options={{headerTitle: 'My Question'}}/>
       <Stack.Screen name="MyUnlockQuestion" component={MyUnlockQuestion} options={{headerTitle: 'My Unlock Question'}}/>

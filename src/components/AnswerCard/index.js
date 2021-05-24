@@ -1,14 +1,13 @@
 import React,  { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions , Linking} from 'react-native'
 import PlainText from '../PlainText'
-import { DefaultProfile, IconLike, IconLikeActive, IconCheck, IconLock} from '../../assets';
+import { DefaultProfile, IconLike, IconLikeActive, IconCheck, IconLock, IconCaretLeft} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, BASE_URL_API,BASE_URL_IMG} from '../../utils/constant';
 import FastImage from 'react-native-fast-image'
 import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56
-import MathText from 'react-native-math';
 
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 function hitungSelisihHari(tgl1){
@@ -37,15 +36,7 @@ const AnswerCard = (props) => {
   const { token,data } = useSelector (state => state.authReducers);
   const [like, setLike] = useState(props.like)
   const [isLike, setIsLike] = useState(props.is_like)
-  function validURL(str) {
-    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-    return !!pattern.test(str);
-  }
+  
   const addLike = () =>{
     var form_data = new FormData()
     form_data.append('id_answer', props.id_answer)
@@ -59,12 +50,12 @@ const AnswerCard = (props) => {
             "Authorization" : "Bearer "+token
             }  
     }).then(function(response) {
-        console.log(response.data)
+        // console.log(response.data)
      
         setLike(like+1)
         setIsLike("True")
     }).catch(function(error){
-        console.error(error)
+        // console.error(error)
     })
   }
   const GambarModal = ()=>{
@@ -106,7 +97,7 @@ const AnswerCard = (props) => {
 }
 
   const date = hitungSelisihHari(props.time)
-  console.log(date)
+  // console.log(date)
     return (
         <View 
           
@@ -123,39 +114,46 @@ const AnswerCard = (props) => {
                 <View 
                 style={{flexDirection : 'column', justifyContent:'space-around', marginLeft: 10}}
                 >
-                { props.is_me == 'True' &&
-                <PlainText
-                        title={"You"}
-                        color={"#000"}
-                        fontStyle={"bold"}
-                        fontSize = {13}
-                    />
-                }
-                { props.is_me == 'False' &&
-                <PlainText
-                        title={props.name}
-                        color={"#000"}
-                        fontStyle={"bold"}
-                        fontSize = {13}
-                    />
-                }
-                 
+                  { props.is_me == 'True' &&
+                  <PlainText
+                          title={"You"}
+                          color={"#000"}
+                          fontStyle={"bold"}
+                          fontSize = {13}
+                      />
+                  }
+                  { props.is_me == 'False' &&
+                  <PlainText
+                          title={props.name}
+                          color={"#000"}
+                          fontStyle={"bold"}
+                          fontSize = {13}
+                      />
+                  }
+                  
                   <PlainText
                         title={date }
                         color={"#000"}
                         fontSize = {11}
                     />
                 </View>
-              </View>
               
+              </View>
                 {props.isRelevant == true &&
                     <View style={{flexDirection:'row', alignItems : 'center'}}>
                         
                         
-                        <IconCheck style={{marginLeft:3}} width={24} height={24} fill={'#fff'}/>
+                        <IconCheck  width={24} height={24} fill={'#fff'}/>
                     </View>
                     
                 }
+                {props.is_me == "True" &&
+                  <TouchableOpacity onPress={props.onEditAnswer} style={{flexDirection:'row', alignItems : 'center'}}>
+                      <IconCaretLeft  width={24} height={24} />
+                  </TouchableOpacity>
+                }
+                
+               
              
             </View>
                 { props.is_lock && 
@@ -298,14 +296,14 @@ const AnswerCard = (props) => {
                         </TouchableOpacity>
                       }
                       
-                      
+                      <TouchableOpacity onPress={props.onPress}>
                       <PlainText
                             title={props.commentar + " comment"}
                             fontStyle={"bold"}
                             color={"#000"}
                             fontSize = {13}
                             />
-                    
+                      </TouchableOpacity>
                     
                     
                     </View>

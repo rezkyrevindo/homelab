@@ -10,7 +10,6 @@ function hitungSelisihHari(tgl1){
 
   var tanggal1 = new Date(tgl1);
   var tanggal2 = new Date();
-  console.log(tgl1)
   var tglPertama = Date.parse(tanggal1);
   var tglKedua = Date.parse(tanggal2);
 
@@ -27,7 +26,7 @@ function hitungSelisihHari(tgl1){
 }
 const QuestionCard = (props) => {
     const date = hitungSelisihHari(props.time)
-    console.log(date)
+    
     return (
         <TouchableOpacity 
           onPress={props.onPress}
