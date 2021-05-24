@@ -146,6 +146,7 @@ export const topup =  (token, point, acum_price, description, status ) => {
             data.append('acum_price', acum_price)
             data.append('description', description)
             data.append('status', status)
+            data.append('transaction_id', ""+Math.floor(Math.random() * 100000000) + 1 )
 
             axios.post('https://askhomelab.com/api/order',
             data,
@@ -182,11 +183,11 @@ export const topup =  (token, point, acum_price, description, status ) => {
     }
 };
 
-export const snap = (snap, client, production) =>{
+export const snap = (snap, client, production, acum_price,point) =>{
     try {
         return async dispatch =>{
            let data = {
-               snap, client, production
+               snap, client, production, acum_price, point
            }
            dispatch({
             type : SNAP,

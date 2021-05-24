@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react'
 import {
-    StyleSheet,
+    StyleSheet,Alert,
     View,
     Dimensions,StatusBar, TouchableOpacity, Text
   } from 'react-native';
 import {ImgWithdraw, IconPoints, IconRiwayat, IconWallet} from '../../assets';
-import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
+import {WARNA_UTAMA, WARNA_WARNING, BASE_URL_API} from '../../utils/constant';
 import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, LoadingIndicator} from '../../components'
-
+import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
@@ -47,6 +47,7 @@ const WithdrawDetail = ({navigation}) => {
     }, [amount])
 
     const withdraw = async () =>{
+        setLoading(true)
         var data = new FormData();        
         data.append('point', amount)
         data.append('acum_price', receive)
@@ -59,11 +60,12 @@ const WithdrawDetail = ({navigation}) => {
             headers : {
             Accept : '*/*',
             "content-type" :'multipart/form-data',
-            "Authorization" : "Bearer "+token
+            "Authorization" : "Bearer "+token   
             }  
            
         })
             .then(function (response) {
+                console.log(response.data.message)
                 if (response.data.message == "successful"){
                     
                     setLoading(false)
@@ -85,6 +87,7 @@ const WithdrawDetail = ({navigation}) => {
                 }
             })
             .catch(function (error) {
+                console.log(error)
                     setLoading(false)
             });
     }

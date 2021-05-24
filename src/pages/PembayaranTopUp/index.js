@@ -46,14 +46,14 @@ const PembayaranTopUp = ({navigation, route}) => {
         });
       }, [navigation]);
     const {_acum_price, _point} = route.params;
-    const { token,data, snapToken,clientKey, production  } = useSelector (state => state.authReducers);
+    const { token,data, snapToken,clientKey, production, acum_price, point } = useSelector (state => state.authReducers);
     const dispatch = useDispatch();
     
     const topUp = (token,point,acum_price,description, status) => dispatch(topup(token,point, acum_price, description, status))
-    const setSnap = (snap1, client, production) => dispatch(snap(snap1, client, production))
+    const setSnap = (snap1, client, production, acum_price, point) => dispatch(snap(snap1, client, production, acum_price, point))
     const [isLoading, setLoading] = useState(false)
-    const acum_price = _acum_price
-    const point = _point
+    const acum_price__ = _acum_price
+    const point__ = _point
     const [snapToken_, setSnapToken] = useState(snapToken)
     const [webViewRef, setWebViewRef] = useState("")
     const [serverKey, setServerKey] = useState("")
@@ -77,7 +77,7 @@ const PembayaranTopUp = ({navigation, route}) => {
         setLoading(true)
         
         var data = new FormData()
-        data.append('acum_price' , acum_price)
+        data.append('acum_price' , acum_price__)
         axios.post(BASE_URL_API+'order_topup',
         data,
         {
@@ -117,7 +117,7 @@ const PembayaranTopUp = ({navigation, route}) => {
                     if(result.status_code == "409"){
                         let description = "top-up"
                         let status = 'success'
-                        topUp(token, point, acum_price, description, status)
+                        topUp(token, point__, acum_price__, description, status)
                         navigation.replace("ConfirmationSuccess")
                        
                     }else{

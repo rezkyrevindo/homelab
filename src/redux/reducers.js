@@ -7,6 +7,8 @@ const initialState = {
     snapToken :'',
     clientKey :'',
     production : '',
+    acum_price : '',
+    point : '',
   };
 
 function authReducers(state = initialState, action) {
@@ -18,9 +20,10 @@ function authReducers(state = initialState, action) {
         case NOTIF:
             return { ...state, notification: action.payload};
         case TOPUP :
-            return { ...state, snapToken : '', clientKey :'', production : ''}
+            return { ...state, snapToken : '', clientKey :'', production : '', acum_price : '', point : ''}
         case SNAP : {
-            return { ...state, snapToken: action.payload.snap,  clientKey : action.payload.client, production : action.payload.production}
+            return { ...state, snapToken: action.payload.snap,  clientKey : action.payload.client, production : action.payload.production,
+            acum_price : action.payload.acum_price, point : action.payload.point}
         }
         case LOGOUT :
             return (

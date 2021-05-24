@@ -4,6 +4,7 @@ import PlainText from '../PlainText'
 import { DefaultProfile, IconPoints, IconLike,IconLikeActive, IconCheck} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, BASE_URL_API, BASE_URL_IMG, OpenSans} from '../../utils/constant';
 import FastImage from 'react-native-fast-image'
+import MathText from 'react-native-math';
 function hitungSelisihHari(tgl1){
   var miliday = 60 * 60 * 1000;
 
@@ -74,10 +75,12 @@ const QuestionCard = (props) => {
 
             <View style={styles.cardQuestionContent}>
               <PlainText
-                title={props.question}
-                color={"#000"}
-                fontSize = {13}
-                />
+                      title={props.question}
+                      
+                      fontSize = {13}
+                      color={"#000000"}
+              />
+              
             </View>
             <View style={styles.cardQuestionFooter}>
               <View style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}}>

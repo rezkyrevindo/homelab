@@ -16,7 +16,7 @@ const TopUp = ({navigation}) => {
     
     useEffect(() => {
         if(snapToken !=''){
-            navigation.replace("PembayaranTopUp")
+            navigation.replace("PembayaranTopUp",  {"_acum_price" : "0", "_point": "0"})
         }
     }, [])
 

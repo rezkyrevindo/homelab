@@ -52,29 +52,7 @@ const Commentar = ({navigation, route}) => {
                     'Comment' : reply,
                 }
             }
-            axios.post("https://fcm.googleapis.com/fcm/send", 
-            JSON.stringify(
-                {
-                    "to" : "/topics/rezkyrevindo3gmailcom", 
-                    "notification" : {
-                        "body" : data[2].first_name+" "+data[2].last_name+" mengomentari jawabanmu",
-                        "title" : "Wah ada yang mengomentari jawaban mu"
-                    },
-                    "data" : {
-                        "body" : data[2].first_name+" "+data[2].last_name+" mengomentari jawabanmu",
-                        "title" : "Wah ada yang mengomentari jawaban mu"
-                    }
-                }
-            
-            ), 
-            {
-                headers : {
-                    Accept : '*/*',
-                    "content-type" :'application/json',
-                    "Authorization" : "key=AAAAaXjkBfM:APA91bHrxDkwpX85OxMN7f_ecBOpcxorsuxLAiNQDKuqPba_aVMhlrVFglvF47jhQ1RkDvam-NCDugMQMorA5q70XvuCr86v3olYhvy20nZ0bbYsUfduBfeqs5-UH83yH5HZnLxcdB78"
-                    }  
-            }
-            )
+           
             setListComment([...listComment, new_comment])
             setLoading(false)
         }).catch(function(error){

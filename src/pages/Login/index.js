@@ -22,7 +22,7 @@ import { login, refresh , addLogin} from '../../redux/actions';
 
 const Login = ({navigation}) => {
     
-    const { token,data } = useSelector (state => state.authReducers)
+    const { token,data, } = useSelector (state => state.authReducers)
     const dispatch = useDispatch();
     const setRefresh = ()=> dispatch(refresh())
     const requestLogin = (email,password) => dispatch(login(email,password));
@@ -79,6 +79,8 @@ const Login = ({navigation}) => {
         return null
       }
 
+    
+
     const loginCheck =  () =>{
         console.log(setRefresh())
         console.log("check isi token "+ token)
@@ -107,6 +109,7 @@ const Login = ({navigation}) => {
             });
             if ( data[2].category_id != null){
                 navigation.navigate('MainApp')
+                
             }else{
                 navigation.navigate('Interest')
             }

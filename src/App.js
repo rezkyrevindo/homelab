@@ -22,7 +22,7 @@ const App = () => {
     //  console.log(fcmToken);
     //  console.log("Your Firebase Token is:", fcmToken);
     } else {
-     console.log("Failed", "No token received");
+    //  console.log("Failed", "No token received");
     }
   }
 
@@ -34,7 +34,7 @@ const App = () => {
 
     if (enabled) {
       getFcmToken()
-      console.log('Authorization status:', authStatus);
+      // console.log('Authorization status:', authStatus);
     }
   }
   return (

@@ -8,6 +8,7 @@ import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56
+import MathText from 'react-native-math';
 
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 function hitungSelisihHari(tgl1){
@@ -59,29 +60,7 @@ const AnswerCard = (props) => {
             }  
     }).then(function(response) {
         console.log(response.data)
-        axios.post("https://fcm.googleapis.com/fcm/send", 
-        JSON.stringify(
-            {
-                "to" : "/topics/rezkyrevindo3gmailcom", 
-                "notification" : {
-                    "body" : data[2].first_name+" "+data[2].last_name+" menyukai jawabanmu",
-                    "title" : "Wah ada yang menyukai jawaban mu"
-                },
-                "data" : {
-                    "body" : data[2].first_name+" "+data[2].last_name+" menyukai jawabanmu",
-                    "title" : "Wah ada yang menyukai jawaban mu"
-                }
-            }
-        
-        ), 
-        {
-            headers : {
-                Accept : '*/*',
-                "content-type" :'application/json',
-                "Authorization" : "key=AAAAaXjkBfM:APA91bHrxDkwpX85OxMN7f_ecBOpcxorsuxLAiNQDKuqPba_aVMhlrVFglvF47jhQ1RkDvam-NCDugMQMorA5q70XvuCr86v3olYhvy20nZ0bbYsUfduBfeqs5-UH83yH5HZnLxcdB78"
-                }  
-        }
-        )
+     
         setLike(like+1)
         setIsLike("True")
     }).catch(function(error){
@@ -181,8 +160,9 @@ const AnswerCard = (props) => {
             </View>
                 { props.is_lock && 
                   <TouchableOpacity    style={styles.cardQuestionContent}>
+                    
                     <PlainText
-                      title={props.question.substring(0,20) + " ... "}
+                      title={"Jawaban ini terkunci"}
                       color={"#000"}
                       fontSize = {13}
                       />
@@ -197,6 +177,7 @@ const AnswerCard = (props) => {
                   borderBottomStartRadius:20,
                   borderBottomEndRadius:20 , alignItems:'center'}}>
                     <FastImage source= {IconLock} style={{width:25, height:25}}/>
+
                     <PlainText
                         title={" Buka jawaban untuk melihat seluruh jawaban maupun gambar "}
                         color={"#000"}
@@ -223,11 +204,12 @@ const AnswerCard = (props) => {
 
                 { !props.is_lock &&
                   <TouchableOpacity   onPress={props.onPress} style={styles.cardQuestionContent}>
-                    <PlainText
-                      title={props.question}
-                      color={"#000"}
-                      fontSize = {13}
-                      />
+                  <PlainText
+                            title={props.question}
+                            
+                            fontSize = {13}
+                            color={"#000000"}
+                    />
                   </TouchableOpacity>
                   
                   

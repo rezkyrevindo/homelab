@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
-import {IconUnderline,IconMenu, IconExplore, IconHome, IconHomeActive, IconSearch, IconSearchActive, IconNotificationActive, IconNotification
+import {IconUnderline,IconMenu, IconExplore, IconHome, IconHomeActive,IconRiwayat, IconRiwayatActive, IconSearch, IconSearchActive
 ,IconChat, IconChatActive, IconUser, IconUserActive, IconPlus } from '../../assets'
 
 import { WARNA_UTAMA, WARNA_DISABLE } from '../../utils/constant'
@@ -17,7 +17,7 @@ const TabItem = ({isFocused, onPress, onLongPress, label }) => {
 
       if(label === "AddQuestion") return <IconPlus width={24} height={24}  fill={"#fff"} style={styles.iconStyleWrap}/>
 
-      if(label === "Notification") return isFocused ? <IconNotification width={24} height={24} fill={WARNA_UTAMA}  style={styles.iconStyle}/> : <IconNotification width={24} height={24} fill={"#979797"}  style={styles.iconStyle}  />
+      if(label === "History") return isFocused ? <IconRiwayatActive width={24} height={24} fill={WARNA_UTAMA}  style={styles.iconStyle}/> : <IconRiwayat width={24} height={24} fill={"#979797"}  style={styles.iconStyle}  />
 
       if(label === "Profile") return isFocused ? <IconUserActive width={24} height={24} fill={WARNA_UTAMA}  style={styles.iconStyle}  /> : <IconUser width={24} height={24} fill={"#979797"}  style={styles.iconStyle} />
 
@@ -28,7 +28,7 @@ const TabItem = ({isFocused, onPress, onLongPress, label }) => {
 
     if(label === "Search") return isFocused ? <IconUnderline style={styles.underline}/>   : <View></View> 
 
-    if(label === "Notification") return isFocused ? <IconUnderline style={styles.underline}/>  : <View></View> 
+    if(label === "History") return isFocused ? <IconUnderline style={styles.underline}/>  : <View></View> 
 
 
     if(label === "Profile") return isFocused ? <IconUnderline style={styles.underline}/> : <View></View> 

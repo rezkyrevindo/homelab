@@ -37,7 +37,8 @@ import IconLike from './like.svg'
 import IconLikeActive from './likeActive'
 import IconCheck from './check.svg'
 import IconExplore from './explore.svg'
-import IconRiwayat from './riwayat.svg'
+import IconRiwayatActive from './riwayat.svg'
+import IconRiwayat from './riwayatNonActive.svg'
 import IconWallet from './wallet.svg'
 import IconCaretUp from './caret-up.svg'
 import IconCaretLeft from "./caret-left.svg"
@@ -67,7 +68,7 @@ export {
   IconPesananAktif,
   IconFacebook,
   IconGoogle,
-  IconUnderline,
+  IconUnderline, IconRiwayatActive,
   IconPoints,
   IconChat,
   IconChatActive,

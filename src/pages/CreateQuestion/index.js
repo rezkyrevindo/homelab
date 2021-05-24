@@ -396,7 +396,6 @@ const CreateQuestion = ({navigation}) => {
 
                                 <TouchableOpacity style={{flexDirection :'row', alignItems:'center'}} onPress={()=>setModalKategori(true)}>
                                     
-                                
                                     <PlainText
                                         marginLeft= {10}
                                         title={selectedKategoriName}

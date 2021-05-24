@@ -70,9 +70,7 @@ const Register = ({navigation}) => {
         namaBelakang : {
             presence: {allowEmpty: false}
         },
-        confirmPassword : {
-            equality: "password"
-        }
+        
       }
       
       
@@ -132,6 +130,7 @@ const Register = ({navigation}) => {
         if(confPasswordError != null){
             setConfPasswordError(confPasswordError)
             setLoading(false)
+            return;
         }
        
 
@@ -159,13 +158,13 @@ const Register = ({navigation}) => {
         })
           .then(function (response) {
             
-            navigation.replace('Verification',  {token: response.data.token })
+                navigation.replace('Verification',  {token: response.data.token })
 
-            setLoading(false)
+                setLoading(false)
           })
           .catch(function (error) {
-               
-              setLoading(false)
+                
+                setLoading(false)
           });
 
 

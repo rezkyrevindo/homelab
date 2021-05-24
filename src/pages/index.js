@@ -7,7 +7,7 @@ import Register from './Register'
 import Verification from './Verification'
 import ConfirmationSuccess from './ConfirmationSuccess'
 import Explore from './Explore'
-import Notification from './Notification'
+import History from './History'
 import Chat from './Chat'
 import CreateQuestion from './CreateQuestion'
 import MyDetailQuestion from './MyDetailQuestion'
@@ -32,12 +32,11 @@ import MyAnswer from './MyAnswer'
 import Setting from './Setting'
 import VerifikatorLogin from './VerifikatorLogin'
 import MyUnlockQuestion from './MyUnlockQuestion'
-import BridgeCreateQuestion from './BridgeCreateQuestion'
 
 export { Splash, Pesanan, 
     CreateQuestion,
-    Akun, Home, Login, Register, Verification , ConfirmationSuccess, Explore, Notification, Chat,
+    Akun, Home, Login, Register, Verification , ConfirmationSuccess, Explore, History, Chat,
     MyDetailQuestion, DetailQuestion, Landing, RegisterSuccess, ForgotPassword,ForgotPasswordSuccess, Interest, Commentar,
     TopUp, PembayaranTopUp, KonfirmasiTopUp, WaitingTopUp, Withdraw, PilihBank, AddAccountBank, WithdrawDetail, WithdrawKonfirmasi,
-    Setting, MyQuestion, MyAnswer, VerifikatorLogin , MyUnlockQuestion, BridgeCreateQuestion
+    Setting, MyQuestion, MyAnswer, VerifikatorLogin , MyUnlockQuestion, 
 }

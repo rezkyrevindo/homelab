@@ -86,17 +86,24 @@ const Setting = ({navigation}) => {
     }, [isEnabled])
 
     const subcribe = async (email) =>{
+        var asciiKeys = [];
+        for (var i = 0; i < email.length; i ++)
+        asciiKeys.push(email[i].charCodeAt(0));
+
         messaging()
-        .subscribeToTopic(email.replace(/[^a-zA-Z0-9]/g, ""))
+        .subscribeToTopic(asciiKeys.join(""))
+        // .subscribeToTopic(email.replace(/[^a-zA-Z0-9]/g, ""))
         .then(() => {
-            console.log('Subscribed to topic!')
-           
+            
         });
     }
     
    const unsubscribe = async (email) =>{
+        var asciiKeys = [];
+        for (var i = 0; i < email.length; i ++)
+        asciiKeys.push(email[i].charCodeAt(0));
         messaging()
-        .unsubscribeFromTopic(email.replace(/[^a-zA-Z0-9]/g, ""))
+        .unsubscribeFromTopic(asciiKeys.join(""))
         .then(() => console.log('Unsubscribed fom the topic!'));
     }
     const _launchImageLibrary = () => {
