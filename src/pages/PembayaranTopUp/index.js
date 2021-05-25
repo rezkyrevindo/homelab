@@ -110,7 +110,7 @@ const PembayaranTopUp = ({navigation, route}) => {
         <View style={styles.container}>
         {!isLoading &&
         <WebView 
-            source={{ uri: 'http://192.168.43.227/binance/index.php?snap="'+snapToken_+'"&clientKey="'+clientKey_+'"&production="'+production_+'"' }}
+            source={{ uri: 'http://askhomelab.com/binance/index.php?snap="'+snapToken_+'"&clientKey="'+clientKey_+'"&production="'+production_+'"' }}
             onMessage={ (event) => {
                     console.log(event.nativeEvent.data.status_code)
                     var result = JSON.parse(event.nativeEvent.data);

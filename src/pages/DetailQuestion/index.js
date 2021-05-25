@@ -23,7 +23,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56
 import validate from '../../utils/validate'
 import Snackbar from 'react-native-snackbar';
-
+import { SliderBox } from "react-native-image-slider-box";
 const DetailQuestion = ({route, navigation}) => {
     
     const { token,data } = useSelector (state => state.authReducers);
@@ -49,6 +49,8 @@ const DetailQuestion = ({route, navigation}) => {
     const [fileUri, setFileUri] = useState(null)
     const [sourceImg, setSourceImg] = useState(null)
     const [idAnswer, setIdAnswer] = useState("")
+    const [indexSelectedImg, setIndexSelectedImg] = useState(0)
+    const [questionImages, setQuestionImages] = useState([])
 
 
     const dispatch = useDispatch();
@@ -119,7 +121,7 @@ const DetailQuestion = ({route, navigation}) => {
                     
                     <FastImage 
                             source={{
-                                uri: BASE_URL_IMG+ dataQuestion.File_Question,
+                                uri: questionImages[indexSelectedImg],
                             }}
                             style={{width : windowWidth, height: windowHeight}} 
                             resizeMode={FastImage.resizeMode.contain}
@@ -446,7 +448,9 @@ const DetailQuestion = ({route, navigation}) => {
                 if (response.data){
                     setDataQuestion(response.data.Question)
                     setDataAnswer(response.data.Sub_Question)
-                    console.log(dataAnswer)
+                    setQuestionImages(response.data.Question.File_Question.map(sweetItem => {
+                        return BASE_URL_IMG + sweetItem
+                    }))
                     
                 }else{
                     setDataQuestion(null)
@@ -624,11 +628,13 @@ const DetailQuestion = ({route, navigation}) => {
                     </View>
 
                     <View style={styles.footerContent}>
-                        <IconFont  fill={'#000'} width={24} height={24}/>
-                        <IconDerajat fill={'#000'} width={24} height={24}/>
+                        {idAnswer == "" &&
                         <TouchableOpacity onPress={()=> _launchCamera()}>
                         <IconPicture fill={'#000'} width={24} height={24}/>
                         </TouchableOpacity>
+                        }
+                        
+                        
                         
                         <TouchableOpacity
                                 style={styles.btn}
@@ -674,13 +680,15 @@ const DetailQuestion = ({route, navigation}) => {
                     <ScrollView showsVerticalScrollIndicator={false} >
                     
                     {dataQuestion.File_Question != null &&
-                    <TouchableOpacity onPress={()=> setModalGambar(true)}>
-                        <FastImage 
-                            source={{
-                                uri: BASE_URL_IMG+ dataQuestion.File_Question,
-                            }}
-                            style={{width : windowWidth, height: 200}} />
-                            </TouchableOpacity>
+                        <SliderBox
+                            images={questionImages}
+                            onCurrentImagePressed={index => {
+                                setIndexSelectedImg(index)
+                                setModalGambar(true)
+                                
+                            } }
+                      
+                        />
 
                     }
                         <View style={{paddingHorizontal : windowWidth *0.05}}>
@@ -688,7 +696,7 @@ const DetailQuestion = ({route, navigation}) => {
                             name = {dataQuestion.First_Name_Question + " " + dataQuestion.Last_Name_Question}
                             category = {dataQuestion.Sub_Kategori_Question}
                             time = {dataQuestion.Date_Question}
-                            point = {"+"+dataQuestion.Point_Question}
+                            point = {dataQuestion.Point_Question}
                             isSolved={dataQuestion.Solved_Question}
                             question={dataQuestion.Content_Question}
                             answer = {dataAnswer.length}

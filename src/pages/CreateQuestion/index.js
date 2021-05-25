@@ -10,10 +10,11 @@ import {
     
 } from 'react-native';
 
+import Tooltip from 'react-native-walkthrough-tooltip';
 import { useSelector, useDispatch } from 'react-redux';
 import {IconCaretDown, IconDerajat,IconPicture,IconFont, IconPoints, DefaultProfile} from '../../assets';
 import {PlainText, HeaderText, InputText, QuestionCard, ButtonPrimary, LoadingIndicator} from '../../components/';
-import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_DISABLE, BASE_URL_IMG, BASE_URL_API} from '../../utils/constant';
+import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_WARNING, BASE_URL_IMG, BASE_URL_API} from '../../utils/constant';
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 import {ScrollView} from 'react-native-gesture-handler';
 const windowWidth = Dimensions.get('window').width;
@@ -24,7 +25,6 @@ import FastImage from 'react-native-fast-image'
 import ImagePicker,{showImagePicker,launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Snackbar from 'react-native-snackbar';
 
-import MathText from 'react-native-math';
 
 
 const CreateQuestion = ({navigation}) => {
@@ -45,50 +45,9 @@ const CreateQuestion = ({navigation}) => {
     const [fileUri, setFileUri] = useState(null)
     const [sourceImg, setSourceImg] = useState(null)
     const [content, setContent] = useState("")
-    const [isText, setIsText] = useState(true)
-    const [formula, setFormula] = useState("")
-    const [formulaSelection, setFormulaSelection]= useState({start: 0, end: 0})
-    const formulaRef = useRef(null);
-    const listKeyboard_1 = [
-        {value: '(', type:'char', output:'('},
-        {value: ')', type:'char', output:')'},
-        {value: '7', type:'char', output:'7'},
-        {value: '8', type:'char', output:'8'},
-        {value: '9', type:'char', output:'9'},
-        {value: '+', type:'char', output:'+'},
-        {value: 'x', type:'char', output:'x'},
-        {value: 'y', type:'char', output:'y'},
-        {value: '4', type:'char', output:'4'},
-        {value: '5', type:'char', output:'5'},
-        {value: '6', type:'char', output:'6'},
-        {value: '-', type:'char', output:'-'},
-        {value: 'x2', type:'char', output:'{?}^{2}'},
-        {value: 'xx', type:'char', output:'{?}^{?}'},
-        {value: '1', type:'char', output:'1'},
-        {value: '2', type:'char', output:'2'},
-        {value: '3', type:'char', output:'3'},
-        {value: 'X', type:'char', output:`\\times `},
-        {value: 'x/y', type:'char', output:`\\frac{?}{?}`},
-        {value: 'xXx/y', type:'char', output:'?\\times \\frac{?}{?}'},
-        {value: '0', type:'char', output:'0'},
-        {value: '.', type:'char', output:'.'},
-        {value: '=', type:'char', output:'='},
-        {value: '/', type:'char', output:'\\div '},
-        {value: '^', type:'char', output:'\\sqrt{?}'},
-        {value: 'akar^', type:'char', output:'\\sqrt[?]{?}'},
-        {value: '|x|', type:'char', output:'|?|'},
-        {value: '<', type:'char', output:'<'},
-        {value: '>', type:'char', output:'>'},
-        {value: 'B', type:'char', output:' \\\\ '},
-        {value: '123', type:'nav', output:'123'},
-        {value: 'pi', type:'nav', output:'pi'},
-        {value: 'abc', type:'nav', output:'abc'},
-        {value: '<=', type:'char', output:'\\leqslant'},
-        {value: '>=', type:'char', output:'\\geqslant'},
-        {value: 'D', type:'char', output:'D'},
-    ]
-    
-
+    const [modalGambar, setModalGambar] = useState(false)
+    const [toolTipVisible, setTooltipVisible] = useState(false)
+    const [toolTipVisibleHitam, setTooltipVisibleHitam] = useState(false)
     const addQuestion = async () => {
         if(selectedKategoriName == "Pilih Kategori"){
             Snackbar.show({
@@ -118,19 +77,15 @@ const CreateQuestion = ({navigation}) => {
         
         var formData = new FormData();
         if (filePath != null){
-            formData.append('file', {
+            let array = {
                 uri: filePath.uri,
                 type: filePath.type,
                 name: "Photo_React_Native",
-            });
-        }
-        if(formula != ""){
-            let new_content = `<u>Formula</u> <br><p><span class='latexEle' data-latex='${formula}'></span></p>`+""+content
-            formData.append('content', new_content)
-        }else{
-            formData.append('content', content)
+            }
+            formData.append('file', array);
         }
         
+        formData.append('content', content)
         formData.append('id_category',data[2].category_id )
         formData.append('id_sub_category', selectedKategori)
         formData.append('point', selectedPoint)
@@ -155,7 +110,7 @@ const CreateQuestion = ({navigation}) => {
         .catch((error) => {
             
             setLoading(false)
-            console.error(error)
+            console.error(JSON.stringify(error))
 
         });
        
@@ -165,8 +120,59 @@ const CreateQuestion = ({navigation}) => {
        getCategory()
     }, [])
 
-    const addFormula = () =>{
-
+    const GambarModal = ()=>{
+        return (
+            <Modal
+                visible={modalGambar}
+                onTouchOutside={() => { setModalGambar(false)}}
+            >
+                <ModalContent >
+                    
+                <TouchableOpacity 
+                    onPress={()=>setModalGambar(false)}
+                >
+                                <PlainText
+                                    title={"x"}
+                                    color={"#000"}
+                                    fontSize= {20}
+                                    marginTop={20}
+                                    marginLeft={20}
+                                    fontStyle={"bold"}
+                                    
+                                />
+                </TouchableOpacity>
+                    <View style={{ width:windowWidth, height:windowHeight *0.8, alignItems:'center'}}>
+                        <FastImage
+                            style={{width : windowWidth, height: windowHeight *0.7}} 
+                            resizeMode={FastImage.resizeMode.contain}
+                            source={sourceImg}
+                        />
+                   
+                            
+                    </View>
+                    <TouchableOpacity style={{ alignItems:'center', alignContent:'center'}}
+                    onPress={()=>{
+                        setSourceImg(null)
+                        
+                        setFilePath(null)
+                        setModalGambar(false)
+                    }}
+                        >
+                                <View style={{backgroundColor:WARNA_WARNING, paddingHorizontal:20, paddingVertical:10, borderRadius : 20,}}>
+                                <PlainText
+                                    title={"Delete"}
+                                    color={"#fff"}
+                                    fontSize= {14}
+                                    fontStyle={"bold"}
+                                    
+                                />
+                                </View>
+                                
+                </TouchableOpacity>
+                    
+                </ModalContent>
+            </Modal>
+        )
     }
 
     const _launchCamera = () => {
@@ -178,7 +184,7 @@ const CreateQuestion = ({navigation}) => {
             maxHeight : 1000,
             maxWidth : 1000
           };
-        launchCamera(options, (response) => {
+          launchImageLibrary(options, (response) => {
           console.log('Response = ', response);
     
           if (response.didCancel) {
@@ -330,10 +336,49 @@ const CreateQuestion = ({navigation}) => {
             >
                 <ModalContent>
                     <View style={{ width:windowWidth*0.5, alignItems:'center'}}>
-                    <SafeAreaView style={{marginTop:10, flexDirection : 'row', paddingBottom : 5}}>
+                    <SafeAreaView style={{marginTop:10, flexDirection : 'column', paddingBottom : 5,height:270, alignItems:'center'}}>
+                        <Tooltip
+                        isVisible={toolTipVisibleHitam}
+                        content={
+                            <PlainText
+                                title={"Kamu akan mengeluarkan poin setiap membuat pertanyaan, ketika kamu menemukan jawaban yang sesuai,"+
+                                " penjawab akan mendapatkan poin yang telah kamu keluarkan.  "+
+                                "\nBerikut rinciannya : \n"+
+                                "1. 110 poin untuk jawaban yang mudah, penjawab akan mendapatkan 85 poin\n"+
+                                "2. 130 poin untuk jawaban yang menengah, penjawab akan mendapatkan 105 poin\n"+
+                                "3. 150 poin untuk jawaban yang susah, penjawab akan mendapatkan 125 poin\n"}
+                                color={"#000"}
+                                fontSize= {13}
+                            />
+                        }
+                        placement="bottom"
+                        onClose={() => setTooltipVisibleHitam(false)}
+                        >
+                    
+                            <TouchableOpacity style={{backgroundColor:'#000', alignItems:'center', marginBottom:20, 
+                            borderRadius:50, paddingHorizontal:20,}} onPress={()=> setTooltipVisibleHitam(true)}>
+                                <PlainText
+                                    title={"?"}
+                                    color={"#fff"}
+                                    fontSize= {20}
+                                    fontStyle={"bold"}
+                                    textAlign={"center"}
+                                />
+                            </TouchableOpacity>
+                            
+                        </Tooltip>
+                        <PlainText
+                            title={"Jumlah point yang dikeluarkan untuk pertanyaan ini"}
+                            color={"#000"}
+                            fontSize= {14}
+                            fontStyle={"bold"}
+                            textAlign={"center"}
+                            marginBottom={20}
+                        />
+                        
                         <FlatList
-                        maxHeight={windowHeight * 0.4}
                         data={points}
+                        width={windowWidth*0.45}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={RenderPoint}
                         showsHorizontalScrollIndicator={false}
@@ -356,6 +401,7 @@ const CreateQuestion = ({navigation}) => {
             {!isLoading &&
                 
                 <View style={styles.container}> 
+                    <GambarModal/>
                     <KategoriModal/>
                     <PointModal/>
                     <View>
@@ -366,16 +412,44 @@ const CreateQuestion = ({navigation}) => {
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <View style={styles.content}>
                        
-                            
+                            {sourceImg != null &&
+                                <TouchableOpacity onPress={()=> setModalGambar(true)}>
+                                <FastImage
+                                    style={{  width: windowWidth, height: 200, marginLeft :-20, marginBottom:20, marginTop:-20 }}
+                                    source={sourceImg}
+                                />
+                                </TouchableOpacity>
+                            }
                             <View style={styles.headerContent}>
-                                <View style={{alignItems : 'center'}}>
-                                {data[2].picture != null &&
-                                    <FastImage source={{uri: BASE_URL_IMG+data[2].picture}} style={{width : 60, height: 60, borderRadius:100}}  />
-                                }
-                                {data[2].picture == null &&
-                                    <FastImage source={DefaultProfile} style={{width : 60, height: 60}}  />
-                                }
-                                </View>
+                                    <Tooltip
+                                        isVisible={toolTipVisible}
+                                        content={
+                                            <PlainText
+                                                title={"Kamu akan mengeluarkan poin setiap membuat pertanyaan, ketika kamu menemukan jawaban yang sesuai,"+
+                                                " penjawab akan mendapatkan poin yang telah kamu keluarkan.  "+
+                                                "\nBerikut rinciannya : \n"+
+                                                "1. 110 poin untuk jawaban yang mudah, penjawab akan mendapatkan 85 poin\n"+
+                                                "2. 130 poin untuk jawaban yang menengah, penjawab akan mendapatkan 105 poin\n"+
+                                                "3. 150 poin untuk jawaban yang susah, penjawab akan mendapatkan 125 poin\n"}
+                                                color={"#000"}
+                                                fontSize= {13}
+                                            />
+                                        }
+                                        placement="bottom"
+                                        onClose={() => setTooltipVisible(false)}
+                                        >
+                                    
+                                            <TouchableOpacity style={{backgroundColor:WARNA_UTAMA, alignItems:'center', 
+                                            borderRadius:50, paddingHorizontal:10,paddingVertical:3}} onPress={()=> setTooltipVisible(true)}>
+                                                <PlainText
+                                                    title={"?"}
+                                                    color={"#fff"}
+                                                    fontSize= {14}
+                                                    fontStyle={"bold"}
+                                                />
+                                            </TouchableOpacity>
+                                            
+                                        </Tooltip>
                                 <TouchableOpacity style={{flexDirection :'row', alignItems:'center'}} onPress={()=> setModalPoint(true)}>
                                     <IconPoints/>
                                     <PlainText
@@ -392,6 +466,7 @@ const CreateQuestion = ({navigation}) => {
                                         fontStyle={"bold"}
                                     />
                                     <IconCaretDown style={{marginLeft:10}} fill={WARNA_UTAMA} width={12} height={12} />
+                                   
                                 </TouchableOpacity>
 
                                 <TouchableOpacity style={{flexDirection :'row', alignItems:'center'}} onPress={()=>setModalKategori(true)}>
@@ -410,7 +485,9 @@ const CreateQuestion = ({navigation}) => {
                             
 
                             </View>
+                            
                             <View style={styles.bodyContent}>
+                            
                                 <View style={{padding:20, backgroundColor : WARNA_UTAMA, borderTopEndRadius:10, borderTopStartRadius:10}}>
                                     <PlainText
                                             title={"Tulis pertanyaan kamu"}
@@ -419,19 +496,7 @@ const CreateQuestion = ({navigation}) => {
                                             fontStyle={"bold"}
                                         />
                                 </View>
-                                { formula != "" &&
-                                    <View style={{width:windowWidth *0.9 , marginBottom:10,
-                                    padding:10,
-                                    borderBottomWidth:1,borderColor:'#dadada', alignContent:'center',}}>
-                                        <MathText
-                                        value={`<u>Formula</u> <br><p><span class='latexEle' data-latex='${formula}'></span></p>`}
-                                        style={{ height:100, alignItems: "center", justifyContent: "center" }}
-                                        textSize={15}
-                                        textColor={"#000000"}
-                                />
-                                    </View>
-                                    
-                                }   
+                                
                                 <TextInput
                                     numberOfLines={20}
                                     style={styles.inputContainer}
@@ -441,13 +506,7 @@ const CreateQuestion = ({navigation}) => {
                                 />
                             </View>
                             <View>
-                            {sourceImg != null &&
-                                <FastImage
-                                    style={{  width: windowWidth, height: 200, marginLeft :-20 }}
-                                    source={sourceImg}
-                                    resizeMode={FastImage.resizeMode.contain}
-                                />
-                                }
+                           
                             </View>
                             
                         </View>
@@ -458,45 +517,21 @@ const CreateQuestion = ({navigation}) => {
 
                         <View style={{
                             width : windowWidth  ,
-                            paddingHorizontal : windowWidth * 0.05,
+                            paddingHorizontal : windowWidth * 0.1,
                             backgroundColor : '#fff',
                             flexDirection : 'row',
                             justifyContent : 'space-between',
                             alignItems:'center',
+                            alignContent:'center'
                             }}>
-                            {isText &&
-                                <TouchableOpacity onPress={()=>setIsText(true)}>
-                                    <IconFont  fill={WARNA_UTAMA} width={18} height={18}/>
-                                </TouchableOpacity>
-                                    
-                                
-                            }
-                            {isText &&
-                                <TouchableOpacity onPress={()=>setIsText(false)}>
-                                    <IconDerajat fill={'#000'} width={18} height={18}/>
-                                    </TouchableOpacity>  
-                            }
-                            {!isText &&
-                                <TouchableOpacity onPress={()=>setIsText(true)}>
-                                    <IconFont  fill={"#000"} width={18} height={18}/>
-                                    </TouchableOpacity>
-                                
-                            }
-                            {!isText &&
-                                <TouchableOpacity onPress={()=>setIsText(false)}>
-                                    <IconDerajat fill={WARNA_UTAMA} width={18} height={18}/>
-                                    </TouchableOpacity>  
-                            }
-                           
-                           
                             
                             
                             <TouchableOpacity 
                             onPress= {()=>_launchCamera()}>
-                            <IconPicture fill={'#000'} width={18} height={18}/>
+                            <IconPicture fill={'#000'} width={24} height={24}/>
                             </TouchableOpacity>
 
-                            {isText &&
+                            
                                 <TouchableOpacity
                                         style={styles.btn}
                                         onPress= {()=> addQuestion()}
@@ -508,95 +543,11 @@ const CreateQuestion = ({navigation}) => {
                                             fontStyle={"bold"}
                                         />
                                 </TouchableOpacity>
-                            }
-                            {!isText &&
-                                <TouchableOpacity
-                                        style={styles.btn}
-                                        onPress= {()=> addFormula()}
-                                    >
-                                    <PlainText
-                                            title={"Add Formula"}
-                                            color={"#000"}
-                                            fontSize= {14}
-                                            fontStyle={"bold"}
-                                        />
-                                </TouchableOpacity>
-                            }
+                            
+                           
                             
                         </View>
-                        {!isText &&
-                            <View style={{
-                            width : windowWidth ,
-                            height: windowHeight *0.4,
-                            backgroundColor : '#dadada',
-                            marginTop:10,
-                            }}>
-                            
-                                <TextInput
-
-                                        ref={formulaRef}
-                                        style={{
-                                            backgroundColor:"#fff",
-                                            marginTop:10,
-                                            marginHorizontal:10,
-                                            borderRadius:10,
-                                            height:windowHeight*0.4 * 0.14,
-                                            paddingHorizontal:20,
-                                            
-
-                                        }}
-                                        allowFontScalling={true}
-                                        onChangeText= {(text) => setFormula(text)}
-                                        value={formula}
-                                        showSoftInputOnFocus= {false}
-                                        onSelectionChange={({ nativeEvent: { selection } }) => {
-                                            
-                                            setFormulaSelection(selection)
-                                            
-                                        }}
-                                        
-                                    />
-                                    <FlatList
-                                        style={{marginTop:10, marginHorizontal : 5,}}
-                                        data={ listKeyboard_1 }
-                                        keyExtractor={(item) => item.value.toString()}
-                                        renderItem={({item}) =>
-                                            <TouchableHighlight  style={{
-                                                
-                                                    justifyContent: 'center',
-                                                    flex:1,
-                                                    alignItems: 'center',
-                                                    height:windowHeight*0.4 * 0.1,
-                                                    borderRadius:5,
-                                                    margin: 5,
-                                                    backgroundColor: '#fff'
-                                            }}
-                                            onPress={()=> {
-                                                
-                                                if(item.value =="D"){
-                                                    let new_value = formula.substring(0, parseInt(formulaSelection.start)-1)  + formula.substring(formulaSelection.start)
-                                                    setFormula(new_value)
-                                                    
-                                                    setFormulaSelection({start:parseInt(formulaSelection.start)-1, end : parseInt(formulaSelection.end)-1 })
-                                                }else{
-                                                    let new_value = formula.substring(0, formulaSelection.start) + item.output + formula.substring(formulaSelection.start)
-                                                    setFormula(new_value)
-                                                    
-                                                    setFormulaSelection({start:parseInt(formulaSelection.start)+1, end : parseInt(formulaSelection.end)+1 })
-                                                }
-                                                }}
-                                            >
-                                                <Text style={{
-                                                    color: '#000',
-                                                    padding: 10,
-                                                    fontSize: 12,
-                                                    justifyContent: 'center',
-                                                }} > {item.value} </Text>
-                                            </TouchableHighlight>}
-                                        numColumns={6}
-                                        />
-                            </View>
-                        }
+                        
                         
                         
                         
@@ -628,7 +579,7 @@ const styles = StyleSheet.create({
         justifyContent : 'space-between',
         width : windowWidth * 0.9,
         paddingHorizontal : windowWidth * 0.05,
-        paddingVertical:10,
+        paddingVertical:20,
         borderRadius    : 10,
         shadowColor: "#000",
         shadowOffset: {
@@ -667,8 +618,9 @@ const styles = StyleSheet.create({
         flexDirection : 'column',
         alignContent:'center',
         alignItems:'center',
-        width : windowWidth ,
+        width : windowWidth  ,
         paddingVertical : 10,
+        paddingHorizontal:40
     },
     inputContainer: {
         flexDirection: "row",
@@ -683,7 +635,7 @@ const styles = StyleSheet.create({
         backgroundColor: WARNA_UTAMA,
         borderRadius : 10,
         padding : 10,
-        width : '40%',
+        width : '70%',
         alignItems:'center'
     }
 })

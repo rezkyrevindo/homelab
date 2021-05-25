@@ -29,16 +29,11 @@ const Withdraw = ({navigation}) => {
                     <View style={{alignItems:'center'}}>
                         <PlainText
                             fontSize={24}
-                            title="Pilih Akun Bank"
+                            title="Penarikan"
                             fontStyle={"bold"}
                             color={"#000"}     
                         />
-                        <PlainText
-                            fontSize={13}
-                            title="atau tambah akun baru"
-                            color={"#000"}     
-                            marginTop={10}
-                        />
+                      
                     </View>
                     <View style={{alignItems:'center'}}>
                         <View style={{
@@ -100,7 +95,7 @@ const Withdraw = ({navigation}) => {
                             color={"#000"}     
                             marginTop={10}
                         />
-                        {data[2].bank != "" &&
+                        {data[2].bank != null &&
                             <TouchableOpacity style={{flexDirection:'row', marginTop:20, borderColor:'#DAD0D0',
                                     borderBottomWidth:1,paddingBottom:10, alignContent:'center', alignItems:'center'}}
                                     onPress={()=>navigation.navigate('WithdrawDetail')}>
@@ -125,11 +120,11 @@ const Withdraw = ({navigation}) => {
                             
                             </TouchableOpacity>
                         }
-                        { data[2].bank == "" &&
+                        { data[2].bank == null &&
                             <TouchableOpacity style={{flexDirection:'row', marginTop:20, borderColor:'#DAD0D0',
                                     borderBottomWidth:1,paddingBottom:10, alignContent:'center', alignItems:'center'}}
                                     onPress={()=>navigation.navigate('Setting')}>
-                                <IconWallet/>
+                                
                                 <View style={{flexDirection:'column'}}>
                                 <PlainText
                                         fontSize={18}
@@ -154,7 +149,7 @@ const Withdraw = ({navigation}) => {
                     </View>
                    
             </View>
-            {data[2].bank != "" &&
+            {data[2].bank != null &&
             <TouchableOpacity style={{backgroundColor:'#FFF9C4', height:50, alignItems:'center', justifyContent:'center'}}
                 onPress={()=> navigation.navigate("WithdrawDetail")}>
                             

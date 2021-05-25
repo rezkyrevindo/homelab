@@ -7,9 +7,9 @@ import {
   ImageBackground,
   Dimensions, StatusBar, TouchableOpacity, 
 } from 'react-native';
-
+import { SliderBox } from "react-native-image-slider-box";
 import {PlainText, HeaderText, ButtonPrimary,AnswerCard,  QuestionCard,ButtonDefault, LoadingIndicator} from '../../components/';
-import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans} from '../../utils/constant';
+import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, OpenSans, BASE_URL_IMG, BASE_URL_API} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
 import axios from 'axios'
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
@@ -26,11 +26,13 @@ const MyDetailQuestion = ({route,navigation}) => {
     const [isLoading, setLoading] = useState(false)
     const [modalAnswer, setModalAnswer] = useState(false)
     const [selectedAnswer, setSelectedAnswer] = useState(null)
-    
+    const [questionImages, setQuestionImages] = useState([])
     const [modalGambar, setModalGambar] = useState(false)
+    const [indexSelectedImg, setIndexSelectedImg] = useState(0)
 
     useEffect(() => {
         getDataQuestion()
+        
     }, [])
     const GambarModal = ()=>{
         return (
@@ -57,7 +59,7 @@ const MyDetailQuestion = ({route,navigation}) => {
                     
                     <FastImage 
                             source={{
-                                uri: "https://askhomelab.com/storage/"+ dataQuestion.File_Question,
+                                uri: questionImages[indexSelectedImg],
                             }}
                             style={{width : windowWidth, height: windowHeight}} 
                             resizeMode={FastImage.resizeMode.contain}
@@ -214,8 +216,10 @@ const MyDetailQuestion = ({route,navigation}) => {
                 if (response.data){
                     setDataQuestion(response.data.Question)
                     setDataAnswer(response.data.Sub_Question)
-                    
-                    
+                   
+                    setQuestionImages(response.data.Question.File_Question.map(sweetItem => {
+                        return BASE_URL_IMG + sweetItem
+                    }))
                 }else{
                     setDataQuestion(null)
                 }
@@ -271,21 +275,22 @@ const MyDetailQuestion = ({route,navigation}) => {
                 <AnswerModal/>
                     <ScrollView showsVerticalScrollIndicator={false} >
                     {dataQuestion.File_Question != null &&
-                    <TouchableOpacity onPress={()=> setModalGambar(true)}>
-                        <FastImage 
-                            source={{
-                                uri: "https://askhomelab.com/storage/"+ dataQuestion.File_Question,
-                            }}
-                            style={{width : windowWidth, height: 200}} />
-                            </TouchableOpacity>
-
+                        <SliderBox
+                            images={questionImages}
+                            onCurrentImagePressed={index => {
+                                setIndexSelectedImg(index)
+                                setModalGambar(true)
+                                
+                            } }
+                      
+                        />
                     }
                     <View style={{paddingHorizontal : windowWidth * 0.05}}>
                         <QuestionCard
                             name = {dataQuestion.First_Name_Question + " " + dataQuestion.Last_Name_Question}
                             category = {dataQuestion.Sub_Kategori_Question}
                             time = {dataQuestion.Date_Question}
-                            point = {"+"+dataQuestion.Point_Question}
+                            point = {dataQuestion.Point_Question}
                             isSolved={dataQuestion.Solved_Question}
                             question={dataQuestion.Content_Question}
                             answer = {dataAnswer.length}
@@ -305,24 +310,13 @@ const MyDetailQuestion = ({route,navigation}) => {
 
                         <SafeAreaView style={{flex :1}}
                                     >
-                            {/* <LoadAnswer/> */}
                             <FlatList
                             data={dataAnswer}
-                            // keyExtractor={(item) => item[0].answer_0.id_Question.toString()}
                             renderItem={renderAnswer}
                             showsVerticalScrollIndicator={false}
                             />
                             
-                            {/* { listQuestionSearch == null &&
-                                <View style={{flexDirection :'row', alignItems:'center',alignContent:'center',
-                                justifyContent:'center', marginTop:50}}>
-                                <FastImage
-                                    style={{  width: 300, height: 300 }}
-                                    source={ImgNothingQuestion}
-                                    resizeMode={FastImage.resizeMode.contain}
-                                />
-                                </View>
-                            } */}
+                          
                             
                             </SafeAreaView>
                         <View style={{padding:10}}></View>
@@ -345,6 +339,51 @@ const MyDetailQuestion = ({route,navigation}) => {
                             />
                         </TouchableOpacity>
                     }
+                    { isSolved == "1"  &&
+                        <View style={{height: 80,width:'100%', backgroundColor:WARNA_UTAMA, alignItems:'center', justifyContent:'center',
+                            position: 'absolute', 
+                        bottom: 0,}}>
+                            <PlainText
+                                title={"Pertanyaan dan Jawaban"}
+                                color={"#000"}
+                                fontStyle={"bold"}
+                                fontSize = {14}
+                            />
+                            <PlainText
+                                title={"Sedang di review oleh "}
+                                color={"#000"}
+                                fontSize = {11}
+                            />
+                            <PlainText
+                                title={"Admin"}
+                                color={"#000"}
+                                fontSize = {11}
+                            />
+                        </View>
+                    }
+                    { isSolved == "2"  &&
+                                <View style={{height: 80,width:'100%', backgroundColor:WARNA_SUCCESS, alignItems:'center', justifyContent:'center',
+                                 position: 'absolute', 
+                                bottom: 0,}}>
+                                    <PlainText
+                                        title={"Question Solved"}
+                                        color={"#fff"}
+                                        fontStyle={"bold"}
+                                        fontSize = {14}
+                                    />
+                                    <PlainText
+                                        title={"Jawaban relevan "}
+                                        color={"#fff"}
+                                        fontSize = {11}
+                                    />
+                                    <PlainText
+                                        title={"adalah jawaban yang ada tanda centang"}
+                                        color={"#fff"}
+                                        fontSize = {11}
+                                    />
+                                </View>
+                            }
+                    
                 </View>
             }
            

@@ -9,12 +9,13 @@ const initialState = {
     production : '',
     acum_price : '',
     point : '',
+    verify_user : '',
   };
 
 function authReducers(state = initialState, action) {
     switch (action.type) {
         case LOGIN:
-            return { ...state, token: action.payload.token };
+            return { ...state, token: action.payload.token, verify_user : ""+action.payload.verify_user };
         case UPDATE_PROFILE:
             return { ...state, data: action.payload};
         case NOTIF:

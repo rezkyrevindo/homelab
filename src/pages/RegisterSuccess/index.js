@@ -24,14 +24,14 @@ const RegisterSuccess = ({navigation}) => {
             <View style={{alignItems:'center'}}>
                 <PlainText
                     fontSize= {21}
-                    title="Registrasi berhasil"
+                    title="Verifikasi Email berhasil"
                     color={"#fff"}
                     fontStyle="bold"
                     marginTop={30}
                 />
                 <PlainText
                     fontSize= {16}
-                    title="Silahkan check email anda untuk verifikasi!"
+                    title="Silahkan login kembali!"
                     color={"#fff"}
                     fontStyle="bold"
                     marginTop={10}

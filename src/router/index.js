@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, Splash, Akun, CreateQuestion, Login,RegisterSuccess, Register,DetailQuestion ,Verification, ConfirmationSuccess, 
   Landing,Explore, MyDetailQuestion ,History , KonfirmasiTopUp,ForgotPassword, ForgotPasswordSuccess, Interest, Commentar, TopUp,
-PembayaranTopUp, WaitingTopUp, Withdraw, PilihBank, AddAccountBank, WithdrawDetail, WithdrawKonfirmasi, Setting, MyQuestion, MyAnswer,
+PembayaranTopUp, WaitingTopUp, Withdraw, PilihBank, AddAccountBank, WithdrawDetail, WithdrawKonfirmasi, Setting, MyQuestion, MyAnswer,OpenWebView,
 VerifikatorLogin, MyUnlockQuestion, UpdateQuestion}  from '../pages';
 import { BottomNavigator } from '../components';
 const Stack = createStackNavigator();
@@ -29,6 +29,7 @@ const Router = () => {
     <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }}/>
       <Stack.Screen name="CreateQuestion" component={CreateQuestion} options={{headerTitle: 'Create Question'}}/>
+      <Stack.Screen name="OpenWebView" component={OpenWebView} />
       <Stack.Screen name="UpdateQuestion" component={UpdateQuestion} options={{headerTitle: 'Update Question'}}/>
       
       <Stack.Screen name="MyDetailQuestion" component={MyDetailQuestion} options={{headerTitle: 'My Question'}}/>

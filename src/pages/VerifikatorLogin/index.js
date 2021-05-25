@@ -8,12 +8,12 @@ import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, Loading
 import Snackbar from 'react-native-snackbar';
 import messaging from '@react-native-firebase/messaging';
 const VerifikatorLogin = ({navigation}) => {
-    const { token,data, notification } = useSelector (state => state.authReducers)
+    const { token,data, notification , verify_user} = useSelector (state => state.authReducers)
     useEffect(() => {
         
         if(token == "false"){
             
-        }else{
+        }else if (token != 'false' && verify_user == "true") {
             Snackbar.show({
             text: "Login berhasil",
             duration: Snackbar.LENGTH_INDEFINITE,
@@ -33,6 +33,9 @@ const VerifikatorLogin = ({navigation}) => {
                 navigation.replace('Interest')
             }
             
+        }else if (token != 'false' && verify_user == "false"){
+            console.log("Token yg dikirim : "+token)
+            navigation.replace("Verification", {"token" : token})
         }
     }, [])
     const subcribe = async (email) =>{
@@ -43,7 +46,7 @@ const VerifikatorLogin = ({navigation}) => {
         messaging()
         .subscribeToTopic(asciiKeys.join(""))
         .then(() => {
-            
+            console.log("berhasil subscribe +"+ asciiKeys)
         });
     }
     

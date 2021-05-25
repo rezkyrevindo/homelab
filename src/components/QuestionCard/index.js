@@ -1,10 +1,10 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import PlainText from '../PlainText'
-import { DefaultProfile, IconPoints, IconLike,IconLikeActive, IconCheck} from '../../assets';
+import { DefaultProfile, IconPoints, IconLike,IconLikeActive,IconPending, IconCheck} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, BASE_URL_API, BASE_URL_IMG, OpenSans} from '../../utils/constant';
 import FastImage from 'react-native-fast-image'
-import MathText from 'react-native-math';
+import Tooltip from 'react-native-walkthrough-tooltip';
 function hitungSelisihHari(tgl1){
   var miliday = 60 * 60 * 1000;
 
@@ -27,9 +27,9 @@ function hitungSelisihHari(tgl1){
 const QuestionCard = (props) => {
     const date = hitungSelisihHari(props.time)
     
+    const [toolTipVisibleHitam, setTooltipVisibleHitam] = useState(false)
     return (
-        <TouchableOpacity 
-          onPress={props.onPress}
+        <View 
          style={styles.cardQuestion}>
             <View style={styles.cardQuestionHeader}>
               <View style={{flexDirection : 'row'}}>
@@ -58,21 +58,64 @@ const QuestionCard = (props) => {
               
               <View style={{alignItems:'center', flexDirection:'row'}}>
                 <PlainText
-                      title={props.point}
+                      title={"+"+props.point}
                       color={WARNA_UTAMA}
                       fontSize = {16}
                       fontStyle= {"bold"}
                   />
                 <IconPoints style={{marginLeft: 5}}/>
                 {props.isSolved == "2" &&
-                  <IconCheck style={{marginLeft:10}} width={24} height={24} fill={'#fff'}/>
+                    <Tooltip
+                        isVisible={toolTipVisibleHitam}
+                        content={
+                            <PlainText
+                                title={"Pertanyaan dan jawaban telah terverifikasi"}
+                                color={"#000"}
+                                fontSize= {13}
+                            />
+                        }
+                        placement="bottom"
+                        onClose={() => setTooltipVisibleHitam(false)}
+                        >
+                    
+                            <TouchableOpacity  onPress={()=> setTooltipVisibleHitam(true)}>
+                                
+                            <IconCheck style={{marginLeft:10}} width={24} height={24} fill={'#fff'}/>
+                            </TouchableOpacity>
+                            
+                        </Tooltip>
+                  
+                }
+                {props.isSolved == "1" &&
+                      <Tooltip
+                        isVisible={toolTipVisibleHitam}
+                        content={
+                            <PlainText
+                                title={"Pertanyaan dan jawaban sedang direview Admin."}
+                                color={"#000"}
+                                fontSize= {13}
+                            />
+                        }
+                        placement="bottom"
+                        onClose={() => setTooltipVisibleHitam(false)}
+                        >
+                    
+                            <TouchableOpacity  onPress={()=> setTooltipVisibleHitam(true)}>
+                                
+                                <IconPending style={{marginLeft:10}} width={24} height={24} fill={'#888'}/>
+                            </TouchableOpacity>
+                            
+                        </Tooltip>
                 }
               </View>
                 
              
             </View>
 
-            <View style={styles.cardQuestionContent}>
+            <TouchableOpacity
+            
+            onPress={props.onPress}
+            style={styles.cardQuestionContent}>
               <PlainText
                       title={props.question}
                       
@@ -80,8 +123,11 @@ const QuestionCard = (props) => {
                       color={"#000000"}
               />
               
-            </View>
-            <View style={styles.cardQuestionFooter}>
+            </TouchableOpacity>
+            <TouchableOpacity 
+            
+            onPress={props.onPress}
+            style={styles.cardQuestionFooter}>
               <View style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}}>
                 <View  style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
                      
@@ -105,9 +151,9 @@ const QuestionCard = (props) => {
                
               </View>
              
-            </View>
+            </TouchableOpacity>
            
-          </TouchableOpacity>
+          </View>
     )
 }
 

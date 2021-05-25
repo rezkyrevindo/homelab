@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {
     StyleSheet,
     Image,
-    View,
+    View,TouchableOpacity,
     Dimensions,
     StatusBar,
   } from 'react-native';
@@ -18,16 +18,39 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Verification = ({route, navigation}) => {
-    const {token} = route.params.token;
+    const {token} = route.params;
     const [isLoading, setLoading] = useState(false)
     const [code, setCode] = useState('')
 
+    useEffect(() => {
+        resend()
+    }, [])
 
+    const resend = async () => {
+        setLoading(true)
 
-    const submit = () =>{
+        axios({
+            method :'get',
+            url :'https://askhomelab.com/api/re_send',
+            headers :{
+                "Authorization" : "Bearer "+token
+            }
+        }) .then(function (response) {
+              
+              
+            
+            setLoading(false)
+        })
+        .catch(function (err) {
+             setLoading(false)
+        });
+
+    }
+
+    const submit = async () =>{
         setLoading(true)
      
-        const data = new URLSearchParams()
+        const data = new FormData()
         
         data.append("code", code)
         
@@ -36,10 +59,13 @@ const Verification = ({route, navigation}) => {
         {
           headers : {
             Accept : '*/*',
-            "content-type" :'application/x-www-form-urlencoded'
+            "content-type" :'application/x-www-form-urlencoded',
+            "Authorization" : "Bearer "+token
+            
           }  
         })
           .then(function (response) {
+              console.log(JSON.stringify(response))
             if(response.data.message != "error"){
                 
                 navigation.replace('RegisterSuccess')
@@ -58,7 +84,7 @@ const Verification = ({route, navigation}) => {
             setLoading(false)
           })
           .catch(function (error) {
-               
+               console.error(error)
               setLoading(false)
           });
     }
@@ -70,7 +96,11 @@ const Verification = ({route, navigation}) => {
                 backgroundColor={"#FFF"} 
                 barStyle="dark-content" />
             </View>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            {isLoading &&
+                <LoadingIndicator></LoadingIndicator>
+            }
+            {!isLoading &&
+                <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.header}>
                     <FastImage 
                             style={{width:200, height:100}} 
@@ -142,17 +172,23 @@ const Verification = ({route, navigation}) => {
                             marginTop = {windowHeight * 0.033}
                             fontSize= {13}
                         />
-                        <PlainText
-                            title={"Resend Confirmation"}
-                            color={WARNA_UTAMA}
-                            marginTop = {windowHeight * 0.01}
-                            fontSize= {13}
-                        />
+                        <TouchableOpacity>
+                            <PlainText
+                                title={"Resend Confirmation"}
+                                color={WARNA_UTAMA}
+                                marginTop = {windowHeight * 0.01}
+                                fontSize= {13}
+                            />
+                        </TouchableOpacity>
+                        
                     </View>
                     
                 </View>
 
             </ScrollView>
+            }
+            
+            
         </View>
     )
 }

@@ -14,6 +14,7 @@ import messaging from '@react-native-firebase/messaging';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
 
+import { WebView } from 'react-native-webview';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateProfile, logout ,update_notification} from '../../redux/actions';
 import axios from 'axios'
@@ -94,7 +95,7 @@ const Setting = ({navigation}) => {
         .subscribeToTopic(asciiKeys.join(""))
         // .subscribeToTopic(email.replace(/[^a-zA-Z0-9]/g, ""))
         .then(() => {
-            
+            console.log("Berhasil subcribe + "+asciiKeys.join(""))
         });
     }
     
@@ -796,7 +797,7 @@ const Setting = ({navigation}) => {
                             {infoMinimize && 
                                 <View style={{alignContent:'center', alignItems:'center', padding:20}}>
                                 
-                                    <View style={{
+                                    <TouchableOpacity style={{
                                         flexDirection:'row',
                                         justifyContent:'space-between',
                                         alignItems:'center',
@@ -805,20 +806,23 @@ const Setting = ({navigation}) => {
                                         borderBottomWidth:1,
                                         borderColor: "#DAD0D0"
         
-                                    }}>
+                                    }}
+                                        onPress= {()=> navigation.navigate("OpenWebView", {"title": "Syarat dan Ketentuan", 
+                                        "url": "http://askhomelab.com/binance/syarat_dan_ketentuan.php"})}
+                                    >
                                         <View style={{flexDirection:'row', alignItems:'center', flex:1}}>
-                                            <IconFile width={24} height={24} fill={"#000"}/>
+                                            
                                             <PlainText
                                                     title={"Syarat dan Ketentuan"}
                                                     color={"#000"}
-                                                    fontSize= {11}
+                                                    fontSize= {12}
                                                     fontStyle={"bold"}
-                                                    marginLeft={20}
+                                                    
                                                 />
                                         </View>
                                         <IconCaretLeft style={{height:24, width:24}}/>
-                                    </View>
-                                    <View style={{
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{
                                         flexDirection:'row',
                                         justifyContent:'space-between',
                                         alignItems:'center',
@@ -826,38 +830,68 @@ const Setting = ({navigation}) => {
                                         paddingBottom:10,
                                         borderBottomWidth:1,
                                         borderColor: "#DAD0D0"
-                                    }}>
+                                    }}
+                                    onPress= {()=> navigation.navigate("OpenWebView", {"title": "Kebijakan Privasi", 
+                                        "url": "http://askhomelab.com/binance/kebijakan_privasi.php"})}
+                                    >
                                         <View style={{flexDirection:'row', alignItems:'center', flex:1}}>
-                                            <IconFile width={24} height={24} fill={"#000"}/>
+                                            
                                             <PlainText
                                                     title={"Kebijakan Privasi"}
                                                     color={"#000"}
-                                                    fontSize= {11}
+                                                    fontSize= {12}
                                                     fontStyle={"bold"}
-                                                    marginLeft={20}
+                                                    
                                                 />
                                         </View>
                                         <IconCaretLeft style={{height:24, width:24}}/>
-                                    </View>
-                                    <View style={{
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{
                                         flexDirection:'row',
                                         justifyContent:'space-between',
                                         alignItems:'center',
                                         paddingTop:10,
                                         paddingBottom:10,
-                                    }}>
+                                        
+                                        borderBottomWidth:1,
+                                        borderColor: "#DAD0D0"
+                                    }}
+                                    onPress= {()=> navigation.navigate("OpenWebView", {"title": "Informasi Poin", 
+                                        "url": "http://askhomelab.com/binance/informasi_poin.php"})}
+                                    >
                                         <View style={{flexDirection:'row', alignItems:'center', flex:1}}>
-                                            <IconFaq width={24} height={24} fill={"#000"}/>
+                                            
                                             <PlainText
-                                                    title={"Frequently Ask Question"}
+                                                    title={"Informasi Poin"}
                                                     color={"#000"}
-                                                    fontSize= {11}
+                                                    fontSize= {12}
                                                     fontStyle={"bold"}
-                                                    marginLeft={20}
+                                                    
                                                 />
                                         </View>
                                         <IconCaretLeft style={{height:24, width:24}}/>
-                                    </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{
+                                        flexDirection:'row',
+                                        justifyContent:'space-between',
+                                        alignItems:'center',
+                                        paddingTop:10,
+                                        paddingBottom:10,
+                                    }}
+                                    onPress= {()=> navigation.navigate("OpenWebView", {"title": "Tentang Kami", 
+                                        "url": "http://askhomelab.com/binance/tentang_homelab.php"})}
+                                    >
+                                        <View style={{flexDirection:'row', alignItems:'center', flex:1}}>
+                                            
+                                            <PlainText
+                                                    title={"Tentang Kami"}
+                                                    color={"#000"}
+                                                    fontSize= {12}
+                                                    fontStyle={"bold"}
+                                                />
+                                        </View>
+                                        <IconCaretLeft style={{height:24, width:24}}/>
+                                    </TouchableOpacity>
                                     
                                 </View>
                             }

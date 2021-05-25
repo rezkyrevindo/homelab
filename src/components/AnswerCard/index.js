@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56
 
+import { SliderBox } from "react-native-image-slider-box";
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 function hitungSelisihHari(tgl1){
   var miliday = 60 * 60 * 1000;
@@ -36,7 +37,16 @@ const AnswerCard = (props) => {
   const { token,data } = useSelector (state => state.authReducers);
   const [like, setLike] = useState(props.like)
   const [isLike, setIsLike] = useState(props.is_like)
+  const [indexSelectedImg, setIndexSelectedImg] = useState(0)
+
+  const [answerImages, setAnswerImages] = useState([])
   
+  useEffect(() => {
+    setAnswerImages(props.img.map(sweetItem => {
+      return BASE_URL_IMG + sweetItem
+  }))
+  }, [])
+
   const addLike = () =>{
     var form_data = new FormData()
     form_data.append('id_answer', props.id_answer)
@@ -83,7 +93,7 @@ const AnswerCard = (props) => {
                 {props.img != null &&
                 <FastImage 
                         source={{
-                            uri: BASE_URL_IMG+ props.img,
+                            uri: answerImages[indexSelectedImg],
                         }}
                         style={{width : windowWidth, height: windowHeight}} 
                         resizeMode={FastImage.resizeMode.contain}
@@ -191,11 +201,16 @@ const AnswerCard = (props) => {
                 }
                 {props.img != null && !props.is_lock &&
                     <TouchableOpacity onPress= {()=> setModalGambar(true)} >
-                        <FastImage 
-                            source={{
-                                uri: BASE_URL_IMG+ props.img,
-                            }}
-                            style={{width : windowWidth, height: 200}} />
+                       
+                            <SliderBox
+                            images={answerImages}
+                            onCurrentImagePressed={index => {
+                                setIndexSelectedImg(index)
+                                setModalGambar(true)
+                                
+                            } }
+                      
+                        />
                             </TouchableOpacity>
 
                     }

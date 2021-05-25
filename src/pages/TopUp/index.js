@@ -12,11 +12,11 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height - 56;
 
 const TopUp = ({navigation}) => {
-    const { token,data, snapToken,clientKey, production  } = useSelector (state => state.authReducers);
+    const { token,data, snapToken,clientKey, production, acum_price, point  } = useSelector (state => state.authReducers);
     
     useEffect(() => {
         if(snapToken !=''){
-            navigation.replace("PembayaranTopUp",  {"_acum_price" : "0", "_point": "0"})
+            navigation.replace("PembayaranTopUp",  {"_acum_price" : acum_price, "_point": point})
         }
     }, [])
 

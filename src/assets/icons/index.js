@@ -36,6 +36,7 @@ import IconDerajat from './derajat.svg'
 import IconLike from './like.svg'
 import IconLikeActive from './likeActive'
 import IconCheck from './check.svg'
+import IconPending from './pending.svg'
 import IconExplore from './explore.svg'
 import IconRiwayatActive from './riwayat.svg'
 import IconRiwayat from './riwayatNonActive.svg'
@@ -54,7 +55,7 @@ export {
   IconAkun,IconFaq,
   IconAkunActive,IconFile,IconSecurity,IconInfo,
   IconHome,
-  IconHomeActive,
+  IconHomeActive, IconPending,
   IconPesanan,
   IconPesananActive,
   IconAddSaldo,
