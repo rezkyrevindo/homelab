@@ -209,7 +209,7 @@ const WithdrawDetail = ({navigation}) => {
                             withdraw()
                         }}
                         title="Lanjutkan"
-                        width={windowWidth*0.9}
+                        width={windowWidth*0.8}
                         marginTop   = {windowHeight * 0.05}
                     /> 
                 }

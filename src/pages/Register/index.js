@@ -44,15 +44,9 @@ const Register = ({navigation}) => {
 
     const constraints = {
         email: {
-            presence: {
-                message: "cannot be blank."
-            },
+            
             email: {
                 message: 'must contain a valid email address'
-            },
-            length: {
-                minimum: 8,
-                message: 'must be at least 8 characters'
             }
         },
         password: {
@@ -63,6 +57,10 @@ const Register = ({navigation}) => {
                 minimum: 6,
                 message: 'must be at least 6 characters'
             }
+        },
+        confirmPassword: {
+           
+            equality: "password"
         },
         namaDepan : {
             presence: {allowEmpty: false}
@@ -93,7 +91,7 @@ const Register = ({navigation}) => {
           return result[field][0]
         }
       
-        return null
+        return "first"
       }
 
     const submit = async () => {
@@ -106,40 +104,35 @@ const Register = ({navigation}) => {
         let namaDepanError = validator('namaDepan', namaDepan)
         let namaBelakangError = validator('namaBelakang', namaBelakang)
         let confPasswordError = validator('confirmPassword', confPassword)
-        if(emailError != null){
+        if(emailError != "first"){
             setEmailError(emailError)
             setLoading(false)
             return;
         }
-        if(passwordError != null){
+        if(passwordError != "first"){
             setPasswordError(passwordError)
             setLoading(false)
             return;
         }
-        if(namaBelakangError != null){
+        if(namaBelakangError != "first"){
             setNamaBelakangError(namaBelakangError)
             setLoading(false)
             return;
         }
 
-        if(namaDepanError != null){
+        if(namaDepanError != "first"){
             setNamaDepanError(namaDepanError)
             setLoading(false)
             return;
         }
-        if(confPasswordError != null){
+        if(confPasswordError != "first"){
             setConfPasswordError(confPasswordError)
             setLoading(false)
             return;
         }
        
 
-        const url = "https://askhomelab.com/api/register"
-        const config = {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-            }
-          }
+       
         const data = new URLSearchParams()
         data.append("email", email)
         data.append("password", password)
@@ -163,7 +156,17 @@ const Register = ({navigation}) => {
                 setLoading(false)
           })
           .catch(function (error) {
-                
+                if(error.response.data.check_validation.email != ""){
+                    Snackbar.show({
+                        text: "Email yang anda masukan sudah digunakan",
+                        duration: Snackbar.LENGTH_INDEFINITE,
+                        action: {
+                            text: 'Ok',
+                            textColor: WARNA_UTAMA,
+                            onPress: () => { /* Do something. */ },
+                        },  
+                        });
+                }
                 setLoading(false)
           });
 
@@ -272,6 +275,7 @@ const Register = ({navigation}) => {
                         onChangeText = {(text) => setEmail(text)}
                         value={email}
                         error={emailError}
+                        keyboardType={"email-address"}
                         />
                     
                     <InputText 
@@ -289,6 +293,7 @@ const Register = ({navigation}) => {
                         onChangeText = {(text) => setConfPassword(text)}
                             value={confPassword}
                             error={confPasswordError}
+                            onSubmitEditing= {()=> submit()}
                         />
                 </View>
            
@@ -305,7 +310,10 @@ const Register = ({navigation}) => {
             </View>
 
             
-            <View style={{alignItems:'center'}}>
+            <TouchableOpacity
+                onPress= {()=> navigation.navigate("OpenWebView", {"title": "Kebijakan Privasi", 
+                                        "url": "http://askhomelab.com/binance/kebijakan_privasi.php"})}
+             style={{alignItems:'center'}}>
                 
                 
                 <PlainText
@@ -321,7 +329,7 @@ const Register = ({navigation}) => {
                     fontSize= {10}
                     marginBottom={50}
                 />
-            </View>
+            </TouchableOpacity>
             </ScrollView>
 
             

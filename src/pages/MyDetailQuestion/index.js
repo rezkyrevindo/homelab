@@ -27,6 +27,8 @@ const MyDetailQuestion = ({route,navigation}) => {
     const [modalAnswer, setModalAnswer] = useState(false)
     const [selectedAnswer, setSelectedAnswer] = useState(null)
     const [questionImages, setQuestionImages] = useState([])
+    const [typeFile, setTypeFile] = useState([])
+    
     const [modalGambar, setModalGambar] = useState(false)
     const [indexSelectedImg, setIndexSelectedImg] = useState(0)
 
@@ -216,9 +218,12 @@ const MyDetailQuestion = ({route,navigation}) => {
                 if (response.data){
                     setDataQuestion(response.data.Question)
                     setDataAnswer(response.data.Sub_Question)
-                   
-                    setQuestionImages(response.data.Question.File_Question.map(sweetItem => {
-                        return BASE_URL_IMG + sweetItem
+                    setTypeFile(response.data.Type_Of_File)
+                    setQuestionImages(response.data.Question.File_Question.map((sweetItem, index) => {
+                        if(response.data.Type_Of_File[index] == "image"){
+                            return BASE_URL_IMG + sweetItem
+                        }
+                        
                     }))
                 }else{
                     setDataQuestion(null)
@@ -229,6 +234,8 @@ const MyDetailQuestion = ({route,navigation}) => {
                 setLoading(false)
             });
     }
+ 
+
     const renderAnswer = ({item}) =>{
         var jum_commentar = 0; 
         console.log(item[1].map(data=>{
@@ -258,6 +265,7 @@ const MyDetailQuestion = ({route,navigation}) => {
                 type_reference = {item[0].answer.Type_Reference}
                 reference={item[0].answer.Reference}
                 picture = {item[0].answer.Photo_User_Answer}
+                typeFile= {item[0].answer.Type_File}
             />
         )
     }
@@ -274,29 +282,23 @@ const MyDetailQuestion = ({route,navigation}) => {
                 <View style={styles.container}>
                 <AnswerModal/>
                     <ScrollView showsVerticalScrollIndicator={false} >
-                    {dataQuestion.File_Question != null &&
-                        <SliderBox
-                            images={questionImages}
-                            onCurrentImagePressed={index => {
-                                setIndexSelectedImg(index)
-                                setModalGambar(true)
-                                
-                            } }
-                      
-                        />
-                    }
+                    
                     <View style={{paddingHorizontal : windowWidth * 0.05}}>
-                        <QuestionCard
-                            name = {dataQuestion.First_Name_Question + " " + dataQuestion.Last_Name_Question}
-                            category = {dataQuestion.Sub_Kategori_Question}
-                            time = {dataQuestion.Date_Question}
-                            point = {dataQuestion.Point_Question}
-                            isSolved={dataQuestion.Solved_Question}
-                            question={dataQuestion.Content_Question}
-                            answer = {dataAnswer.length}
-                            picture = {dataQuestion.Photo_User_Question}
-                            onPress= {()=> navigation.navigate("UpdateQuestion" , {dataQuestion : dataQuestion})}
-                        />
+                    <QuestionCard
+                        name = {dataQuestion.First_Name_Question + " " + dataQuestion.Last_Name_Question}
+                        category = {dataQuestion.Sub_Kategori_Question}
+                        time = {dataQuestion.Date_Question}
+                        point = {dataQuestion.Point_Question}
+                        isSolved={dataQuestion.Solved_Question}
+                        question={dataQuestion.Content_Question}
+                        answer = {dataAnswer.length}
+                        picture = {dataQuestion.Photo_User_Question}
+                        img= {dataQuestion.File_Question}
+                        typeFile = {dataQuestion.File_Type_Question}
+                        onPress= {()=> navigation.navigate("UpdateQuestion" , {dataQuestion : dataQuestion})}
+                    />
+
+                      
 
                         <View style={{flexDirection : 'row', justifyContent :'space-between', alignItems:'center', marginTop:20}}>
                             <PlainText
@@ -311,7 +313,7 @@ const MyDetailQuestion = ({route,navigation}) => {
                         <SafeAreaView style={{flex :1}}
                                     >
                             <FlatList
-                            data={dataAnswer}
+                             data={dataAnswer}
                             renderItem={renderAnswer}
                             showsVerticalScrollIndicator={false}
                             />

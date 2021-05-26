@@ -351,10 +351,12 @@ const DetailQuestion = ({route, navigation}) => {
                 setRefresh(refresh+1)
             })
         }).catch(function(error){
-            
+            updateProf(token).then( () =>{
+                setLoading(false)
+                setRefresh(refresh+1)
+            })
             setLoading(false)
             setRefresh(refresh+1)
-            console.error(error.response)
         })
     }
 
@@ -400,7 +402,7 @@ const DetailQuestion = ({route, navigation}) => {
                 visible={modalUnlock}
                 onTouchOutside={() => { setModalUnlock(false)}}
             >
-                <ModalContent>
+                <ModalContent style={{width: windowWidth *0.8}}>
                         <PlainText
                             title={"Anda yakin membuka jawaban ini?"}
                             color={"#000"}
@@ -409,7 +411,7 @@ const DetailQuestion = ({route, navigation}) => {
                             textAlign={"center"}
                         />
                         <PlainText
-                            title={"Membuka jawaban ini akan menghabiskan 3 point anda "}
+                            title={"Membuka jawaban ini akan menghabiskan 30 point anda "}
                             color={"#000"}
                             fontSize = {14}
                             textAlign={"center"}
@@ -452,6 +454,7 @@ const DetailQuestion = ({route, navigation}) => {
                         return BASE_URL_IMG + sweetItem
                     }))
                     
+                    
                 }else{
                     setDataQuestion(null)
                     console.info("Unable to fetch data from API")
@@ -461,7 +464,6 @@ const DetailQuestion = ({route, navigation}) => {
             })
             .catch(function (error) {
                 setLoading(false)
-                console.error(error.response.status)
             });
     }
 
@@ -475,6 +477,7 @@ const DetailQuestion = ({route, navigation}) => {
             }
             
         }))
+        console.log("ini data item +"+ JSON.stringify(item[0].answer))
         
         return (
             <AnswerCard
@@ -490,6 +493,7 @@ const DetailQuestion = ({route, navigation}) => {
                 id_answer = {item[0].answer.Id_Answer}
                 is_me = {item[0].answer.Status_User_Answer}
                 img= {item[0].answer.Image_Answer}
+                typeFile= {item[0].answer.Type_File}
                 type_reference = {item[0].answer.Type_Reference}
                 reference={item[0].answer.Reference}
                 picture = {item[0].answer.Photo_User_Answer}
@@ -504,6 +508,7 @@ const DetailQuestion = ({route, navigation}) => {
                         setTypeReference({'id':'document description',"name" : "Notes"})
                     }
                 } }
+                is_solved = {dataQuestion.Solved_Question}
                 
             />
         )
@@ -522,15 +527,17 @@ const DetailQuestion = ({route, navigation}) => {
         return (
             <AnswerCard
                 is_lock = {true}
+                is_me = {item[0].answer.Status_User_Answer}
                 name = {item[0].answer.First_Name_Answer + " "+item[0].answer.Last_Name_Answer}
                 time = {item[0].answer.Date_Answer}
                 isRelevant={item[0].Is_Relevant}
                 like = {item[0].answer.Total_Like}
                 is_like = {item[0].answer.Status_User_Like}
                 commentar={jum_commentar}
-                onPress={() => navigation.navigate("Commentar", {listCommentar : item[1], id_answer : item[0].answer.Id_Answer, isSolved, id_question})}
+                onPress={() => setModalUnlock(true)}
                 question={item[0].answer.Answer}
                 id_answer = {item[0].answer.Id_Answer}
+                
             />
         )
     }
@@ -679,18 +686,7 @@ const DetailQuestion = ({route, navigation}) => {
                    
                     <ScrollView showsVerticalScrollIndicator={false} >
                     
-                    {dataQuestion.File_Question != null &&
-                        <SliderBox
-                            images={questionImages}
-                            onCurrentImagePressed={index => {
-                                setIndexSelectedImg(index)
-                                setModalGambar(true)
-                                
-                            } }
-                      
-                        />
-
-                    }
+                   
                         <View style={{paddingHorizontal : windowWidth *0.05}}>
                         <QuestionCard
                             name = {dataQuestion.First_Name_Question + " " + dataQuestion.Last_Name_Question}
@@ -701,6 +697,8 @@ const DetailQuestion = ({route, navigation}) => {
                             question={dataQuestion.Content_Question}
                             answer = {dataAnswer.length}
                             picture = {dataQuestion.Photo_User_Question}
+                            img = {dataQuestion.File_Question}
+                            typeFile = {dataQuestion.File_Type_Question}
                         />
 
                         <View style={{flexDirection : 'row', justifyContent :'space-between', alignItems:'center', marginTop:20}}>

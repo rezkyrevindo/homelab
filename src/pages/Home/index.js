@@ -182,6 +182,7 @@ const Home = ({navigation}) => {
           isSolved={item.Solved_Status}
           answer = {item.Total_Answer}
           question={item.Content_Question}
+          img = {item.File}
       />
     )
     
@@ -204,6 +205,7 @@ const Home = ({navigation}) => {
           isSolved={item.Solved_Status}
           answer = {item.Total_Answer}
           question={item.Content_Question}
+          img = {item.File}
         />
       )
       

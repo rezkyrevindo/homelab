@@ -50,6 +50,7 @@ import IconFile from './ic_file.svg'
 import IconSecurity from './ic_security.svg'
 import IconInfo from './ic_info.svg'
 import IconPlus from './ic_plus.svg'
+import IconNotFound from './not_found.svg'
 export {
   IconMenu,IconMenuActive, IconNotification,IconNotificationActive, IconSearch, IconSearchActive,
   IconAkun,IconFaq,
@@ -59,7 +60,7 @@ export {
   IconPesanan,
   IconPesananActive,
   IconAddSaldo,
-  IconGetPoint,
+  IconGetPoint, IconNotFound,
   IconKiloan,
   IconVIP,
   IconSatuan,

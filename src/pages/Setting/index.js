@@ -20,7 +20,7 @@ import { updateProfile, logout ,update_notification} from '../../redux/actions';
 import axios from 'axios'
 import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 import ImagePicker,{showImagePicker,launchCamera, launchImageLibrary} from 'react-native-image-picker';
-
+import validate from '../../utils/validate'
 const Setting = ({navigation}) => {
     
     const requestLogout = (token) => dispatch(logout(token));
@@ -30,15 +30,26 @@ const Setting = ({navigation}) => {
     const updateNotif = (not)  => dispatch(update_notification(not))
     
     const [currentPassword, setCurrentPassword] = useState("")
+    const [currentPasswordError, setCurrentPasswordError] = useState("first")
     const [password, setPassword] = useState("")
+    const [passwordError, setPasswordError] = useState("first")
     const [no_rek, setNoRek] = useState(data[2].account_number)
+    const [no_rekError, setNoRekError] = useState("first")
     const [bank, setBank] = useState(data[2].bank)
+    const [bankError, setBankError] = useState("first")
     const [gender, setGender] = useState(data[2].gender)
+    const [genderError, setGenderError] = useState("first")
     const [password_confirmation, setPasswordConfirmation] = useState("")
+    const [passwordConfirmationError, setPasswordConfirmationError] = useState("first")
     const [noHp, setNoHp] = useState(data[2].handphone)
+    
+    const [noHpError, setNoHpError] = useState("first")
     const [universitas, setUniversitas] = useState(data[2].universitas!="null"? data[2].universitas:"")
+    const [universitasError, setUniversitasError] = useState("first")
     const [namaDepan, setNamaDepan] = useState(data[2].first_name)
+    const [namaDepanError, setNamaDepanError] = useState("first")
     const [namaBelakang, setNamaBelakang] = useState(data[2].last_name)
+    const [namaBelakangError, setNamaBelakangError] = useState("first")
     const [isLoading, setLoading] = useState(false)
     const [selectedImage, setSelectedImage] = useState(BASE_URL_IMG+""+data[2].picture)
     const [selectedImageType,setSelectedImageType] = useState("url")
@@ -50,6 +61,10 @@ const Setting = ({navigation}) => {
         {id:"/users/5.png", name:BASE_URL_IMG+"users/5.png"},
         {id:"/users/6.png", name:BASE_URL_IMG+"users/6.png"},
     ])
+    const [sourceImg, setSourceImg] = useState(null)
+    
+    const [fileData, setFileData] = useState(null)
+    const [fileUri, setFileUri] = useState(null)
     const [listBank, setListBank] = useState([
         {id:"BRI", name:"BRI"},
         {id:"BCA", name:"BCA"},
@@ -73,6 +88,79 @@ const Setting = ({navigation}) => {
     
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
+    const constraints = {
+        email: {
+            
+            email: {
+                message: 'must contain a valid email address'
+            }
+        },
+        password: {
+            presence: {
+                message: "cannot be blank."
+            },
+            length: {
+                minimum: 6,
+                message: 'must be at least 6 characters'
+            }
+        },
+        no_hp: {
+            presence: {
+                message: "cannot be blank."
+            },
+            length: {
+                minimum: 10,
+                message: 'must be at least 10 characters'
+            }
+        },
+        confirm_Password: {
+           
+            equality: "password"
+        },
+        namaDepan : {
+            presence: {allowEmpty: false}
+        },
+        namaBelakang : {
+            presence: {allowEmpty: false}
+        },
+        universitas : {
+            presence: {allowEmpty: false}
+        },
+        gender : {
+            presence: {allowEmpty: false}
+        },
+        no_rek : {
+            presence: {allowEmpty: false}
+        },
+        bank : {
+            presence: {allowEmpty: false}
+        },
+        
+        
+      }
+      
+      
+      const validator = (field, value) => {
+        // Creates an object based on the field name and field value
+        // e.g. let object = {email: 'email@example.com'}
+        let object = {}
+        object[field] = value
+      
+        let constraint = constraints[field]
+        // console.log(object, constraint)
+      
+        // Validate against the constraint and hold the error messages
+        const result = validate(object, { [field]: constraint })
+        
+      
+        // If there is an error message, return it!
+        if (result) {
+          // Return only the field error message if there are multiple
+          return result[field][0]
+        }
+      
+        return "first"
+      }
     
 
     useEffect(() => {
@@ -147,6 +235,33 @@ const Setting = ({navigation}) => {
     const submit = async () => {
         
         setLoading(true)
+
+       
+        
+        let genderError = validator('gender', gender)
+        let namaDepanError = validator('namaDepan', namaDepan)
+        let namaBelakangError = validator('namaBelakang', namaBelakang)
+        let universitasError = validator('universitas', universitas)
+        let noHpError = validator('no_hp', noHp)
+        let noRekError = validator('no_rek', no_rek)
+        let bankError = validator('bank', bank)
+        
+        
+        setNamaBelakangError(namaBelakangError)
+        setGenderError(genderError)
+        setNamaDepanError(namaDepanError)
+        setUniversitasError(universitasError)
+        setNoHpError(noHpError)
+        setNoRekError(noRekError)
+        setBankError(bankError)
+        if(namaBelakangError != "first" || namaDepanError != "first" || genderError != "first" || 
+        universitasError != "first"|| noHpError != "first" ||  noRekError != "first" || bankError != "first"){
+            setLoading(false)
+            return;
+        }
+        
+       
+
         const formData = new FormData()
         formData.append("universitas", universitas)
         formData.append("first_name", namaDepan)
@@ -201,7 +316,11 @@ const Setting = ({navigation}) => {
                     onPress: () => { /* Do something. */ },
                 },  
                 });
-            updateProf(token).then(() => setLoading(false))
+                
+                updateProf(token).then(() =>{ 
+                    setLoading(false)
+                    navigation.replace("MainApp")
+                })
             
           })
           .catch(function (error) {
@@ -223,6 +342,22 @@ const Setting = ({navigation}) => {
     const update_password = async () => {
         
         setLoading(true)
+        let passwordError = validator('password', password)
+        let currentPasswordError = validator('password', currentPassword)
+        setPasswordError(passwordError)
+        setCurrentPasswordError(currentPasswordError)
+        if(passwordError != "first" || currentPasswordError != "first"){
+            setLoading(false)
+            return;
+        }
+        if(password != password_confirmation){
+            setPasswordConfirmationError("New password must be same with Confirmation password")
+            setLoading(false)
+            return;
+        }else{
+            setPasswordConfirmationError("first")
+        }
+
         const formData = new FormData()
         formData.append("password", password)
         formData.append("current_password", currentPassword)
@@ -252,9 +387,7 @@ const Setting = ({navigation}) => {
                         onPress: () => { /* Do something. */ },
                     },  
                     });
-                    setPassword("")
-                    setPasswordConfirmation("")
-                    setCurrentPassword("")
+                navigation.replace("MainApp")
             }else{
                 Snackbar.show({
                     text: response.data.message,
@@ -270,17 +403,11 @@ const Setting = ({navigation}) => {
             
           })
           .catch(function (error) {
-                Snackbar.show({
-                text: error.response,
-                duration: Snackbar.LENGTH_INDEFINITE,
-                action: {
-                    text: 'Ok',
-                    textColor: WARNA_UTAMA,
-                    onPress: () => { /* Do something. */ },
-                },  
-              });
-              console.log(error)
-              setLoading(false)
+                console.log(error.response.data.message)
+                setCurrentPasswordError(error.response.data.message)
+               
+                setLoading(false)
+              
           });
 
 
@@ -557,7 +684,7 @@ const Setting = ({navigation}) => {
                                             secureTextEntry = {false} 
                                             onChangeText = {(text) => setNamaDepan(text)}
                                             value={namaDepan}
-                                            error="first"
+                                            error={namaDepanError}
                                             />
                                         <InputText 
                                             width       = {windowWidth * 0.32}
@@ -565,7 +692,7 @@ const Setting = ({navigation}) => {
                                             secureTextEntry = {false} 
                                             onChangeText = {(text) => setNamaBelakang(text)}
                                             value={namaBelakang}
-                                            error="first"
+                                            error={namaBelakangError}
                                             
                                             />
                                     </View>
@@ -575,7 +702,8 @@ const Setting = ({navigation}) => {
                                         secureTextEntry = {false} 
                                         onChangeText = {(text) => setNoHp(text)}
                                         value={noHp}
-                                        error="first"
+                                        error={noHpError}
+                                        keyboardType={"number-pad"}
                                         />
                                     
                                     <InputText 
@@ -584,7 +712,7 @@ const Setting = ({navigation}) => {
                                         secureTextEntry = {false}
                                         onChangeText = {(text) => setUniversitas(text)}
                                         value={universitas}
-                                        error="first"
+                                        error={universitasError}
                                         />
                                    
                                     <TouchableOpacity style={{flexDirection :'row',alignContent:'center',justifyContent:'center', alignItems:'center'}} onPress={()=> setModalGender(true)}>
@@ -595,7 +723,7 @@ const Setting = ({navigation}) => {
                                             secureTextEntry = {false}
                                             
                                             value={gender}
-                                            error="first"
+                                            error={genderError}
                                         />
                                         <IconCaretDown style={{marginLeft:10,marginTop:30}} fill={"#000"} width={18} height={18} />
                                     </TouchableOpacity>    
@@ -605,7 +733,8 @@ const Setting = ({navigation}) => {
                                         secureTextEntry = {false}
                                         onChangeText = {(text) => setNoRek(text)}
                                         value={no_rek}
-                                        error="first"
+                                        error={no_rekError}
+                                        keyboardType={"number-pad"}
                                         />
                                     <TouchableOpacity style={{flexDirection :'row',alignContent:'center',justifyContent:'center', alignItems:'center'}} onPress={()=> setModalBank(true)}>
                                         
@@ -615,7 +744,7 @@ const Setting = ({navigation}) => {
                                             secureTextEntry = {false}
                                             
                                             value={bank}
-                                            error="first"
+                                            error={bankError}
                                         />
                                         <IconCaretDown style={{marginLeft:10,marginTop:30}} fill={"#000"} width={18} height={18} />
                                     </TouchableOpacity>   
@@ -672,7 +801,7 @@ const Setting = ({navigation}) => {
                                         secureTextEntry = {true} 
                                         onChangeText = {(text) => setCurrentPassword(text)}
                                         value={currentPassword}
-                                        error="first"
+                                        error= {currentPasswordError}
                                         />
                                     <InputText 
                                         width       = {windowWidth * 0.7}
@@ -680,7 +809,7 @@ const Setting = ({navigation}) => {
                                         secureTextEntry = {true} 
                                         onChangeText = {(text) => setPassword(text)}
                                         value={password}
-                                        error="first"
+                                        error= {passwordError}
                                         />
                                     <InputText 
                                         width       = {windowWidth * 0.7}
@@ -688,7 +817,7 @@ const Setting = ({navigation}) => {
                                         secureTextEntry = {true} 
                                         onChangeText = {(text) => setPasswordConfirmation(text)}
                                         value={password_confirmation}
-                                        error="first"
+                                        error= {passwordConfirmationError}
                                         />
                                     
                                    

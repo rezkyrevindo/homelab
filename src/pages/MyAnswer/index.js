@@ -7,8 +7,8 @@ import {
   TouchableHighlight,
   Dimensions, StatusBar, TouchableOpacity, 
 } from 'react-native';
-import {IconSearchActive, ImgNothingAsked,ImgNothingQuestion, IconPoints} from '../../assets';
-import {PlainText, HeaderText, AnswerCard, QuestionCard, LoadingIndicator} from '../../components/';
+import {IconSearchActive, ImgNothingAsked,ImgNothingQuestion, IconNotFound} from '../../assets';
+import {PlainText, HeaderText, AnswerCard, QuestionCard,ButtonPrimary, LoadingIndicator} from '../../components/';
 import FastImage from 'react-native-fast-image'
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_DISABLE, OpenSansBold, OpenSans} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -67,6 +67,7 @@ const MyAnswer = ({navigation}) => {
                 is_lock ={false}
                 name = {item.First_Name_Answer + " "+item.Last_Name_Answer}
                 time = {item.Date_Answer}
+                picture= {data[2].picture}
                 isRelevant={item.Is_Relevant}
                 like = {item.Total_Like}
                 is_like = {"True"}
@@ -76,8 +77,10 @@ const MyAnswer = ({navigation}) => {
                 id_answer = {item.Id_Answer}
                 is_me = {"True"}
                 img= {item.File_Answer}
+                typeFile= {item.File_Type}
                 type_reference = {item.Type_Reference}
                 reference={item.Reference}
+                is_solved= {"3"}
             />
         
       )
@@ -109,14 +112,25 @@ const MyAnswer = ({navigation}) => {
                 />
                 }
                 { listMyQuestion == null &&
-                <View style={{flexDirection :'row', alignItems:'center',alignContent:'center',
-                justifyContent:'center', marginTop:50}}>
-                    <FastImage
-                        style={{  width: 300, height: 300 }}
-                        source={ImgNothingAsked}
-                        resizeMode={FastImage.resizeMode.contain}
+                  <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+                    
+                    <IconNotFound width={300} height={300}/>
+                    <PlainText
+                        title={"Oppss??!!\nYou never answering a question"}
+                        color={"#000"}
+                        fontSize= {18}
+                        fontStyle={"bold"}
+                        textAlign= {"center"}
                     />
-                </View>
+                    <PlainText
+                        title={"Go to Explore Page and find\n some question you want to answer!"}
+                        color={"#000"}
+                        fontSize= {13}
+                        textAlign= {"center"}
+                        
+                    />
+                    
+                  </View>
                 }
         </SafeAreaView>
         }
@@ -161,7 +175,7 @@ const styles = StyleSheet.create({
       backgroundColor : '#FAFAFA',
       borderTopLeftRadius : 30,
       borderTopRightRadius : 30,
-      minHeight: windowHeight * 0.65,
+      height: windowHeight ,
       paddingHorizontal : windowWidth * 0.05,
       paddingVertical : 10,
       marginTop:-20

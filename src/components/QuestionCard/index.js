@@ -1,10 +1,17 @@
-import React, {useState} from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import React, {useState, useEffect, FlatList} from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView,Linking, Dimensions } from 'react-native'
 import PlainText from '../PlainText'
 import { DefaultProfile, IconPoints, IconLike,IconLikeActive,IconPending, IconCheck} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, BASE_URL_API, BASE_URL_IMG, OpenSans} from '../../utils/constant';
 import FastImage from 'react-native-fast-image'
 import Tooltip from 'react-native-walkthrough-tooltip';
+
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height -56
+import { SliderBox } from "react-native-image-slider-box";
+
+import { Modal, ModalContent, ModalPortal  } from 'react-native-modals';
 function hitungSelisihHari(tgl1){
   var miliday = 60 * 60 * 1000;
 
@@ -26,11 +33,104 @@ function hitungSelisihHari(tgl1){
 }
 const QuestionCard = (props) => {
     const date = hitungSelisihHari(props.time)
-    
+    const [modalGambar, setModalGambar] = useState(false)
     const [toolTipVisibleHitam, setTooltipVisibleHitam] = useState(false)
+    const [indexSelectedImg, setIndexSelectedImg] = useState(0)
+
+    const [questionImages, setQuestionImages] = useState([])
+    const [questionFile, setQuestionFile] = useState([])
+    
+    useEffect(() => {
+      if(props.img != null){
+        if(props.img.length > 0 ){
+          
+            props.img.map((sweetItem, index) => {
+                  if(props.typeFile[index] == "image"){
+                    let joined = questionImages.concat(BASE_URL_IMG + sweetItem);
+                    setQuestionImages(joined)
+                  }else{
+                    let joined = questionFile.concat(BASE_URL_IMG + sweetItem);
+                    setQuestionFile(joined)
+                  }
+            })
+           
+        }
+      }
+
+      
+      
+    }, [])
+    const renderFile = () => {
+        
+        return questionFile.map((item, index) => {
+          
+          return (
+            <TouchableOpacity style={{backgroundColor: WARNA_UTAMA, padding:5, borderRadius:20, width:200, marginVertical:5, 
+            alignItems:'center'}}
+            onPress={()=>{
+              Linking.canOpenURL(item).then(supported => {
+                        if (supported) {
+                          Linking.openURL(item);
+                        } else {
+                          console.log("Don't know how to open URI: " + props.reference);
+                        }
+                      });
+            }}>
+              <PlainText
+                  title={"Open File - File #"+(index+1)}
+                  color={"#000"}
+                  fontSize= {14}
+                  fontStyle={"bold"}
+                  
+              />
+            </TouchableOpacity>
+          )
+          
+        })
+        
+    }
+
+
+    const GambarModal = ()=>{
+      return (
+          <Modal
+              visible={modalGambar}
+              onTouchOutside={() => { setModalGambar(false)}}
+          >
+              <ModalContent >
+                  
+              <TouchableOpacity style={{ background:'#000000'}}
+                  onPress={()=>setModalGambar(false)}
+              >
+                    <PlainText
+                  title={"X"}
+                  color={"#000"}
+                  fontSize= {20}
+                  marginLeft={20}
+                  fontStyle={"bold"}
+                  
+              />          
+              </TouchableOpacity>
+                  <View style={{ width:windowWidth, height:windowHeight, alignItems:'center'}}>
+                  {props.img != null &&
+                  <FastImage 
+                          source={{
+                              uri: questionImages[indexSelectedImg],
+                          }}
+                          style={{width : windowWidth, height: windowHeight}} 
+                          resizeMode={FastImage.resizeMode.contain}
+                          />
+                     }
+                  </View>
+                  
+              </ModalContent>
+          </Modal>
+      )
+  }
     return (
         <View 
          style={styles.cardQuestion}>
+         <GambarModal/>
             <View style={styles.cardQuestionHeader}>
               <View style={{flexDirection : 'row'}}>
                 {props.picture != null &&
@@ -111,11 +211,31 @@ const QuestionCard = (props) => {
                 
              
             </View>
+               
+            {questionImages.length > 0 &&
+            <SafeAreaView >
+                <SliderBox
+                
+                      images={questionImages}
+                      onCurrentImagePressed={index => {
+                          setIndexSelectedImg(index)
+                          setModalGambar(true)
+                          
+                        } 
+                      }
+                      ImageComponentStyle={{ width: windowWidth*0.9, marginLeft: -windowWidth*0.1}}
+                
+                  /></SafeAreaView>
+
+                    
+
+              }
 
             <TouchableOpacity
             
             onPress={props.onPress}
             style={styles.cardQuestionContent}>
+            
               <PlainText
                       title={props.question}
                       
@@ -128,6 +248,7 @@ const QuestionCard = (props) => {
             
             onPress={props.onPress}
             style={styles.cardQuestionFooter}>
+           
               <View style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}}>
                 <View  style={{flexDirection:'row', justifyContent:'space-between', alignItems :'center'}} >
                      
@@ -150,6 +271,29 @@ const QuestionCard = (props) => {
                 
                
               </View>
+              { questionFile.length > 0 &&
+                <View style={{flexDirection:'column', marginTop:10}}>
+                  <View   >
+                      
+                        <PlainText
+                            title={"File"}
+                            fontStyle={"bold"}
+                            fontSize = {13}
+                        />
+                        {
+                          renderFile()
+                          
+                        }
+                  </View>
+                    
+                 
+                </View>
+              }
+              
+
+              
+               
+              
              
             </TouchableOpacity>
            

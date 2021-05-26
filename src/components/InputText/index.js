@@ -9,9 +9,11 @@ const windowHeight = Dimensions.get('window').height;
 import PlainText from '../PlainText'
 
 const InputText = ({autoFocus,onSubmitEditing,keyboardType,placeholder, secureTextEntry, width,borderRadius, textAlign, marginTop, paddingRight, onChangeText, value,onBlur, height, error}) => {
+    
     return (
+        
         <View>
-            {error == null || error == "first" &&
+            { error == "first"  &&
                 <TextInput 
                 width           = {width}
                 secureTextEntry = {secureTextEntry}
@@ -31,7 +33,7 @@ const InputText = ({autoFocus,onSubmitEditing,keyboardType,placeholder, secureTe
                 />
             }
 
-            {error != null && error != "first"  &&
+            { error != "first"  &&
                 <View>
                     <TextInput 
                         width           = {width}

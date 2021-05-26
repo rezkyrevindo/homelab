@@ -1,5 +1,5 @@
 import React,  { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions , Linking} from 'react-native'
+import { StyleSheet, Text,Linking, View, TouchableOpacity, Dimensions } from 'react-native'
 import PlainText from '../PlainText'
 import { DefaultProfile, IconLike, IconLikeActive, IconCheck, IconLock, IconCaretLeft} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, OpenSansBold, BASE_URL_API,BASE_URL_IMG} from '../../utils/constant';
@@ -40,11 +40,24 @@ const AnswerCard = (props) => {
   const [indexSelectedImg, setIndexSelectedImg] = useState(0)
 
   const [answerImages, setAnswerImages] = useState([])
+  const [answerFile, setAnswerFile] = useState([])
   
   useEffect(() => {
-    setAnswerImages(props.img.map(sweetItem => {
-      return BASE_URL_IMG + sweetItem
-  }))
+    if(props.img != null){
+      
+      if(props.img.length > 0){
+        props.img.map((sweetItem, index) => {
+          if(props.typeFile[index] == "image"){
+            let joined = answerImages.concat(BASE_URL_IMG + sweetItem);
+            setAnswerImages(joined)
+          }else{
+            let joined = answerFile.concat(BASE_URL_IMG + sweetItem);
+            setAnswerFile(joined)
+          }
+        })
+      }
+      
+    }
   }, [])
 
   const addLike = () =>{
@@ -68,6 +81,35 @@ const AnswerCard = (props) => {
         // console.error(error)
     })
   }
+  const renderFile = () => {
+        
+    return answerFile.map((item, index) => {
+      
+      return (
+        <TouchableOpacity style={{backgroundColor: WARNA_UTAMA, padding:5, borderRadius:20, width:200, marginVertical:5, 
+        alignItems:'center'}}
+        onPress={()=>{
+          Linking.canOpenURL(item).then(supported => {
+                    if (supported) {
+                      Linking.openURL(item);
+                    } else {
+                      console.log("Don't know how to open URI: " + props.reference);
+                    }
+                  });
+        }}>
+          <PlainText
+              title={"Open File - File #"+(index+1)}
+              color={"#000"}
+              fontSize= {14}
+              fontStyle={"bold"}
+              
+          />
+        </TouchableOpacity>
+      )
+      
+    })
+    
+}
   const GambarModal = ()=>{
     return (
         <Modal
@@ -157,7 +199,7 @@ const AnswerCard = (props) => {
                     </View>
                     
                 }
-                {props.is_me == "True" &&
+                {props.is_me == "True" && props.is_solved == "0" &&
                   <TouchableOpacity onPress={props.onEditAnswer} style={{flexDirection:'row', alignItems : 'center'}}>
                       <IconCaretLeft  width={24} height={24} />
                   </TouchableOpacity>
@@ -183,7 +225,8 @@ const AnswerCard = (props) => {
                   style={{backgroundColor : '#F5F5F5',
                   padding:20, 
                   borderBottomStartRadius:20,
-                  borderBottomEndRadius:20 , alignItems:'center'}}>
+                  borderBottomEndRadius:20 , alignItems:'center'}}
+                  onPress={props.onPress}>
                     <FastImage source= {IconLock} style={{width:25, height:25}}/>
 
                     <PlainText
@@ -200,9 +243,9 @@ const AnswerCard = (props) => {
                 
                 }
                 {props.img != null && !props.is_lock &&
-                    <TouchableOpacity onPress= {()=> setModalGambar(true)} >
+                    
                        
-                            <SliderBox
+                          <SliderBox
                             images={answerImages}
                             onCurrentImagePressed={index => {
                                 setIndexSelectedImg(index)
@@ -211,7 +254,6 @@ const AnswerCard = (props) => {
                             } }
                       
                         />
-                            </TouchableOpacity>
 
                     }
 
@@ -229,7 +271,7 @@ const AnswerCard = (props) => {
                 }
                 { props.type_reference == "url" && !props.is_lock &&
                 <TouchableOpacity style={styles.cardQuestionRef}
-                 
+                    onPress={props.onPress}
                     
                   > 
                       <PlainText
@@ -257,7 +299,9 @@ const AnswerCard = (props) => {
                             
                             />
                         </TouchableOpacity>
+                        
                 </TouchableOpacity>
+                       
                     
                   } 
                   { props.type_reference != "url" && !props.is_lock &&
@@ -278,6 +322,25 @@ const AnswerCard = (props) => {
                         </TouchableOpacity>
                 </View>
                   } 
+                  { answerFile.length > 0 &&
+                    <View style={{flexDirection:'column', marginTop:-20, padding:20}}>
+                      <View   >
+                          
+                            <PlainText
+                                title={"File"}
+                                fontStyle={"bold"}
+                                fontSize = {13}
+                            />
+                            {
+                              renderFile()
+                              
+                            }
+                      </View>
+                        
+                    
+                    </View>
+                  }
+                  
                 { !props.is_lock &&
                   <View style={styles.cardQuestionFooter}>
                     <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>

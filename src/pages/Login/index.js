@@ -31,7 +31,7 @@ const Login = ({navigation}) => {
     const [emailError, setEmailError]  = useState("first")
     const [password, setPassword] = useState("")
     const [passwordError, setPasswordError] =  useState("first")
-
+    const passRef = React.useRef(null)
     const constraints = {
         email: {
             presence: {
@@ -76,47 +76,11 @@ const Login = ({navigation}) => {
           return result[field][0]
         }
       
-        return null
+        return "first"
       }
 
     
 
-    const loginCheck =  () =>{
-        console.log(setRefresh())
-        console.log("check isi token "+ token)
-        
-        if(token == "false"){
-            
-            Snackbar.show({
-            text: "Username atau password salah",
-            duration: Snackbar.LENGTH_INDEFINITE,
-            action: {
-                text: 'Ok',
-                textColor: WARNA_UTAMA,
-                onPress: () => { /* Do something. */ },
-            },  
-            });
-            setLoading(false)
-        }else{
-            Snackbar.show({
-            text: "Login berhasil",
-            duration: Snackbar.LENGTH_INDEFINITE,
-            action: {
-                text: 'Ok',
-                textColor: WARNA_UTAMA,
-                onPress: () => { /* Do something. */ },
-            },  
-            });
-            if ( data[2].category_id != null){
-                navigation.navigate('MainApp')
-                
-            }else{
-                navigation.navigate('Interest')
-            }
-            
-            setLoading(false)
-        }
-    }
 
     const submit = async () => {
         
@@ -124,7 +88,7 @@ const Login = ({navigation}) => {
         try{
             let emailError = validator('email', email)
             let passwordError = validator('password', password)
-            if(emailError != null || passwordError != null){
+            if(emailError != "first" || passwordError != "first"){
                 setEmailError(emailError)
                 setPasswordError(passwordError)
                 setLoading(false)
@@ -171,14 +135,19 @@ const Login = ({navigation}) => {
                         onChangeText= {(text) => setEmail(text)}
                         value={email}
                         error ={emailError}
+                        keyboardType= {"email-address"}
+                        
                         />
                     <InputText 
+                        ref = {passRef}
                         width       = {windowWidth * 0.8}
                         placeholder = "Password" 
                         secureTextEntry = {true}
                         onChangeText= {(text) => setPassword(text)}
                         value={password}
                         error ={passwordError}
+                        onSubmitEditing= {() => submit()}
+                        
                         />
                 </View>
 
@@ -195,28 +164,9 @@ const Login = ({navigation}) => {
                     />
                 </View>
 
-                <View style={{alignItems:"center"}}>
                 
-                    <PlainText
-                        fontSize={13}
-                        title="atau masuk menggunakan"
-                        color={"#000"}
-                        marginTop = {windowHeight * 0.033}       
-                    />
-                </View>
                 
 
-                <View 
-                
-                style={styles.otherLogin}>
-                    <ButtonWithIcon
-                        title={"facebook"}
-                    />
-                    <ButtonWithIcon
-                        title={"google"}
-                    />
-                    
-                </View>
                 
                 <View style={{alignItems:'center'}}>
                     

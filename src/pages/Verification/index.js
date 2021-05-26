@@ -89,6 +89,7 @@ const Verification = ({route, navigation}) => {
           });
     }
 
+   
     return (
         <View style = {styles.container}>
             <View>

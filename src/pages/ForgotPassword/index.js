@@ -53,7 +53,7 @@ const ForgotPassword = ({navigation}) => {
           return result[field][0]
         }
       
-        return null
+        return "first"
       }
 
       const submit = async () => {
@@ -62,7 +62,7 @@ const ForgotPassword = ({navigation}) => {
         setLoading(true)
 
         let emailError = validator('email', email)
-        if(emailError != null){
+        if(emailError != "first"){
             setEmailError(emailError)
             setLoading(false)
             return;
@@ -70,13 +70,13 @@ const ForgotPassword = ({navigation}) => {
        
         axios.post(BASE_URL_API+'forgot_password?email='+email)
           .then(function (response) {
-            // console.log("ini data"+JSON.stringify(response))
+            console.log("ini data"+JSON.stringify(response))
             navigation.replace('ForgotPasswordSuccess')
 
             setLoading(false)
           })
           .catch(function (error) {
-            // console.log("ini data"+JSON.stringify(error))
+            console.log("ini data"+JSON.stringify(error))
             setLoading(false)
           });
 

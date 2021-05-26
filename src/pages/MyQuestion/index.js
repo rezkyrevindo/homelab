@@ -7,8 +7,8 @@ import {
   TouchableHighlight,
   Dimensions, StatusBar, TouchableOpacity, LogBox,
 } from 'react-native';
-import {IconSearchActive, ImgNothingAsked,ImgNothingQuestion, IconPoints} from '../../assets';
-import {PlainText, HeaderText, InputText, QuestionCard, LoadingIndicator} from '../../components/';
+import {IconSearchActive, ImgNothingAsked,ImgNothingQuestion, IconNotFound} from '../../assets';
+import {PlainText, HeaderText, InputText,ButtonPrimary, QuestionCard, LoadingIndicator} from '../../components/';
 import FastImage from 'react-native-fast-image'
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_DISABLE, OpenSansBold, OpenSans} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -63,18 +63,20 @@ const MyQuestion = ({navigation}) => {
     
         return (
           <QuestionCard
-          onPress={() => {
-            navigation.navigate('MyDetailQuestion', {isSolved: item.Solved_Status,id_question: item.id_Question });
-              }}
-              name = {item.First_Name + " "+ item.Last_Name}
-          picture = {item.Picture_User}
-          category = {item.Sub_Category}
-          time = {item.Date_Created}
-          point = {item.Total_Point}
-          isSolved={item.Solved_Status}
-          answer = {item.Total_Answer}
-          question={item.Content_Question}
-        />
+            onPress={() => {
+              navigation.navigate('MyDetailQuestion', {isSolved: item.Solved_Status,id_question: item.id_Question });
+                }}
+                name = {item.First_Name + " "+ item.Last_Name}
+            picture = {item.Picture_User}
+            category = {item.Sub_Category}
+            time = {item.Date_Created}
+            point = {item.Total_Point}
+            isSolved={item.Solved_Status}
+            answer = {item.Total_Answer}
+            question={item.Content_Question}
+            img = {item.File}
+            typeFile= {item.Type_Of_File}
+          />
       )
       
   }
@@ -96,22 +98,40 @@ const MyQuestion = ({navigation}) => {
             
                 { listMyQuestion != null &&
                     <FlatList
-                data={listMyQuestion}
-                keyExtractor={(item) => item.id_Question.toString()}
-                renderItem={renderItemMyQuestion}
-                showsVerticalScrollIndicator={false}
-                
-                />
+                    data={listMyQuestion}
+                    keyExtractor={(item) => item.id_Question.toString()}
+                    renderItem={renderItemMyQuestion}
+                    showsVerticalScrollIndicator={false}
+                    
+                    />
                 }
                 { listMyQuestion == null &&
-                <View style={{flexDirection :'row', alignItems:'center',alignContent:'center',
-                justifyContent:'center', marginTop:50}}>
-                    <FastImage
-                        style={{  width: 300, height: 300 }}
-                        source={ImgNothingAsked}
-                        resizeMode={FastImage.resizeMode.contain}
+                  <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+                   
+                    <IconNotFound width={300} height={300}/>
+                    <PlainText
+                        title={"Oppss??!!\nYou never create a question"}
+                        color={"#000"}
+                        fontSize= {18}
+                        fontStyle={"bold"}
+                        textAlign= {"center"}
                     />
-                </View>
+                    <PlainText
+                        title={"You want to create once?"}
+                        color={"#000"}
+                        fontSize= {13}
+                        textAlign= {"center"}
+                        
+                    />
+                    <ButtonPrimary  
+                        onPress={() => {
+                            navigation.navigate("CreateQuestion")
+                        }}
+                        title="Create Question"
+                        width={windowWidth*0.6}
+                        marginTop   = {windowHeight * 0.033}
+                    />
+                  </View>
                 }
         </SafeAreaView>
         }
@@ -154,7 +174,7 @@ const styles = StyleSheet.create({
       backgroundColor : '#FAFAFA',
       borderTopLeftRadius : 30,
       borderTopRightRadius : 30,
-      minHeight: windowHeight * 0.65,
+      minHeight: windowHeight ,
       paddingHorizontal : windowWidth * 0.05,
       paddingVertical : 10,
       marginTop:-20

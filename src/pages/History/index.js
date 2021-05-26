@@ -7,8 +7,8 @@ import {
   ImageBackground, SafeAreaView, FlatList, 
   Dimensions, StatusBar, TouchableOpacity, 
 } from 'react-native';
-import {IconSearchActive, DefaultProfile} from '../../assets';
-import {PlainText, HeaderText, InputText, QuestionCard, LoadingIndicator} from '../../components/';
+import {IconSearchActive, DefaultProfile, IconNotFound} from '../../assets';
+import {PlainText, HeaderText, InputText, QuestionCard,ButtonPrimary, LoadingIndicator} from '../../components/';
 import { WARNA_UTAMA, WARNA_SUCCESS,WARNA_WARNING, OpenSans, BASE_URL_API} from '../../utils/constant';
 import {ScrollView} from 'react-native-gesture-handler';
 import axios from 'axios'
@@ -18,7 +18,7 @@ const windowHeight = Dimensions.get('window').height;
 
 import { useSelector, useDispatch } from 'react-redux';
 
-const History = () => {
+const History = ({navigation}) => {
   function hitungSelisihHari(tgl1){
     var miliday = 60 * 60 * 1000;
   
@@ -57,16 +57,22 @@ const History = () => {
             "Authorization" : "Bearer " + token 
         }
     }).then(function (response){
-        let obj = response.data.Transaction
-        obj.sort(function(a, b) {
-            var dateA = new Date(a.Date), dateB = new Date(b.Date);
-            return dateB- dateA;
-        });
-        setListRiwayat(obj)
+        if(response.data.Transaction.length > 0 ){
+          let obj = response.data.Transaction
+          obj.sort(function(a, b) {
+              var dateA = new Date(a.Date), dateB = new Date(b.Date);
+              return dateB- dateA;
+          });
+          setListRiwayat(obj)
+        }else{
+          setListRiwayat(null)
+        }
+        
        
         setLoading(false)
     }).catch(function (error){
         console.error(error)
+        setListRiwayat(null)
         setLoading(false)
     })
 
@@ -201,8 +207,8 @@ const History = () => {
         <View style={styles.content}>
 
          
-
-          <SafeAreaView style={{marginTop:10, flexDirection : 'row', paddingBottom : 5}}>
+          { listRiwayat != null &&
+            <SafeAreaView style={{marginTop:10, flexDirection : 'row', paddingBottom : 5}}>
               <FlatList
               data={listRiwayat}
               keyExtractor={(item) => item.Date.toString()}
@@ -213,6 +219,48 @@ const History = () => {
               />
               
           </SafeAreaView>
+          }
+          
+          {listRiwayat == null &&
+            <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+                    
+                    <IconNotFound width={300} height={300}/>
+                    <PlainText
+                        title={"Oppss??!!\nYou never buy or withdraw points"}
+                        color={"#000"}
+                        fontSize= {18}
+                        fontStyle={"bold"}
+                        textAlign= {"center"}
+                    />
+                    <PlainText
+                        title={"Want to withdraw or buy points?"}
+                        color={"#000"}
+                        fontSize= {13}
+                        textAlign= {"center"}
+                        
+                    />
+                    <View style={{flexDirection:'row', justifyContent:'space-around', width:windowWidth*0.8}}>
+                    <ButtonPrimary  
+                        onPress={() => {
+                            navigation.navigate("TopUp")
+                        }}
+                        title="Buy Point"
+                        width={windowWidth*0.35}
+                        marginTop   = {windowHeight * 0.033}
+                    />
+                    <ButtonPrimary  
+                        onPress={() => {
+                            navigation.navigate("Withdraw")
+                        }}
+                        title="Withdraw"
+                        width={windowWidth*0.35}
+                        marginTop   = {windowHeight * 0.033}
+                    />
+                    </View>
+                   
+                    
+                  </View>
+          }
 
           
           
@@ -256,7 +304,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius : 30,
     borderTopRightRadius : 30,
     marginTop : -20,
-    minHeight : windowHeight,
+    minHeight : windowHeight * 0.8,
     paddingHorizontal : windowWidth * 0.05,
     paddingVertical : 10,
     

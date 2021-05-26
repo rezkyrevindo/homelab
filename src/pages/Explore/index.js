@@ -27,14 +27,14 @@ const Explore = ({navigation}) => {
   const [listCategory, setListCategory] = useState([]) 
   const [selectedMenu , setSelectedMenu] = useState("bounty")
   const [modalKategori, setModalKategori] = useState(false)
-    const [modalPoint, setModalPoint] = useState(false)
+  const [modalPoint, setModalPoint] = useState(false)
   const [isLoading, setLoading] = useState(false)
   const [selectedId, setSelectedId] = useState(null);
   const [listQuestion, setListQuestion] = useState([])
   const [opacity_bounty, setOpacityBounty] = useState(1)
-  const [selectedPoint, setSelectedPoint] = useState("150")
+  const [selectedPoint, setSelectedPoint] = useState("125")
   const [isLoadingContent, setLoadingContent] = useState(false)
-  const listPoints = [{id:'110', name:'110'}, {id:'130', name:'130'} , {id:'150', name:'150'} ,{id:'6', name:'All'}]
+  const listPoints = [{id:'85', name:'85'}, {id:'105', name:'105'} , {id:'125', name:'125'} ,{id:'6', name:'All'}]
   const [selectedQuestion, setSelectedQuestion] = useState(null)
   
   const [selectedKategoriName, setSelectedKategoriName] = useState('Pilih Tag')
@@ -129,6 +129,7 @@ const Explore = ({navigation}) => {
           isSolved={item.Solved_Status}
           answer = {item.Total_Answer}
           question={item.Content_Question}
+          img = {item.File}
           
         />
       )

@@ -41,8 +41,8 @@ const Withdraw = ({navigation}) => {
                             flexDirection:'row',
                             padding:10,
                             borderRadius:20,
-                            justifyContent:'space-around',
-                            width: windowWidth *0.7,
+                            justifyContent:'center',
+                            width: windowWidth *0.5,
                             alignItems:'center',
                             marginTop:20,
                             shadowColor: "#000",
@@ -58,7 +58,7 @@ const Withdraw = ({navigation}) => {
                         }}>
                             <IconPoints width={30} height={30}/>
                             <View style={{
-                                alignItems:'flex-end'
+                                alignItems:'center', marginLeft:20,
                             }}>
                                 <PlainText
                                     fontSize={24}
@@ -72,18 +72,7 @@ const Withdraw = ({navigation}) => {
                                     color={"#000"}     
                                 />
                             </View>
-                            <View style={{
-                                alignItems:'center',
-                                
-                            }}>
-                                <IconRiwayat width={24} height={24}/>
-                                <PlainText
-                                    fontSize={12}
-                                    title="Riwayat"
-                                    color={"#FF9F31"}     
-                                    marginTop={0}
-                                />
-                            </View>
+                           
                             
                         </View>
                     </View>
