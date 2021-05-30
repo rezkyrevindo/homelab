@@ -8,7 +8,7 @@ const Splash = ({ navigation }) => {
     const { token,data, notification } = useSelector (state => state.authReducers);
 
     useEffect(() => {
-       
+        
         setTimeout( () => {
             if(token != 'false' && data[2].category_id == null){
                 navigation.replace('Interest')

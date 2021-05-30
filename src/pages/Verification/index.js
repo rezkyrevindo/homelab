@@ -8,7 +8,7 @@ import {
   } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {LogoHorizontal} from '../../assets';
-import {WARNA_UTAMA, WARNA_WARNING} from '../../utils/constant';
+import {WARNA_UTAMA, WARNA_WARNING,WARNA_ABU_ABU} from '../../utils/constant';
 import {ButtonPrimary, InputText, HeaderText, PlainText, ButtonWithIcon, ButtonDefault, LoadingIndicator} from '../../components'
 import axios from 'axios'
 
@@ -21,10 +21,20 @@ const Verification = ({route, navigation}) => {
     const {token} = route.params;
     const [isLoading, setLoading] = useState(false)
     const [code, setCode] = useState('')
-
+    const [canResend, setCanResend] = useState(false)
+    const [timer, setTimer ] = useState(60)
     useEffect(() => {
-        resend()
+        setTimerResend()
+        
     }, [])
+
+    const setTimerResend = ()=>{
+        setCanResend(false)
+        setTimeout( () => {
+            setCanResend(true)
+        }, 30000)
+        
+    }
 
     const resend = async () => {
         setLoading(true)
@@ -37,7 +47,7 @@ const Verification = ({route, navigation}) => {
             }
         }) .then(function (response) {
               
-              
+              console.log(JSON.stringify(response.data))
             
             setLoading(false)
         })
@@ -173,7 +183,12 @@ const Verification = ({route, navigation}) => {
                             marginTop = {windowHeight * 0.033}
                             fontSize= {13}
                         />
-                        <TouchableOpacity>
+                        {canResend && 
+                            <TouchableOpacity 
+                            onPress= {()=> {
+                                resend()
+                                setTimerResend()
+                                }}>
                             <PlainText
                                 title={"Resend Confirmation"}
                                 color={WARNA_UTAMA}
@@ -181,6 +196,19 @@ const Verification = ({route, navigation}) => {
                                 fontSize= {13}
                             />
                         </TouchableOpacity>
+                        }
+                        {!canResend && 
+                            <TouchableOpacity 
+                                style={{backgroundColor: WARNA_ABU_ABU, borderRadius:20, padding:20, marginTop:10}}
+                            >
+                            <PlainText
+                                title={"You cant resend email now!"}
+                                color={"#000"}
+                                fontSize= {13}
+                            />
+                        </TouchableOpacity>
+                        }
+                        
                         
                     </View>
                     

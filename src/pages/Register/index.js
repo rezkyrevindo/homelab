@@ -103,33 +103,40 @@ const Register = ({navigation}) => {
         let passwordError = validator('password', password)
         let namaDepanError = validator('namaDepan', namaDepan)
         let namaBelakangError = validator('namaBelakang', namaBelakang)
-        let confPasswordError = validator('confirmPassword', confPassword)
+        setEmailError(emailError)
+        setPasswordError(passwordError)
+        setNamaBelakangError(namaBelakangError)
+        setNamaDepanError(namaDepanError)
+
+        if(password != confPassword){
+            setConfPasswordError("New password must be same with Confirmation password")
+            setLoading(false)
+            return;
+        }else{
+            setConfPasswordError("first")
+        }
         if(emailError != "first"){
-            setEmailError(emailError)
+            
             setLoading(false)
             return;
         }
         if(passwordError != "first"){
-            setPasswordError(passwordError)
+            
             setLoading(false)
             return;
         }
         if(namaBelakangError != "first"){
-            setNamaBelakangError(namaBelakangError)
+            
             setLoading(false)
             return;
         }
 
         if(namaDepanError != "first"){
-            setNamaDepanError(namaDepanError)
+            
             setLoading(false)
             return;
         }
-        if(confPasswordError != "first"){
-            setConfPasswordError(confPasswordError)
-            setLoading(false)
-            return;
-        }
+        
        
 
        

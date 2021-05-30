@@ -51,6 +51,7 @@ const DetailQuestion = ({route, navigation}) => {
     const [idAnswer, setIdAnswer] = useState("")
     const [indexSelectedImg, setIndexSelectedImg] = useState(0)
     const [questionImages, setQuestionImages] = useState([])
+    
 
 
     const dispatch = useDispatch();
@@ -117,17 +118,35 @@ const DetailQuestion = ({route, navigation}) => {
                                     
                                 />
                 </TouchableOpacity>
-                    <View style={{ width:windowWidth, height:windowHeight, alignItems:'center'}}>
+                    <View style={{ width:windowWidth, height:windowHeight- 100, alignItems:'center'}}>
                     
                     <FastImage 
-                            source={{
-                                uri: questionImages[indexSelectedImg],
-                            }}
-                            style={{width : windowWidth, height: windowHeight}} 
+                            source={ sourceImg
+                            }
+                            style={{width : windowWidth, height: windowHeight- 100}} 
                             resizeMode={FastImage.resizeMode.contain}
                             />
                             
                     </View>
+                    <TouchableOpacity style={{ alignItems:'center', alignContent:'center'}}
+                    onPress={()=>{
+                        setSourceImg(null)
+                        
+                        setFilePath(null)
+                        setModalGambar(false)
+                    }}
+                        >
+                                <View style={{backgroundColor:WARNA_WARNING, paddingHorizontal:20, paddingVertical:10, borderRadius : 20,}}>
+                                <PlainText
+                                    title={"Delete"}
+                                    color={"#fff"}
+                                    fontSize= {14}
+                                    fontStyle={"bold"}
+                                    
+                                />
+                                </View>
+                                
+                </TouchableOpacity>
                     
                 </ModalContent>
             </Modal>
@@ -300,7 +319,7 @@ const DetailQuestion = ({route, navigation}) => {
             formdata.append('file', {
                 uri: filePath.uri,
                 type: filePath.type,
-                name: "Photo_React_Native",
+                name: filePath.fileName,
             });
         }
         formdata.append('id_question', id_question)
@@ -369,7 +388,7 @@ const DetailQuestion = ({route, navigation}) => {
             maxHeight : 1000,
             maxWidth : 1000
           };
-        launchCamera(options, (response) => {
+        launchImageLibrary(options, (response) => {
           console.log('Response = ', response);
     
           if (response.didCancel) {
@@ -382,11 +401,11 @@ const DetailQuestion = ({route, navigation}) => {
           } else {
             const source = { uri: response.uri };
             // console.log('response', JSON.stringify(response));
-            console.log("file ",{'uri': Platform.OS === "android" ? response.uri.replace("content://", "file://") : response.uri.replace("file://", ""), 'type': response.type,'name': response.fileName})
+            // console.log("file ",{'uri': Platform.OS === "android" ? response.uri.replace("content://", "file://") : response.uri.replace("file://", ""), 'type': response.type,'name': response.fileName})
             
             
             setSourceImg(source)
-            console.log(response)
+            // console.log(response)
             setFilePath(response)
             setFileData({'uri': Platform.OS === "android" ? response.uri.replace("content://", "file://") : response.uri.replace("file://", "") , 'type': response.type,'name': response.fileName})
             setFileUri(response.uri)
@@ -558,13 +577,14 @@ const DetailQuestion = ({route, navigation}) => {
             <View style={{alignItems:'center'}}>
             <View style={{width:50, height:3, backgroundColor:WARNA_UTAMA}}/>
             </View>
-                            {sourceImg != null &&
+            {sourceImg != null &&
+                                <TouchableOpacity onPress={()=> setModalGambar(true)}>
                                 <FastImage
-                                    style={{  width: windowWidth, height: 200, marginTop:10 }}
+                                    style={{  width: windowWidth, height: 200, marginLeft :-20, marginBottom:20, marginTop:-20 }}
                                     source={sourceImg}
-                                    resizeMode={FastImage.resizeMode.center}
                                 />
-                                }
+                                </TouchableOpacity>
+                            }
                     <View style={styles.bodyContent}>
                     
                         <View style={{padding:20, backgroundColor : WARNA_UTAMA, borderTopEndRadius:10, borderTopStartRadius:10}}>
@@ -577,7 +597,7 @@ const DetailQuestion = ({route, navigation}) => {
                                 />
                         </View>
                         <TextInput
-                            numberOfLines={10}
+                            numberOfLines={5}
                             style={styles.inputContainer}
                             multiline = {true}
                             onChangeText= {(text) => setContent(text)}
@@ -612,8 +632,13 @@ const DetailQuestion = ({route, navigation}) => {
                         
                         <TextInput
                             numberOfLines={1}
-                            style={styles.inputContainer}
-                            multiline = {true}
+                            style={{ flexDirection: "row",
+                                    width: "100%",
+                                    borderRadius: 10,
+                                    backgroundColor: "transparent",
+                                    textAlignVertical: 'top',
+                                    padding: 20}}
+                            multiline = {false}
                             onChangeText= {(text) => setReference(text)}
                             value={reference}
                         />
@@ -671,6 +696,7 @@ const DetailQuestion = ({route, navigation}) => {
 
     return (
         <View style={styles.container}> 
+        
             <TypeModal/>
             <GambarModal/>
             <UnlockModal/>
@@ -779,7 +805,7 @@ const DetailQuestion = ({route, navigation}) => {
                     { isSolved == "0" && dataQuestion.Status_Question_User_Answer == "False" &&
                     
                         <TouchableOpacity
-                                onPress={() => sheetRef.current.snapTo(1)}
+                                onPress={() => sheetRef.current.snapTo(0)}
                                 style={{height: 70,
                                 width:"100%",
                                 backgroundColor:WARNA_UTAMA, 
@@ -866,7 +892,7 @@ const DetailQuestion = ({route, navigation}) => {
                     
                     <BottomSheet
                         ref={sheetRef}
-                        snapPoints={['75%', "40%", 0]}
+                        snapPoints={['93%', "93%", 0]}
                         initialSnap={2}
                         borderRadius={10}
                         renderContent={renderContent}
@@ -894,7 +920,7 @@ const styles = StyleSheet.create({
 
     },
     container: {
-        flex: 1 ,
+        flex: 1,
         backgroundColor : '#FAFAFA',
     },
     headerContent : {
@@ -957,7 +983,7 @@ const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: "row",
         width: "100%",
-        
+        height:200,
         borderRadius: 10,
         backgroundColor: "transparent",
         textAlignVertical: 'top',

@@ -76,8 +76,8 @@ const Home = ({navigation}) => {
   }, [selectedMyQuestion])
 
   useEffect(() => {
-    
     updateProf(token)
+    
     getMyQuestion()
     checkPermission()
     
@@ -127,6 +127,17 @@ const Home = ({navigation}) => {
     .catch(function (err) {
         setLoading(false)
         setListMyQuestion(null)
+        if(error.message == "Network Error"){
+          Snackbar.show({
+            text: "Kamu sedang offline, periksa koneksi kamu!",
+            duration: Snackbar.LENGTH_INDEFINITE,
+            action: {
+                text: 'Ok',
+                textColor: WARNA_UTAMA,
+                onPress: () => { /* Do something. */ },
+            },  
+            });
+        }
           
     });  
   }
@@ -162,7 +173,19 @@ const Home = ({navigation}) => {
               })
               .catch(function (error) {
                 setLoading(false)
-                  console.error(error.response.status)
+                setListQuestionSearch(null)
+                  if(error.message == "Network Error"){
+                    Snackbar.show({
+                      text: "Kamu sedang offline, periksa koneksi kamu!",
+                      duration: Snackbar.LENGTH_INDEFINITE,
+                      action: {
+                          text: 'Ok',
+                          textColor: WARNA_UTAMA,
+                          onPress: () => { /* Do something. */ },
+                      },  
+                      });
+                  }
+                  
               });
       }
      
@@ -183,6 +206,7 @@ const Home = ({navigation}) => {
           answer = {item.Total_Answer}
           question={item.Content_Question}
           img = {item.File}
+          typeFile= {item.File_Type}
       />
     )
     
@@ -206,6 +230,7 @@ const Home = ({navigation}) => {
           answer = {item.Total_Answer}
           question={item.Content_Question}
           img = {item.File}
+          typeFile= {item.Type_Of_File}
         />
       )
       

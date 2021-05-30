@@ -35,11 +35,27 @@ export const updateProfile = (token) => {
                     "Authorization" : 'Bearer ' + token
                 }
             }).then(function (res){
-                dispatch({
-                    type : UPDATE_PROFILE,
-                    payload : res.data
-                })
-                console.log(res.data)
+                
+                if(res.data.status == "Token is Expired"){
+                    
+                    dispatch({
+                        type : LOGOUT
+                    })
+                    Snackbar.show({
+                        text: "Session Expired, Silahkan login kembali",
+                        duration: Snackbar.LENGTH_INDEFINITE,
+                        action: {
+                            text: 'Ok',
+                            textColor: WARNA_UTAMA,
+                            onPress: () => { /* Do something. */ },
+                        },  
+                        });
+                }else{
+                    dispatch({
+                        type : UPDATE_PROFILE,
+                        payload : res.data
+                    })
+                }
             }).catch(function (err){
 
                 console.log(err)

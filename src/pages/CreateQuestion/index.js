@@ -75,14 +75,22 @@ const CreateQuestion = ({navigation}) => {
         }
         setLoading(true)
         
+        // console.log("FILE : " + JSON.stringify({
+        //     uri :  uri,
+        //     type : filePath.type,
+        //     name : "appUpload"
+        // }))
+        // setLoading(false)
+
         var formData = new FormData();
         if (filePath != null){
-            let array = {
-                uri: filePath.uri,
-                type: filePath.type,
-                name: "Photo_React_Native",
-            }
-            formData.append('file', array);
+            // let uri = Platform.OS === "android" ? filePath.uri.replace("content://", "file://") : filePath.uri.replace("file://", "")
+            
+            formData.append('file', {
+                uri :  filePath.uri,
+                type : filePath.type,
+                name : filePath.fileName
+            });
         }
         
         formData.append('content', content)
@@ -110,7 +118,7 @@ const CreateQuestion = ({navigation}) => {
         .catch((error) => {
             
             setLoading(false)
-            console.error(JSON.stringify(error))
+            console.log(error)
 
         });
        
@@ -118,6 +126,18 @@ const CreateQuestion = ({navigation}) => {
 
     useEffect(() => {
        getCategory()
+       if(parseInt(data[2].point) < 110){
+           navigation.replace("MainApp")
+           Snackbar.show({
+            text: "Point Kamu Tidak Cukup untuk Membuat Pertanyaan",
+            duration: Snackbar.LENGTH_INDEFINITE,
+            action: {
+                text: 'Ok',
+                textColor: WARNA_UTAMA,
+                onPress: () => { /* Do something. */ },
+            },  
+            });
+       }
     }, [])
 
     const GambarModal = ()=>{
@@ -188,7 +208,7 @@ const CreateQuestion = ({navigation}) => {
           console.log('Response = ', response);
     
           if (response.didCancel) {
-            // console.log('User cancelled image picker');
+            // console.log('User caSncelled image picker');
           } else if (response.error) {
             // console.log('ImagePicker Error: ', response.error);
           } else if (response.customButton) {
@@ -197,11 +217,11 @@ const CreateQuestion = ({navigation}) => {
           } else {
             const source = { uri: response.uri };
             // console.log('response', JSON.stringify(response));
-            console.log("file ",{'uri': Platform.OS === "android" ? response.uri.replace("content://", "file://") : response.uri.replace("file://", ""), 'type': response.type,'name': response.fileName})
-            
+            // console.log("file ",{'uri': Platform.OS === "android" ? response.uri.replace("content://", "file://") : response.uri.replace("file://", ""), 'type': response.type,'name': response.fileName})
+            console.log("NAMA file : "+ response.fileName)
             
             setSourceImg(source)
-            console.log(response)
+            // console.log(response)
             setFilePath(response)
             setFileData({'uri': Platform.OS === "android" ? response.uri.replace("content://", "file://") : response.uri.replace("file://", "") , 'type': response.type,'name': response.fileName})
             setFileUri(response.uri)

@@ -50,6 +50,7 @@ const Commentar = ({navigation, route}) => {
                     'Date_Comment': new Date(),
                     'Status_User_comment' : 'True',
                     'Comment' : reply,
+                    'Photo_User_Comment' : data[2].picture
                 }
             }
            

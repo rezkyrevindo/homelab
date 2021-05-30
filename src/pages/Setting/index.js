@@ -281,7 +281,7 @@ const Setting = ({navigation}) => {
             formData.append('file', {
                 uri: selectedImage,
                 type: 'image/png',
-                name: "Photo_React_Native",
+                name: "Photo_React_Native.png",
             });
             
         }else{
@@ -290,7 +290,7 @@ const Setting = ({navigation}) => {
                 formData.append('file', {
                     uri: filePath.uri,
                     type: filePath.type,
-                    name: "Photo_React_Native",
+                    name: filePath.fileName,
                 });
             }
         }
