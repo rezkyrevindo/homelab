@@ -7,6 +7,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:452999775731:android:29e973f3bc46ed13657e86",
+        "android_client_info": {
+          "package_name": "com.askhomelab.apps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "452999775731-v4nuelkcqgjrk4m55pt8qtnvo37gonhv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBv6Sk4wG-NG6-2U6sBQPwhRkusIYVpWho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "452999775731-v4nuelkcqgjrk4m55pt8qtnvo37gonhv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:452999775731:android:42601e57f12e52d3657e86",
         "android_client_info": {
           "package_name": "com.homelab"

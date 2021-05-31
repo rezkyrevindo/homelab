@@ -1,4 +1,4 @@
-package com.homelab;
+package com.askhomelab.apps;
 
 import com.facebook.react.ReactActivity;
 

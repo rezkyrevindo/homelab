@@ -130,11 +130,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.homelab"
+        applicationId "com.askhomelab.apps"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.00"
         vectorDrawables.useSupportLibrary = true
     }
     splits {

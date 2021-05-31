@@ -1,4 +1,4 @@
-package com.homelab;
+package com.askhomelab.apps;
 
 import android.app.Application;
 import android.content.Context;
