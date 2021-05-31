@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity , Dimensions} from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity , BackHandler, Alert, Dimensions} from 'react-native'
 import TabItem from '../TabItem';
 
 const windowWidth = Dimensions.get('window').width;
@@ -8,11 +8,23 @@ const windowHeight = Dimensions.get('window').height;
 const BottomNavigator = ({ state, descriptors, navigation }) => {
     const focusedOptions = descriptors[state.routes[state.index].key].options;
 
+    function handleBackButton  ()  {
+      Alert.alert("Hold on!", "Are you sure you want to go back?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel"
+        },
+        { text: "YES", onPress: () => BackHandler.exitApp() }
+      ]);
+      return true;
+    } 
     if (focusedOptions.tabBarVisible === false) {
       return null;
     }
   
     return (
+      
       <View style={styles.container}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
@@ -42,6 +54,7 @@ const BottomNavigator = ({ state, descriptors, navigation }) => {
 
             }
           };
+
   
           const onLongPress = () => {
             navigation.emit({

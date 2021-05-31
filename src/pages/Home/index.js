@@ -1,8 +1,8 @@
 import React, {useState,useEffect} from 'react';
 import {
   StyleSheet,
-  Text,
-  Image,
+  Text,Alert,
+  Image, BackHandler,
   View,SafeAreaView, FlatList, PermissionsAndroid,
   TouchableHighlight,
   Dimensions, StatusBar, TouchableOpacity, LogBox,
@@ -22,6 +22,7 @@ const headerHeight = windowHeight * 0.25;
 const StatusBarHeight = 30;
 
 const Home = ({navigation}) => {
+
   const dispatch = useDispatch();
   const updateProf = (token) => dispatch(updateProfile(token));
   const [selectedQuestion, setSelectedQuestion] = useState(null)
@@ -34,6 +35,8 @@ const Home = ({navigation}) => {
   const [displayHome, setDisplayHome] = useState(0)
   const [selectedMyQuestion, setSelectedMyQuestion] = useState(null)
 
+
+ 
 
   const checkPermission = async () =>{
     if (Platform.OS === 'android') {
@@ -76,12 +79,19 @@ const Home = ({navigation}) => {
   }, [selectedMyQuestion])
 
   useEffect(() => {
-    updateProf(token)
+    updateProf(token).then( ()=> {
+      if(token == "false"){
+        navigation.replace("Landing")
+      }
+    })
     
     getMyQuestion()
     checkPermission()
+
+    
     
   }, [])
+
 
   const filterQuestion = (question)=>{
     
@@ -104,6 +114,7 @@ const Home = ({navigation}) => {
         
       
   }
+
 
   const getMyQuestion = async () => {
     setLoading(true)

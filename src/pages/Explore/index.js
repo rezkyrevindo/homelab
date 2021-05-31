@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
-  Image,SafeAreaView,
-  View,
+  Image,SafeAreaView,BackHandler,
+  View,Alert,
   ImageBackground, FlatList,
   Dimensions, StatusBar, TouchableOpacity, LogBox,
 } from 'react-native';
@@ -32,14 +32,24 @@ const Explore = ({navigation}) => {
   const [selectedId, setSelectedId] = useState(null);
   const [listQuestion, setListQuestion] = useState([])
   const [opacity_bounty, setOpacityBounty] = useState(1)
-  const [selectedPoint, setSelectedPoint] = useState("125")
+  const [selectedPoint, setSelectedPoint] = useState("6")
   const [isLoadingContent, setLoadingContent] = useState(false)
   const listPoints = [{id:'85', name:'85'}, {id:'105', name:'105'} , {id:'125', name:'125'} ,{id:'6', name:'All'}]
   const [selectedQuestion, setSelectedQuestion] = useState(null)
   
   const [selectedKategoriName, setSelectedKategoriName] = useState('Pilih Tag')
 
-
+  function handleBackButton  ()  {
+    Alert.alert("Hold on!", "Are you sure you want to go back?", [
+      {
+        text: "Cancel",
+        onPress: () => null,
+        style: "cancel"
+      },
+      { text: "YES", onPress: () => BackHandler.exitApp() }
+    ]);
+    return true;
+  }
 
   useEffect(() => {
     LogBox.ignoreLogs(['Warning']); 
@@ -110,8 +120,25 @@ const Explore = ({navigation}) => {
       })
           .then(function (response) {
               if (response.data.message != "No Associated Data"){
-                
-                setListQuestion(response.data.Data)
+                let obj = response.data.Data
+                obj.sort(function(a, b) {
+                  var totalA = a.Total_Point, totalB = b.Total_Point;
+                  if(totalA > totalB) return 1;
+                  if(totalA < totalB) return -1;
+
+                    var jawabanA = a.Total_Answer, jawabanB = b.Total_Answer;
+                    if(jawabanA > jawabanB) return 1;
+                    if(jawabanA < jawabanB) return -1;
+
+                    var dateA = new Date(a.Date_Created), dateB = new Date(b.Date_Created);
+                    if(dateB > dateA) return -1;
+                    if(dateB < dateB) return 1;
+
+                  
+
+
+                });
+                setListQuestion(obj)
                 
               }else{
                 setListQuestion(null)
@@ -119,6 +146,7 @@ const Explore = ({navigation}) => {
               setLoadingContent(false)
           })
           .catch(function (error) {
+            setListQuestion(null)
               setLoadingContent(false)
               if(error.message == "Network Error"){
                 Snackbar.show({
@@ -191,6 +219,7 @@ const Explore = ({navigation}) => {
               keyExtractor={(item) => item.id_Question.toString()}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
+              initialNumToRender= {5}
               />
             }
             

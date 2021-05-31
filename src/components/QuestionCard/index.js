@@ -1,5 +1,5 @@
-import React, {useState, useEffect, FlatList} from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView,Linking, Dimensions } from 'react-native'
+import React, {useState, useEffect,  } from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView,Linking, Dimensions, FlatList  } from 'react-native'
 import PlainText from '../PlainText'
 import { DefaultProfile, IconPoints, IconLike,IconLikeActive,IconPending, IconCheck} from '../../assets';
 import {WARNA_ABU_ABU, WARNA_UTAMA, WARNA_SUCCESS, BASE_URL_API, BASE_URL_IMG, OpenSans} from '../../utils/constant';
@@ -7,6 +7,7 @@ import FastImage from 'react-native-fast-image'
 import Tooltip from 'react-native-walkthrough-tooltip';
 
 
+import ImageViewer from 'react-native-image-zoom-viewer';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height -56
 import { SliderBox } from "react-native-image-slider-box";
@@ -39,6 +40,7 @@ const QuestionCard = (props) => {
 
     const [questionImages, setQuestionImages] = useState([])
     const [questionFile, setQuestionFile] = useState([])
+    
     
     useEffect(() => {
       if(props.img != null){

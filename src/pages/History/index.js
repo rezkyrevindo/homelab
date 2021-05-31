@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
   Image,
-  View,
+  View, Alert,BackHandler,
   ImageBackground, SafeAreaView, FlatList, 
   Dimensions, StatusBar, TouchableOpacity, 
 } from 'react-native';
@@ -48,6 +48,17 @@ const History = ({navigation}) => {
   useEffect(() => {
     getRiwayat()
   }, [])
+  function handleBackButton  ()  {
+    Alert.alert("Hold on!", "Are you sure you want to go back?", [
+      {
+        text: "Cancel",
+        onPress: () => null,
+        style: "cancel"
+      },
+      { text: "YES", onPress: () => BackHandler.exitApp() }
+    ]);
+    return true;
+  }
 
   const getRiwayat = async () =>{
     setLoading(true)

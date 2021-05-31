@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
   Image,
-  View,
+  View, Alert,BackHandler,
   ImageBackground,
   Dimensions, StatusBar, TouchableOpacity, 
 } from 'react-native';
@@ -26,7 +26,17 @@ const Akun = ({navigation}) => {
     const dispatch = useDispatch();
 
     const requestLogout = (token) => dispatch(logout(token));
-    
+    function handleBackButton  ()  {
+        Alert.alert("Hold on!", "Are you sure you want to go back?", [
+          {
+            text: "Cancel",
+            onPress: () => null,
+            style: "cancel"
+          },
+          { text: "YES", onPress: () => BackHandler.exitApp() }
+        ]);
+        return true;
+      }
 
   return (
     <View style={styles.page}>

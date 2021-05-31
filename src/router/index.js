@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Button, Alert} from 'react-native';
+import {StyleSheet, Button, Alert,BackHandler } from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, Splash, Akun, CreateQuestion, Login,RegisterSuccess, Register,DetailQuestion ,Verification, ConfirmationSuccess, 
@@ -10,23 +10,52 @@ import { BottomNavigator } from '../components';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+import { useSelector, useDispatch } from 'react-redux';
 const MainApp = () => {
-  
+ 
   return (
-      <Tab.Navigator tabBar={props => <BottomNavigator {...props} />}>
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Search" component={Explore} />
-        <Tab.Screen name="AddQuestion" component={CreateQuestion}  />
-        <Tab.Screen name="History" component={History} />
-        <Tab.Screen name="Profile" component={Akun} />
+      <Tab.Navigator backBehavior="initialRoute" tabBar={props => <BottomNavigator {...props} />}>
+        <Tab.Screen name="Home" component={Home}
+        
+         />
+        <Tab.Screen name="Search" component={Explore} 
+
+        />
+        <Tab.Screen name="AddQuestion" component={CreateQuestion}  
+
+        />
+        <Tab.Screen name="History" component={History} 
+        
+
+        />
+        <Tab.Screen name="Profile" component={Akun}
+         
+         />
       </Tab.Navigator>
   );
 };
 
 
 const Router = () => {
+  
+  const { token,data } = useSelector (state => state.authReducers);
   return (
     <Stack.Navigator initialRouteName="Splash">
+      {token == "false" && 
+        <Stack.Screen name="Login" component={Login} 
+        options={
+          {
+            headerTitle : 'Masuk',
+            headerTitleStyle:{
+              alignSelf : 'center',
+              marginLeft : -60,
+              
+            },
+          }} />  
+      }
+      {token != "false" && 
+        <Stack.Screen name="MainApp" component={MainApp} options={{ headerShown: false }}/> 
+      }
       <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }}/>
       <Stack.Screen name="CreateQuestion" component={CreateQuestion} options={{headerTitle: 'Create Question'}}/>
       <Stack.Screen name="OpenWebView" component={OpenWebView} />
@@ -35,16 +64,7 @@ const Router = () => {
       <Stack.Screen name="MyDetailQuestion" component={MyDetailQuestion} options={{headerTitle: 'My Question'}}/>
       <Stack.Screen name="MyUnlockQuestion" component={MyUnlockQuestion} options={{headerTitle: 'My Unlock Question'}}/>
       <Stack.Screen name="DetailQuestion" component={DetailQuestion} options={{headerTitle: 'Question'}}/>
-      <Stack.Screen name="Login" component={Login} 
-      options={
-        {
-          headerTitle : 'Masuk',
-          headerTitleStyle:{
-            alignSelf : 'center',
-            marginLeft : -60,
-            
-          },
-        }} />
+      
         <Stack.Screen name="VerifikatorLogin" component={VerifikatorLogin}
          options={{ headerShown: false }}
 
@@ -238,7 +258,7 @@ const Router = () => {
         }}
       />
       
-      <Stack.Screen name="MainApp" component={MainApp} options={{ headerShown: false }}/>
+      
       <Stack.Screen name="Landing" component={Landing} options={{ headerShown: false }}/>
     </Stack.Navigator>
   );
