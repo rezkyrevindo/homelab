@@ -366,16 +366,18 @@ const DetailQuestion = ({route, navigation}) => {
             
             
             updateProf(token).then( () =>{
-                setLoading(false)
                 setRefresh(refresh+1)
+                setLoading(false)
+                
+
             })
         }).catch(function(error){
             updateProf(token).then( () =>{
-                setLoading(false)
                 setRefresh(refresh+1)
+                setLoading(false)
+                
             })
-            setLoading(false)
-            setRefresh(refresh+1)
+            
         })
     }
 
@@ -439,7 +441,9 @@ const DetailQuestion = ({route, navigation}) => {
                         <View style={{alignItems:'center'}}>
                             <ButtonPrimary  
                                 onPress={() => {
+                                    setModalUnlock(false)
                                     unlockProcess()
+                                    
                                 }}
                                 title="Lanjutkan"
                                 width={windowWidth*0.6}
@@ -556,7 +560,7 @@ const DetailQuestion = ({route, navigation}) => {
                 onPress={() => setModalUnlock(true)}
                 question={item[0].answer.Answer}
                 id_answer = {item[0].answer.Id_Answer}
-                
+                picture = {item[0].answer.Photo_User_Answer}
             />
         )
     }

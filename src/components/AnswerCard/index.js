@@ -191,7 +191,7 @@ const AnswerCard = (props) => {
                 </View>
               
               </View>
-                {props.isRelevant == true &&
+                {props.isRelevant == "true" &&
                     <View style={{flexDirection:'row', alignItems : 'center'}}>
                         
                         
